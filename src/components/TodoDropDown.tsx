@@ -1,21 +1,49 @@
 import styled from 'styled-components';
 import TodoSearchResult from './TodoSearchResult';
 import { ImSpinner8 } from 'react-icons/im';
+import { useEffect, useRef } from 'react';
 
 interface ITodoDropDown {
   searchResults: string[];
 }
 
 function TodoDropDown({ searchResults }: ITodoDropDown) {
+  const observerTarget = useRef<HTMLDivElement>(null);
+
+  // observe
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        const [entry] = entries;
+        if (!entry.isIntersecting) return;
+        console.log('oberseve: ', entry);
+      },
+      {
+        root: null,
+        threshold: 1,
+      }
+    );
+    observer.observe(observerTarget.current as Element);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <DropDownItemContainer>
-      {searchResults?.map((searchResult, idx) => (
-        <TodoSearchResult key={idx} value={searchResult} />
-      ))}
-      <DotsIcon>...</DotsIcon>
-      <SpinIcon>
+      {searchResults.length === 0 ? (
+        <TodoSearchResultNone>검색어가 없습니다.</TodoSearchResultNone>
+      ) : (
+        searchResults?.map((searchResult, idx) => (
+          <TodoSearchResult key={idx} value={searchResult} />
+        ))
+      )}
+
+      <DotsIcon ref={observerTarget} isHidden>
+        ...
+      </DotsIcon>
+      {/* <SpinIcon>
         <ImSpinner8 />
-      </SpinIcon>
+      </SpinIcon> */}
+      {/* <SpinIcon /> */}
     </DropDownItemContainer>
   );
 }
@@ -43,7 +71,13 @@ const DropDownItemContainer = styled.div`
 
   overflow: auto;
 `;
-const DotsIcon = styled.div`
+const DotsIcon = styled.div<{ isHidden: boolean }>`
+  ${props =>
+    props.isHidden &&
+    `
+      display: none;
+    `}
+
   color: #9f9f9f;
   width: 100%;
   height: 28px;
@@ -54,7 +88,7 @@ const DotsIcon = styled.div`
   text-align: center;
 `;
 
-const SpinIcon = styled.div`
+const SpinIcon = styled(ImSpinner8)`
   color: #9f9f9f;
   font-size: 14px;
 
@@ -71,6 +105,21 @@ const SpinIcon = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+const TodoSearchResultNone = styled.div`
+  width: 100%;
+  height: 28px;
+  padding: 6px 12px;
+  gap: 10px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #ffffff;
+  border-radius: 3px;
+
+  white-space: nowrap;
 `;
 
 export default TodoDropDown;

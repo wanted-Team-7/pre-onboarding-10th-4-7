@@ -10,7 +10,7 @@ interface InputTodoType {
   setSearchResults: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const DEBOUNCE_TIMEOUT_SEC = 0.4;
+const DEBOUNCE_TIMEOUT_SEC = 0.3;
 
 const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
