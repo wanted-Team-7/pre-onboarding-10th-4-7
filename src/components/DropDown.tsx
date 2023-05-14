@@ -1,19 +1,39 @@
 import React from 'react';
 import styled from 'styled-components';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 interface DropdownType {
   dropdownRef: React.RefObject<HTMLDivElement>;
   searchListData: string[];
+  isSearchLoading: boolean;
+  isTotal: boolean;
+  handleSearchFetch: (type: string) => void;
 }
 
-function DropDown({ dropdownRef, searchListData }: DropdownType) {
+function DropDown({
+  dropdownRef,
+  searchListData,
+  isSearchLoading,
+  isTotal,
+  handleSearchFetch,
+}: DropdownType) {
+  const onIntersect: IntersectionObserverCallback = ([{ isIntersecting }]) => {
+    if (isIntersecting && !isTotal && !isSearchLoading) {
+      handleSearchFetch('scroll');
+    }
+  };
+  const { setTarget } = useIntersectionObserver({ onIntersect });
+
   return (
     <DropdownBox ref={dropdownRef}>
       <DropdownList>
-        {searchListData.length >= 0 ? (
+        {searchListData.length === 0 ? (
           <Typing>검색 결과 없음</Typing>
         ) : (
           searchListData.map((item, idx) => <DropdownItem key={idx}>{item}</DropdownItem>)
+        )}
+        {searchListData.length > 0 && (
+          <div ref={setTarget}>{isSearchLoading ? <p>loading...</p> : !isTotal && <p>...</p>}</div>
         )}
       </DropdownList>
     </DropdownBox>

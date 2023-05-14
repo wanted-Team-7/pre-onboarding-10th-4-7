@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getTodoList } from '../api/todo';
+import { getTodoList, searchTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import useFocus from '../hooks/useFocus';
 import Header from '../components/Header';
@@ -8,6 +8,10 @@ import TodoList from '../components/TodoList';
 import DropDown from '../components/DropDown';
 
 const Main = () => {
+  const [inputText, setInputText] = useState('');
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [isTotal, setIsTotal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchListData, setSearchListData] = useState<string[]>([]);
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -16,6 +20,24 @@ const Main = () => {
 
   const handleInputClick = () => {
     setIsDropdownOpen(true);
+  };
+
+  const handleSearchFetch = async (type: string) => {
+    if (inputText.trim() === '') {
+      setSearchListData([]);
+      return;
+    }
+    if (type === 'first') {
+      setCurrentPage(1);
+      setSearchListData([]);
+    }
+    if (type === 'scroll') setCurrentPage(prev => prev + 1);
+    setIsSearchLoading(true);
+    const updateCurrentPage = type === 'scroll' ? currentPage + 1 : 1;
+    const { data } = await searchTodoList({ q: inputText, page: updateCurrentPage, limit: 10 });
+    setSearchListData(prev => [...prev, ...data.result]);
+    setIsTotal(data.page * data.limit >= data.total);
+    setIsSearchLoading(false);
   };
 
   useEffect(() => {
@@ -51,9 +73,19 @@ const Main = () => {
           inputRef={inputRef}
           setInputFocus={setInputFocus}
           handleInputClick={handleInputClick}
-          setSearchListData={setSearchListData}
+          inputText={inputText}
+          setInputText={setInputText}
+          handleSearchFetch={handleSearchFetch}
         />
-        {isDropdownOpen && <DropDown dropdownRef={dropdownRef} searchListData={searchListData} />}
+        {isDropdownOpen && (
+          <DropDown
+            dropdownRef={dropdownRef}
+            searchListData={searchListData}
+            isSearchLoading={isSearchLoading}
+            isTotal={isTotal}
+            handleSearchFetch={handleSearchFetch}
+          />
+        )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </div>
     </div>

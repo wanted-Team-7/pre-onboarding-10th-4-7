@@ -2,7 +2,7 @@ import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TodoTypes } from '../types/todo';
-import { createTodo, searchTodoList } from '../api/todo';
+import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
 
 interface InputTodoType {
@@ -10,7 +10,9 @@ interface InputTodoType {
   inputRef: React.RefObject<HTMLInputElement>;
   setInputFocus: () => void;
   handleInputClick: () => void;
-  setSearchListData: React.Dispatch<React.SetStateAction<string[]>>;
+  inputText: string;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
+  handleSearchFetch: (type: string) => void;
 }
 
 const InputTodo = ({
@@ -18,23 +20,15 @@ const InputTodo = ({
   inputRef,
   setInputFocus,
   handleInputClick,
-  setSearchListData,
+  inputText,
+  setInputText,
+  handleSearchFetch,
 }: InputTodoType) => {
-  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const debouncedSearch = useDebounce(inputText, 500);
 
-  const handleFetchSearchResult = async () => {
-    if (inputText.trim() === '') {
-      setSearchListData([]);
-      return;
-    }
-    const { data } = await searchTodoList({ q: debouncedSearch, page: 1, limit: 10 });
-    setSearchListData(data.result);
-  };
-
   useEffect(() => {
-    handleFetchSearchResult();
+    handleSearchFetch('first');
   }, [debouncedSearch]);
 
   useEffect(() => {
@@ -66,7 +60,7 @@ const InputTodo = ({
         setIsLoading(false);
       }
     },
-    [inputText, setTodos]
+    [inputText, setInputText, setTodos]
   );
 
   return (
