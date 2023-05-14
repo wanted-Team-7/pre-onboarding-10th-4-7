@@ -13,17 +13,10 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRemoveTodo = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      await deleteTodo(id);
-
-      setTodos(prev => prev.filter((item: TodoTypes) => item.id !== id));
-    } catch (error) {
-      console.error(error);
-      alert('Something went wrong.');
-    } finally {
-      setIsLoading(false);
-    }
+    setIsLoading(true);
+    await deleteTodo(id);
+    setTodos(prev => prev.filter((item: TodoTypes) => item.id !== id));
+    setIsLoading(false);
   }, [id, setTodos]);
 
   useEffect(() => {
