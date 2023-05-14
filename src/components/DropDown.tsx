@@ -10,8 +10,11 @@ function DropDown({ dropdownRef, searchListData }: DropdownType) {
   return (
     <DropdownBox ref={dropdownRef}>
       <DropdownList>
-        {searchListData.length >= 0 &&
-          searchListData.map((item, idx) => <DropdownItem key={idx}>{item}</DropdownItem>)}
+        {searchListData.length >= 0 ? (
+          <Typing>검색 결과 없음</Typing>
+        ) : (
+          searchListData.map((item, idx) => <DropdownItem key={idx}>{item}</DropdownItem>)
+        )}
       </DropdownList>
     </DropdownBox>
   );
@@ -21,6 +24,7 @@ export default DropDown;
 
 const DropdownBox = styled.div`
   width: 580px;
+  margin-top: -16px;
   min-height: 28px;
   max-height: 164px;
   position: absolute;
@@ -42,6 +46,11 @@ const DropdownBox = styled.div`
 `;
 
 const DropdownList = styled.ul``;
+
+const Typing = styled.p`
+  box-sizing: border-box;
+  padding: 6px 12px;
+`;
 
 const DropdownItem = styled.li`
   list-style-type: none;
