@@ -1,6 +1,12 @@
+import { TodoTypes } from "../types/todo";
 import TodoItem from "./TodoItem";
 
-const TodoList = ({ todos, setTodos }) => {
+interface TodoListTypes {
+  todos: TodoTypes[];
+  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+}
+
+const TodoList = ({ todos, setTodos }: TodoListTypes) => {
   return todos.length ? (
     <ul>
       {todos.map(({ id, title }) => (

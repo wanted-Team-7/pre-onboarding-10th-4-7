@@ -1,8 +1,15 @@
 import { FaSpinner, FaTrash } from "react-icons/fa";
 import { useCallback, useState, useEffect } from "react";
 import { deleteTodo } from "../api/todo";
+import { TodoTypes } from "../types/todo";
 
-const TodoItem = ({ id, title, setTodos }) => {
+interface TodoItemTypes {
+  id: string;
+  title: string;
+  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+}
+
+const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRemoveTodo = useCallback(async () => {
@@ -10,7 +17,7 @@ const TodoItem = ({ id, title, setTodos }) => {
       setIsLoading(true);
       await deleteTodo(id);
 
-      setTodos((prev) => prev.filter((item) => item.id !== id));
+      setTodos((prev) => prev.filter((item: TodoTypes) => item.id !== id));
     } catch (error) {
       console.error(error);
       alert("Something went wrong.");
