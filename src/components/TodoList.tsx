@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { TodoTypes } from '../types/todo';
 import TodoItem from './TodoItem';
 
@@ -14,8 +15,20 @@ const TodoList = ({ todos, setTodos }: TodoListTypes) => {
       ))}
     </ul>
   ) : (
-    <div className="empty-list">...</div>
+    <S.EmptyList>...</S.EmptyList>
   );
 };
 
 export default TodoList;
+
+const S = {
+  EmptyList: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 2.5rem;
+    letter-spacing: 1.5rem;
+    margin-left: 0.75rem;
+    color: #ececec;
+  `,
+};
