@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import TodoList from '../components/TodoList';
 import styled from 'styled-components';
+import TodoDropDown from '../components/TodoDropDown';
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
@@ -21,6 +22,7 @@ const Main = () => {
       <TodoInner>
         <Header />
         <InputTodo setTodos={setTodoListData} />
+        <TodoDropDown />
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </TodoInner>
     </TodoContainer>

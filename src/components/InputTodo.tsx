@@ -1,5 +1,4 @@
-import { FaSearch } from 'react-icons/fa';
-import { ImSpinner8 } from 'react-icons/im';
+import { ImSearch, ImSpinner8 } from 'react-icons/im';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
@@ -116,7 +115,7 @@ const TodoInput = styled.input`
   outline: none;
 `;
 
-const SearchIcon = styled(FaSearch)`
+const SearchIcon = styled(ImSearch)`
   width: 14px;
   height: 14px;
   color: #7d7d7d;
