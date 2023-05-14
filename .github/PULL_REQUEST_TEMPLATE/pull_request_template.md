@@ -1,3 +1,12 @@
+---
+name: PR
+about: PR
+title: "PR"
+labels: ''
+assignees: ''
+
+---
+
 ## 개요 :mag:
 
 `어떤 이유에서 이 PR을 시작하게 됐는지에 대한 히스토리를 남겨주세요.`
