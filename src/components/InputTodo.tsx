@@ -23,6 +23,12 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     setFocus();
   }, [setFocus]);
 
+  useEffect(() => {
+    if (inputText === '') {
+      setIsVisibleRecommendList(false);
+    }
+  }, [inputText]);
+
   const searchTerm = useDebounce(inputText, 500);
 
   const trimInputText = (inputText: string) => {
@@ -68,7 +74,6 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
           value={inputText}
           onChange={e => {
             setInputText(e.target.value);
-            setIsVisibleRecommendList(true);
           }}
           disabled={isLoading}
         />
@@ -80,7 +85,13 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
           <Spinner />
         )}
       </S.FormContainer>
-      {isVisibleRecommendList && <RecommendList searchTerm={searchTerm} />}
+      <RecommendList
+        searchTerm={searchTerm}
+        addTodo={addTodo}
+        setInputText={setInputText}
+        isVisibleRecommendList={isVisibleRecommendList}
+        setIsVisibleRecommendList={setIsVisibleRecommendList}
+      />
     </>
   );
 };

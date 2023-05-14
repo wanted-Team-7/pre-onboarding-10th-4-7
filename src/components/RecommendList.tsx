@@ -4,25 +4,50 @@ import styled from 'styled-components';
 
 interface RecommendListType {
   searchTerm: string;
+  addTodo: (todo: string) => Promise<void>;
+  setInputText: (inputText: string) => void;
+  isVisibleRecommendList: boolean;
+  setIsVisibleRecommendList: (isVisible: boolean) => void;
 }
 
-const RecommendList = ({ searchTerm }: RecommendListType) => {
+const RecommendList = ({
+  searchTerm,
+  addTodo,
+  setInputText,
+  isVisibleRecommendList,
+  setIsVisibleRecommendList,
+}: RecommendListType) => {
   const [recommendList, setRecommendList] = useState([]);
 
   const onRecommendList = async () => {
     if (searchTerm) {
+      setIsVisibleRecommendList(true);
       const { data } = await getRecommendList(searchTerm);
       setRecommendList(data.result);
     }
   };
+
   useEffect(() => {
     onRecommendList();
   }, [searchTerm]);
 
+  const clickDropdownItem = (event: React.MouseEvent<HTMLLIElement>) => {
+    const data = event.currentTarget.innerText;
+    addTodo(data);
+    setInputText('');
+    setIsVisibleRecommendList(false);
+  };
+
   return (
-    <S.DropdownContainer>
+    <S.DropdownContainer visible={isVisibleRecommendList}>
       {recommendList.map((recommendWord, index) => (
-        <S.DropdownItem key={`recommend-${index}`}>{recommendWord}</S.DropdownItem>
+        <S.DropdownItem
+          key={`recommend-${index}`}
+          onClick={clickDropdownItem}
+          value={recommendWord}
+        >
+          {recommendWord}
+        </S.DropdownItem>
       ))}
     </S.DropdownContainer>
   );
@@ -31,9 +56,9 @@ const RecommendList = ({ searchTerm }: RecommendListType) => {
 export default RecommendList;
 
 const S = {
-  DropdownContainer: styled.ul`
+  DropdownContainer: styled.ul<{ visible: boolean }>`
     z-index: 999;
-    display: flex;
+    display: ${({ visible }) => (visible ? 'flex' : 'none')};
     flex-direction: column;
     align-items: flex-start;
     margin-top: 4px;
@@ -79,6 +104,9 @@ const S = {
     :hover {
       background: #f2f2f2;
       cursor: pointer;
+    }
+    :active {
+      background: #d5f4f1;
     }
   `,
 };
