@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
+import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
 
 interface InputTodoType {
@@ -15,6 +16,8 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
 
+  const debouncedInputText = useDebounce(inputText, 500);
+
   useEffect(() => {
     setFocus();
   }, [setFocus]);
@@ -25,7 +28,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         e.preventDefault();
         setIsLoading(true);
 
-        const trimmed = inputText.trim();
+        const trimmed = debouncedInputText.trim();
         if (!trimmed) {
           return alert('Please write something');
         }
@@ -44,7 +47,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         setIsLoading(false);
       }
     },
-    [inputText, setTodos]
+    [debouncedInputText, setTodos]
   );
 
   return (
