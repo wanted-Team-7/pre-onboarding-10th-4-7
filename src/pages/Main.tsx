@@ -3,7 +3,7 @@ import Header from '../views/Header';
 import InputTodo from '../views/Icon/InputTodo';
 import TodoList from '../views/TodoList';
 import SearchedList from '../views/SearchedList';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo, searchTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
@@ -16,8 +16,42 @@ const Main = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isNoMoreData, setIsNoMoreData] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const observer = useRef<IntersectionObserver | null>(null);
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
+
+  const lastItemRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      const loadMoreData = async () => {
+        setIsMoreLoading(true);
+        const newData = await searchTodo({ q: debouncedSearchQuery, page: currentPage + 1 });
+        setSearchedResponse((prevData: string[]) => [...prevData, ...newData.data.result]);
+        setTotal(newData.data.total);
+        setCurrentPage((prevPage: number) => prevPage + 1);
+        setIsMoreLoading(false);
+      };
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          loadMoreData();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [currentPage, debouncedSearchQuery]
+  );
+
+  useEffect(() => {
+    if (searchedResponse.length === total) {
+      setIsNoMoreData(true);
+    } else {
+      setIsNoMoreData(false);
+    }
+  }, [searchedResponse.length, total]);
 
   const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
@@ -34,11 +68,13 @@ const Main = () => {
   const handleChange = useCallback(async () => {
     if (debouncedSearchQuery) {
       const response = await searchTodo({ q: debouncedSearchQuery });
-      console.log(response.data);
       setSearchedResponse(response.data.result);
+      setTotal(response.data.total);
     } else {
       setSearchedResponse([]);
+      setTotal(0);
     }
+    setCurrentPage(1);
   }, [debouncedSearchQuery]);
 
   const handleSubmit = useCallback(
@@ -99,6 +135,9 @@ const Main = () => {
             searchedResponse={searchedResponse}
             inputText={inputText}
             setInputText={setInputText}
+            isNoMoreData={isNoMoreData}
+            lastItemRef={lastItemRef}
+            isMoreLoading={isMoreLoading}
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
