@@ -1,15 +1,15 @@
-import { FaPlusCircle, FaSpinner } from "react-icons/fa";
-import { useCallback, useEffect, useState } from "react";
-import { TodoTypes } from "../types/todo";
-import { createTodo } from "../api/todo";
-import useFocus from "../hooks/useFocus";
+import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
+import { useCallback, useEffect, useState } from 'react';
+import { TodoTypes } from '../types/todo';
+import { createTodo } from '../api/todo';
+import useFocus from '../hooks/useFocus';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
 }
 
 const InputTodo = ({ setTodos }: InputTodoType) => {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
 
@@ -25,20 +25,20 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
 
         const trimmed = inputText.trim();
         if (!trimmed) {
-          return alert("Please write something");
+          return alert('Please write something');
         }
 
         const newItem = { title: trimmed };
         const { data } = await createTodo(newItem);
 
         if (data) {
-          return setTodos((prev) => [...prev, data]);
+          return setTodos(prev => [...prev, data]);
         }
       } catch (error) {
         console.error(error);
-        alert("Something went wrong.");
+        alert('Something went wrong.');
       } finally {
-        setInputText("");
+        setInputText('');
         setIsLoading(false);
       }
     },
@@ -52,7 +52,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={e => setInputText(e.target.value)}
         disabled={isLoading}
       />
       {!isLoading ? (
