@@ -10,6 +10,10 @@ import TodoDropDown from '../components/TodoDropDown';
 const Main = () => {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
   const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isHidden, setIsHidden] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -23,8 +27,33 @@ const Main = () => {
     <TodoContainer>
       <TodoInner>
         <Header />
-        <InputTodo setTodos={setTodoListData} setSearchResults={setSearchResults} />
-        <TodoDropDown searchResults={searchResults} />
+        <InputTodo
+          setTodos={setTodoListData}
+          setSearchResults={setSearchResults}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          setIsHidden={setIsHidden}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          setIsFocus={setIsFocus}
+        />
+        {/* {searchResults.length !== 0 && (
+          <TodoDropDown
+            searchResults={searchResults}
+            setCurrentPage={setCurrentPage}
+            isHidden={isHidden}
+            isLoading={isLoading}
+          />
+        )} */}
+        {isFocus && (
+          <TodoDropDown
+            searchResults={searchResults}
+            setCurrentPage={setCurrentPage}
+            isHidden={isHidden}
+            isLoading={isLoading}
+          />
+        )}
+
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </TodoInner>
     </TodoContainer>

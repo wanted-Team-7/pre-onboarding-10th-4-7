@@ -8,13 +8,27 @@ import styled from 'styled-components';
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
   setSearchResults: React.Dispatch<React.SetStateAction<string[]>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  setIsHidden: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFocus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DEBOUNCE_TIMEOUT_SEC = 0.3;
 
-const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
+const InputTodo = ({
+  setTodos,
+  setSearchResults,
+  currentPage,
+  setCurrentPage,
+  setIsHidden,
+  isLoading,
+  setIsLoading,
+  setIsFocus,
+}: InputTodoType) => {
   const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
@@ -26,6 +40,7 @@ const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
       try {
         e.preventDefault();
         setIsLoading(true);
+        console.log('start');
 
         const trimmed = inputText.trim();
         if (!trimmed) {
@@ -42,6 +57,7 @@ const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
         console.error(error);
         alert('Something went wrong.');
       } finally {
+        console.log('end');
         setInputText('');
         setIsLoading(false);
       }
@@ -54,18 +70,49 @@ const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
 
     const debounceTimeout = setTimeout(async () => {
       try {
-        const data = await getSearchTodos(inputText, 1, 20);
+        setIsLoading(true);
+        const data = await getSearchTodos(inputText);
         setSearchResults(data.result);
-        console.log('search data: ', data.result);
+        setCurrentPage(1);
+        console.log('search data: ', data);
       } catch (error) {
         console.error('Fetch error! ', error);
+      } finally {
+        setIsLoading(false);
       }
     }, DEBOUNCE_TIMEOUT_SEC * 1000);
     return () => clearTimeout(debounceTimeout);
-  }, [inputText, setSearchResults]);
+  }, [inputText]);
+
+  useEffect(() => {
+    if (currentPage === 1) return;
+    console.log('infinite fetch');
+    (async () => {
+      try {
+        setIsLoading(true);
+        const data = await getSearchTodos(inputText, currentPage);
+        setSearchResults(prevResult => [...prevResult, ...data.result]);
+        if (Math.ceil(data.total / data.limit) === currentPage) {
+          setIsHidden(true);
+        }
+      } catch (error) {
+        console.error('Infinite fetch error! ', error);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [currentPage]);
 
   return (
-    <TodoFormContainer onSubmit={handleSubmit}>
+    <TodoFormContainer
+      onSubmit={handleSubmit}
+      onClick={() => {
+        setIsFocus(true);
+      }}
+      onBlur={() => {
+        setIsFocus(false);
+      }}
+    >
       <SearchIcon />
       <TodoInput
         placeholder="Add new todo..."
@@ -81,7 +128,7 @@ const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
       ) : (
         <FaSpinner className="spinner" />
       )} */}
-      <SpinIcon />
+      {isLoading && <SpinIcon />}
     </TodoFormContainer>
   );
 };

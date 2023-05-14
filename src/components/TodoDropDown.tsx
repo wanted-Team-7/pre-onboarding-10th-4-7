@@ -1,22 +1,28 @@
 import styled from 'styled-components';
 import TodoSearchResult from './TodoSearchResult';
 import { ImSpinner8 } from 'react-icons/im';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getSearchTodos } from '../api/todo';
 
 interface ITodoDropDown {
   searchResults: string[];
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  isHidden: boolean;
+  isLoading: boolean;
 }
 
-function TodoDropDown({ searchResults }: ITodoDropDown) {
+function TodoDropDown({ searchResults, setCurrentPage, isHidden, isLoading }: ITodoDropDown) {
   const observerTarget = useRef<HTMLDivElement>(null);
 
   // observe
   useEffect(() => {
+    console.log('oberseve 실행');
     const observer = new IntersectionObserver(
       entries => {
         const [entry] = entries;
         if (!entry.isIntersecting) return;
         console.log('oberseve: ', entry);
+        setCurrentPage(prev => prev + 1);
       },
       {
         root: null,
@@ -37,13 +43,15 @@ function TodoDropDown({ searchResults }: ITodoDropDown) {
         ))
       )}
 
-      <DotsIcon ref={observerTarget} isHidden>
+      {searchResults.length !== 0 && isLoading && (
+        <SpinIcon>
+          <ImSpinner8 />
+        </SpinIcon>
+      )}
+
+      <DotsIcon ref={observerTarget} isHidden={searchResults.length === 0 || isLoading || isHidden}>
         ...
       </DotsIcon>
-      {/* <SpinIcon>
-        <ImSpinner8 />
-      </SpinIcon> */}
-      {/* <SpinIcon /> */}
     </DropDownItemContainer>
   );
 }
@@ -80,15 +88,14 @@ const DotsIcon = styled.div<{ isHidden: boolean }>`
 
   color: #9f9f9f;
   width: 100%;
-  height: 28px;
-  padding: 6px 12px;
-  gap: 10px;
+  height: 30px;
+  /* padding: 6px 12px; */
 
-  font-size: 14px;
+  font-size: 20px;
   text-align: center;
 `;
 
-const SpinIcon = styled(ImSpinner8)`
+const SpinIcon = styled.div`
   color: #9f9f9f;
   font-size: 14px;
 
