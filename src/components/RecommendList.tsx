@@ -40,13 +40,29 @@ const RecommendList = ({
 
   return (
     <S.DropdownContainer visible={isVisibleRecommendList}>
-      {recommendList.map((recommendWord, index) => (
+      {recommendList.map((recommendWord: string, index) => (
         <S.DropdownItem
           key={`recommend-${index}`}
           onClick={clickDropdownItem}
           value={recommendWord}
         >
-          {recommendWord}
+          {recommendWord.split(' ').map(term => {
+            if (term === searchTerm) return <S.SameText>{term}</S.SameText>;
+            if (term.includes(searchTerm)) {
+              return (
+                <span>
+                  {term.slice(0, term.indexOf(searchTerm))}
+                  <S.SameText>
+                    {term.slice(
+                      term.indexOf(searchTerm),
+                      term.indexOf(searchTerm) + searchTerm.length
+                    )}
+                  </S.SameText>
+                  {term.slice(term.indexOf(searchTerm) + searchTerm.length)}
+                </span>
+              );
+            } else return <> {term}</>;
+          })}
         </S.DropdownItem>
       ))}
     </S.DropdownContainer>
@@ -89,7 +105,7 @@ const S = {
     flex-direction: row;
     align-items: flex-start;
     padding: 6px 12px;
-    gap: 10px;
+    gap: 4px;
 
     width: 100%;
     height: 28px;
@@ -101,6 +117,7 @@ const S = {
     order: 0;
     align-self: stretch;
     flex-grow: 0;
+
     :hover {
       background: #f2f2f2;
       cursor: pointer;
@@ -108,5 +125,8 @@ const S = {
     :active {
       background: #d5f4f1;
     }
+  `,
+  SameText: styled.span`
+    color: #2bc9ba;
   `,
 };
