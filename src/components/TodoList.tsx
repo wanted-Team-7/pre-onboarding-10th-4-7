@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { TodoTypes } from '../types/todo';
 import TodoItem from './TodoItem';
 
@@ -14,8 +15,38 @@ const TodoList = ({ todos, setTodos }: TodoListTypes) => {
       ))}
     </ul>
   ) : (
-    <div className="empty-list">...</div>
+    <EmptyList2>...</EmptyList2>
   );
 };
+
+const EmptyList = styled.div`
+  /* width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 2.5rem;
+  letter-spacing: 1.5rem;
+  margin-left: 0.75rem;
+  color: #ececec; */
+
+  position: absolute;
+  left: 20.83%;
+  right: 20.83%;
+  top: 43.75%;
+  bottom: 43.75%;
+
+  /* Neutral (Dark)/600 */
+
+  background: #9f9f9f;
+`;
+
+const EmptyList2 = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 2.5rem;
+  letter-spacing: 1.5rem;
+  margin-left: 0.75rem;
+  color: #ececec;
+`;
 
 export default TodoList;

@@ -2,6 +2,7 @@ import { FaSpinner, FaTrash } from 'react-icons/fa';
 import { useCallback, useState, useEffect } from 'react';
 import { deleteTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
+import styled from 'styled-components';
 
 interface TodoItemTypes {
   id: string;
@@ -33,7 +34,7 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
   }, []);
 
   return (
-    <li className="item">
+    <TodoItemContainer>
       <span>{title}</span>
       <div className="item-option">
         {!isLoading ? (
@@ -44,8 +45,40 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
           <FaSpinner className="spinner" />
         )}
       </div>
-    </li>
+    </TodoItemContainer>
   );
 };
+
+const TodoItemContainer = styled.li`
+  /* list-style-type: none;
+  padding: 17px 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 1.2rem;
+  letter-spacing: 1.5px; */
+  /* DropDown/ Item */
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 6px 12px;
+  gap: 10px;
+
+  width: 354px;
+  height: 28px;
+
+  /* Neutral/White */
+
+  background: #ffffff;
+  border-radius: 3px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+`;
 
 export default TodoItem;

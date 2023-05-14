@@ -1,8 +1,10 @@
-import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
+import { ImSpinner8 } from 'react-icons/im';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
+import styled from 'styled-components';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -46,24 +48,94 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   );
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <input
-        className="input-text"
+    <TodoFormContainer onSubmit={handleSubmit}>
+      <SearchIcon />
+      <TodoInput
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
         onChange={e => setInputText(e.target.value)}
         disabled={isLoading}
       />
-      {!isLoading ? (
+      {/* {!isLoading ? (
         <button className="input-submit" type="submit">
           <FaPlusCircle className="btn-plus" />
         </button>
       ) : (
         <FaSpinner className="spinner" />
-      )}
-    </form>
+      )} */}
+      <SpinIcon />
+    </TodoFormContainer>
   );
 };
+
+const TodoFormContainer = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 13px;
+  gap: 8px;
+
+  width: 364px;
+  height: 44px;
+
+  /* Neutral (Light)/White */
+  background: #ffffff;
+
+  /* Neutral (Light)/300 */
+  border: 1px solid #dedede;
+  border-radius: 6px;
+
+  &:hover {
+    border: 3px solid #dedede;
+  }
+`;
+
+const TodoInput = styled.input`
+  width: 310px;
+  height: 20px;
+
+  /* English/Body 2/400 */
+
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.02em;
+
+  /* Neutral (Dark)/Black */
+
+  color: #000000;
+
+  border: none;
+  outline: none;
+`;
+
+const SearchIcon = styled(FaSearch)`
+  width: 14px;
+  height: 14px;
+  color: #7d7d7d;
+`;
+
+const SpinIcon = styled(ImSpinner8)`
+  font-size: 20px;
+  animation: spin 2s linear infinite;
+  display: flex;
+  align-self: center;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
 
 export default InputTodo;
