@@ -10,7 +10,14 @@ const baseInstance = axios.create({
   },
 });
 
-baseInstance.interceptors.response.use(({ data }) => data);
+baseInstance.interceptors.response.use(
+  ({ data }) => data,
+  error => {
+    // 인스턴스에서 에러 처리
+    alert(`Error: ${error.message}`);
+    return Promise.reject(error);
+  }
+);
 
 const apiRequest = {
   get: (url: string, request?: AxiosRequestConfig) => baseInstance.get(url, request),
