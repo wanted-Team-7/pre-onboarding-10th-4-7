@@ -1,6 +1,5 @@
 import { FaSpinner, FaTrash } from "react-icons/fa";
-import { useCallback, useState } from "react";
-
+import { useCallback, useState, useEffect } from "react";
 import { deleteTodo } from "../api/todo";
 
 const TodoItem = ({ id, title, setTodos }) => {
@@ -19,6 +18,12 @@ const TodoItem = ({ id, title, setTodos }) => {
       setIsLoading(false);
     }
   }, [id, setTodos]);
+
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+    };
+  }, []);
 
   return (
     <li className="item">
