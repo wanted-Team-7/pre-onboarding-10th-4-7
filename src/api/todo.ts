@@ -2,31 +2,40 @@ import apiRequest from './index';
 
 const RESOURCE = '/todos';
 
+interface SearchTodoParams {
+  q: string;
+  page?: number;
+  limit?: number;
+}
+
 export const getTodoList = async () => {
-  try {
-    const response = await apiRequest.get(`${RESOURCE}`);
-    return response;
-  } catch (error) {
-    throw new Error('API getTodoList error');
-  }
+  const response = await apiRequest.get(`${RESOURCE}`);
+  console.log(response);
+
+  return response;
 };
 
 export const createTodo = async (data: { title: string }) => {
-  try {
-    const response = await apiRequest.post(`${RESOURCE}`, data);
+  const response = await apiRequest.post(`${RESOURCE}`, data);
+  console.log(response);
 
-    return response;
-  } catch (error) {
-    throw new Error('API createTodo error');
-  }
+  return response;
 };
 
 export const deleteTodo = async (id: string) => {
-  try {
-    const response = await apiRequest.delete(`${RESOURCE}/${id}`);
+  const response = await apiRequest.delete(`${RESOURCE}/${id}`);
 
-    return response;
-  } catch (error) {
-    throw new Error('API deleteTodo error');
-  }
+  return response;
+};
+
+export const searchTodo = async ({ q, page = 1, limit = 10 }: SearchTodoParams) => {
+  const response = await apiRequest.get('/search', {
+    params: {
+      q,
+      page,
+      limit,
+    },
+  });
+
+  return response;
 };
