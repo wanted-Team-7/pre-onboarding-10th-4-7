@@ -32,6 +32,14 @@ const DropdownBox = styled.div`
   border: 1px solid #dedede;
   border-radius: 5px;
   box-shadow: 0px 0px 1px rgba(50, 50, 50, 0.05), 0px 2px 4px rgba(50, 50, 50, 0.1);
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.48);
+  }
 `;
 
 const DropdownList = styled.ul``;
