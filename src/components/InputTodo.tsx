@@ -17,30 +17,36 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     setFocus();
   }, [setFocus]);
 
+  const trimInputText = (inputText: string) => {
+    const trimmedText = inputText.trim();
+
+    if (!trimmedText) {
+      return alert('Please write something');
+    } else return trimmedText;
+  };
+
+  const addTodo = async (todo: string) => {
+    const newItem = { title: todo };
+    const { data } = await createTodo(newItem);
+
+    if (data) {
+      return setTodos(prev => [...prev, data]);
+    }
+  };
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
+      e.preventDefault();
+      setIsLoading(true);
 
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert('Please write something');
-        }
+      const trimmedText = trimInputText(inputText);
 
-        const newItem = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos(prev => [...prev, data]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert('Something went wrong.');
-      } finally {
-        setInputText('');
-        setIsLoading(false);
+      if (trimmedText) {
+        await addTodo(trimmedText);
       }
+
+      setInputText('');
+      setIsLoading(false);
     },
     [inputText, setTodos]
   );
