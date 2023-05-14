@@ -12,18 +12,15 @@ interface TodoItemTypes {
 const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRemoveTodo = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      await deleteTodo(id);
+  const removeTodo = async () => {
+    await deleteTodo(id);
+    setTodos(prev => prev.filter((item: TodoTypes) => item.id !== id));
+  };
 
-      setTodos(prev => prev.filter((item: TodoTypes) => item.id !== id));
-    } catch (error) {
-      console.error(error);
-      alert('Something went wrong.');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleRemoveTodo = useCallback(async () => {
+    setIsLoading(true);
+    await removeTodo();
+    setIsLoading(false);
   }, [id, setTodos]);
 
   useEffect(() => {
