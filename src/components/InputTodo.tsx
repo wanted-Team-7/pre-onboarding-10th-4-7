@@ -5,6 +5,8 @@ import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import styled from 'styled-components';
 import Spinner from './common/Spinner';
+import useDebounce from './../hooks/useDebounce';
+import RecommendList from './RecommendList';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -13,11 +15,15 @@ interface InputTodoType {
 const InputTodo = ({ setTodos }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisibleRecommendList, setIsVisibleRecommendList] = useState(false);
+
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
+
+  const searchTerm = useDebounce(inputText, 500);
 
   const trimInputText = (inputText: string) => {
     const trimmedText = inputText.trim();
@@ -54,22 +60,28 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   );
 
   return (
-    <S.FormContainer onSubmit={handleSubmit}>
-      <S.InputText
-        placeholder="Add new todo..."
-        ref={ref}
-        value={inputText}
-        onChange={e => setInputText(e.target.value)}
-        disabled={isLoading}
-      />
-      {!isLoading ? (
-        <S.InputSubmit type="submit">
-          <FaPlusCircle />
-        </S.InputSubmit>
-      ) : (
-        <Spinner />
-      )}
-    </S.FormContainer>
+    <>
+      <S.FormContainer onSubmit={handleSubmit}>
+        <S.InputText
+          placeholder="Add new todo..."
+          ref={ref}
+          value={inputText}
+          onChange={e => {
+            setInputText(e.target.value);
+            setIsVisibleRecommendList(true);
+          }}
+          disabled={isLoading}
+        />
+        {!isLoading ? (
+          <S.InputSubmit type="submit">
+            <FaPlusCircle />
+          </S.InputSubmit>
+        ) : (
+          <Spinner />
+        )}
+      </S.FormContainer>
+      {isVisibleRecommendList && <RecommendList searchTerm={searchTerm} />}
+    </>
   );
 };
 
