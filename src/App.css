@@ -27,6 +27,7 @@ body {
 .inner {
   width: 100%;
   padding: 8rem 10px 4rem;
+  position: relative;
 }
 
 .btn-plus {

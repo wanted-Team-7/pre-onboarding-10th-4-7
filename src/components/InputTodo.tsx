@@ -2,21 +2,22 @@ import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
-import useFocus from '../hooks/useFocus';
 import styled from 'styled-components';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+  inputRef: React.RefObject<HTMLInputElement>;
+  setInputFocus: () => void;
+  handleInputClick: () => void;
 }
 
-const InputTodo = ({ setTodos }: InputTodoType) => {
+const InputTodo = ({ setTodos, inputRef, setInputFocus, handleInputClick }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { ref, setFocus } = useFocus();
 
   useEffect(() => {
-    setFocus();
-  }, [setFocus]);
+    setInputFocus();
+  }, [setInputFocus]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -50,9 +51,10 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     <FormContainer onSubmit={handleSubmit}>
       <InputText
         placeholder="Add new todo..."
-        ref={ref}
+        ref={inputRef}
         value={inputText}
         onChange={e => setInputText(e.target.value)}
+        onClick={handleInputClick}
         disabled={isLoading}
       />
       {!isLoading ? (
