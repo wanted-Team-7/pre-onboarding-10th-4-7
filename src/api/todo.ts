@@ -1,13 +1,13 @@
-import apiRequest from "./index";
+import apiRequest from './index';
 
-const RESOURCE = "/todos";
+const RESOURCE = '/todos';
 
 export const getTodoList = async () => {
   try {
     const response = await apiRequest.get(`${RESOURCE}`);
     return response;
   } catch (error) {
-    throw new Error("API getTodoList error");
+    throw new Error('API getTodoList error');
   }
 };
 
@@ -17,7 +17,7 @@ export const createTodo = async (data: { title: string }) => {
 
     return response;
   } catch (error) {
-    throw new Error("API createTodo error");
+    throw new Error('API createTodo error');
   }
 };
 
@@ -27,6 +27,6 @@ export const deleteTodo = async (id: string) => {
 
     return response;
   } catch (error) {
-    throw new Error("API deleteTodo error");
+    throw new Error('API deleteTodo error');
   }
 };

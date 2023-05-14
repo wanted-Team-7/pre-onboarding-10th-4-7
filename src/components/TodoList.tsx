@@ -1,5 +1,5 @@
-import { TodoTypes } from "../types/todo";
-import TodoItem from "./TodoItem";
+import { TodoTypes } from '../types/todo';
+import TodoItem from './TodoItem';
 
 interface TodoListTypes {
   todos: TodoTypes[];
@@ -17,4 +17,5 @@ const TodoList = ({ todos, setTodos }: TodoListTypes) => {
     <div className="empty-list">...</div>
   );
 };
+
 export default TodoList;
