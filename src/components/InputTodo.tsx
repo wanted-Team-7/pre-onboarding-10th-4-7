@@ -1,7 +1,7 @@
 import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
-import { createTodo } from '../api/todo';
+import { createTodo, searchTodoList } from '../api/todo';
 import styled from 'styled-components';
 
 interface InputTodoType {
@@ -9,11 +9,27 @@ interface InputTodoType {
   inputRef: React.RefObject<HTMLInputElement>;
   setInputFocus: () => void;
   handleInputClick: () => void;
+  setSearchListData: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const InputTodo = ({ setTodos, inputRef, setInputFocus, handleInputClick }: InputTodoType) => {
+const InputTodo = ({
+  setTodos,
+  inputRef,
+  setInputFocus,
+  handleInputClick,
+  setSearchListData,
+}: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      if (inputText.trim() !== '') {
+        const { data } = await searchTodoList({ q: inputText, page: 1, limit: 10 });
+        setSearchListData(data.result);
+      }
+    })();
+  }, [inputText, setSearchListData]);
 
   useEffect(() => {
     setInputFocus();

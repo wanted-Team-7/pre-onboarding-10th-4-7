@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getTodoList } from '../api/todo';
+import { getTodoList, searchTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import useFocus from '../hooks/useFocus';
 import Header from '../components/Header';
@@ -7,7 +7,18 @@ import InputTodo from '../components/InputTodo';
 import TodoList from '../components/TodoList';
 import DropDown from '../components/DropDown';
 
+interface MainTypes {
+  q: string;
+  page: number;
+  limit: number;
+  result: string[];
+  qty: number;
+  total: number;
+}
+
 const Main = () => {
+  const total = useState<number>(0);
+  const [searchListData, setSearchListData] = useState<string[]>([]);
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { ref: inputRef, setFocus: setInputFocus } = useFocus();
@@ -50,8 +61,9 @@ const Main = () => {
           inputRef={inputRef}
           setInputFocus={setInputFocus}
           handleInputClick={handleInputClick}
+          setSearchListData={setSearchListData}
         />
-        {isDropdownOpen && <DropDown dropdownRef={dropdownRef} />}
+        {isDropdownOpen && <DropDown dropdownRef={dropdownRef} searchListData={searchListData} />}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </div>
     </div>

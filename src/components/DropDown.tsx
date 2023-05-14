@@ -3,15 +3,15 @@ import styled from 'styled-components';
 
 interface DropdownType {
   dropdownRef: React.RefObject<HTMLDivElement>;
+  searchListData: string[];
 }
 
-function DropDown({ dropdownRef }: DropdownType) {
+function DropDown({ dropdownRef, searchListData }: DropdownType) {
   return (
     <DropdownBox ref={dropdownRef}>
       <DropdownList>
-        <DropdownItem>dwd</DropdownItem>
-        <DropdownItem>dwd</DropdownItem>
-        <DropdownItem>dwd</DropdownItem>
+        {searchListData.length >= 0 &&
+          searchListData.map((item, idx) => <DropdownItem key={idx}>{item}</DropdownItem>)}
       </DropdownList>
     </DropdownBox>
   );
