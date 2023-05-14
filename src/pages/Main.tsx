@@ -9,20 +9,22 @@ import TodoDropDown from '../components/TodoDropDown';
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+  const [searchResults, setSearchResults] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { data } = await getTodoList();
-  //     setTodoListData(data || []);
-  //   })();
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const { data } = await getTodoList();
+      console.log('get Todo list: ', data);
+      setTodoListData(data || []);
+    })();
+  }, []);
 
   return (
     <TodoContainer>
       <TodoInner>
         <Header />
-        <InputTodo setTodos={setTodoListData} />
-        <TodoDropDown />
+        <InputTodo setTodos={setTodoListData} setSearchResults={setSearchResults} />
+        <TodoDropDown searchResults={searchResults} />
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </TodoInner>
     </TodoContainer>

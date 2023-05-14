@@ -7,11 +7,12 @@ import styled from 'styled-components';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+  setSearchResults: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const DEBOUNCE_TIMEOUT_SEC = 0.4;
 
-const InputTodo = ({ setTodos }: InputTodoType) => {
+const InputTodo = ({ setTodos, setSearchResults }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
@@ -53,14 +54,15 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
 
     const debounceTimeout = setTimeout(async () => {
       try {
-        const data = await getSearchTodos(inputText, 1, 10);
-        console.log('search data: ', data);
+        const data = await getSearchTodos(inputText, 1, 20);
+        setSearchResults(data.result);
+        console.log('search data: ', data.result);
       } catch (error) {
         console.error('Fetch error! ', error);
       }
     }, DEBOUNCE_TIMEOUT_SEC * 1000);
     return () => clearTimeout(debounceTimeout);
-  }, [inputText]);
+  }, [inputText, setSearchResults]);
 
   return (
     <TodoFormContainer onSubmit={handleSubmit}>

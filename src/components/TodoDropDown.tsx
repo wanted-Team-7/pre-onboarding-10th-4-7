@@ -2,17 +2,16 @@ import styled from 'styled-components';
 import TodoSearchResult from './TodoSearchResult';
 import { ImSpinner8 } from 'react-icons/im';
 
-function TodoDropDown() {
+interface ITodoDropDown {
+  searchResults: string[];
+}
+
+function TodoDropDown({ searchResults }: ITodoDropDown) {
   return (
     <DropDownItemContainer>
-      <TodoSearchResult />
-      <TodoSearchResult />
-      <TodoSearchResult />
-      <TodoSearchResult />
-      <TodoSearchResult />
-      <TodoSearchResult />
-      <TodoSearchResult />
-      <TodoSearchResult />
+      {searchResults?.map((searchResult, idx) => (
+        <TodoSearchResult key={idx} value={searchResult} />
+      ))}
       <DotsIcon>...</DotsIcon>
       <SpinIcon>
         <ImSpinner8 />
