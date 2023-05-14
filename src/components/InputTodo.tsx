@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
+import styled from 'styled-components';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -46,9 +47,8 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   );
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <input
-        className="input-text"
+    <FormContainer onSubmit={handleSubmit}>
+      <InputText
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
@@ -56,14 +56,53 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         disabled={isLoading}
       />
       {!isLoading ? (
-        <button className="input-submit" type="submit">
+        <InputSubmit type="submit">
           <FaPlusCircle className="btn-plus" />
-        </button>
+        </InputSubmit>
       ) : (
         <FaSpinner className="spinner" />
       )}
-    </form>
+    </FormContainer>
   );
 };
 
 export default InputTodo;
+
+const FormContainer = styled.form`
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  border-radius: 6px;
+  border: 1px solid #dedede;
+  justify-content: space-evenly;
+  &:hover {
+    border: 3px solid #dedede;
+    margin-top: -2px;
+    margin-bottom: 18px;
+  }
+`;
+
+const InputText = styled.input`
+  font-size: 1rem;
+  font-weight: 400;
+  width: 85%;
+  padding-right: 5px;
+  padding-left: 10px;
+  height: 45px;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const InputSubmit = styled.button`
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 45px;
+  outline: none;
+  border: none;
+`;
