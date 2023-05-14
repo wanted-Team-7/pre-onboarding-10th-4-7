@@ -23,7 +23,6 @@ const DropdownBox = styled.div`
   width: 580px;
   min-height: 28px;
   max-height: 164px;
-  height: 100%;
   position: absolute;
   z-index: 100;
   padding: 9px 5px 0px 5px;
