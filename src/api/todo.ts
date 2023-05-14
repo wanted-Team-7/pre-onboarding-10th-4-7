@@ -30,3 +30,12 @@ export const deleteTodo = async (id: string) => {
     throw new Error('API deleteTodo error');
   }
 };
+
+export const getRecommendList = async (searchWord: string) => {
+  try {
+    const response = await apiRequest.get(`search?q=${searchWord}&page=${1}&limit=${10}`);
+    return response;
+  } catch (error) {
+    throw new Error('API getTodoList error');
+  }
+};
