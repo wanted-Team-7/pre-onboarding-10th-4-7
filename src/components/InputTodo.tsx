@@ -1,11 +1,12 @@
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { FiSearch } from 'react-icons/fi';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
+import Dropdown from './dropdown/Dropdown';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -15,6 +16,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const debouncedInputText = useDebounce(inputText, 500);
 
@@ -50,27 +52,45 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     [debouncedInputText, setTodos]
   );
 
+  const handleFocus = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.style.display = 'block';
+    }
+  };
+
+  const handleBlur = () => {
+    if (dropdownRef.current) {
+      dropdownRef.current.style.display = 'none';
+    }
+  };
+
   return (
-    <StFormContainer>
-      <StForm onSubmit={handleSubmit}>
-        <StSearchIconWrapper>
-          <FiSearch />
-        </StSearchIconWrapper>
-        <StInput
-          className="input-text"
-          placeholder="Placeholder"
-          ref={ref}
-          value={inputText}
-          onChange={e => setInputText(e.target.value)}
-          disabled={isLoading}
-        />
-        {isLoading && (
-          <StSpinnerContainer>
-            <AiOutlineLoading3Quarters className="spinner" />
-          </StSpinnerContainer>
-        )}
-      </StForm>
-    </StFormContainer>
+    <>
+      <StFormContainer>
+        <StForm onSubmit={handleSubmit}>
+          <StSearchIconWrapper>
+            <FiSearch />
+          </StSearchIconWrapper>
+          <StInput
+            className="input-text"
+            placeholder="Placeholder"
+            ref={ref}
+            value={inputText}
+            onChange={e => setInputText(e.target.value)}
+            disabled={isLoading}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+
+          {isLoading && (
+            <StSpinnerContainer>
+              <AiOutlineLoading3Quarters className="spinner" />
+            </StSpinnerContainer>
+          )}
+        </StForm>
+      </StFormContainer>
+      <Dropdown ref={dropdownRef} />
+    </>
   );
 };
 
