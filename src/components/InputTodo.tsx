@@ -1,13 +1,15 @@
 import { ImSearch, ImSpinner8 } from 'react-icons/im';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
-import { createTodo } from '../api/todo';
+import { createTodo, getSearchTodos } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import styled from 'styled-components';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
 }
+
+const DEBOUNCE_TIMEOUT_SEC = 0.4;
 
 const InputTodo = ({ setTodos }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
@@ -45,6 +47,20 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     },
     [inputText, setTodos]
   );
+
+  useEffect(() => {
+    if (inputText === '') return;
+
+    const debounceTimeout = setTimeout(async () => {
+      try {
+        const data = await getSearchTodos(inputText, 1, 10);
+        console.log('search data: ', data);
+      } catch (error) {
+        console.error('Fetch error! ', error);
+      }
+    }, DEBOUNCE_TIMEOUT_SEC * 1000);
+    return () => clearTimeout(debounceTimeout);
+  }, [inputText]);
 
   return (
     <TodoFormContainer onSubmit={handleSubmit}>

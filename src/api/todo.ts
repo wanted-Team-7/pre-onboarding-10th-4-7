@@ -1,6 +1,8 @@
 import apiRequest from './index';
 
 const RESOURCE = '/todos';
+const FIRST_PAGE = 1;
+const RESULTS_PER_PAGE = 10;
 
 export const getTodoList = async () => {
   try {
@@ -28,5 +30,25 @@ export const deleteTodo = async (id: string) => {
     return response;
   } catch (error) {
     throw new Error('API deleteTodo error');
+  }
+};
+
+export const getSearchTodos = async (
+  query: string,
+  page = FIRST_PAGE,
+  limit = RESULTS_PER_PAGE
+) => {
+  try {
+    const response = await apiRequest.get(`/search`, {
+      params: {
+        q: query,
+        page,
+        limit,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    throw new Error('API getSearchTodos error');
   }
 };
