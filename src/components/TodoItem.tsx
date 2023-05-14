@@ -1,7 +1,8 @@
-import { FaSpinner, FaTrash } from 'react-icons/fa';
 import { useCallback, useState, useEffect } from 'react';
 import { deleteTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
+import TrashIcon from '../views/Icon/TrashIcon';
+import styled from 'styled-components';
 
 interface TodoItemTypes {
   id: string;
@@ -26,19 +27,29 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
   }, []);
 
   return (
-    <li className="item">
-      <span>{title}</span>
-      <div className="item-option">
-        {!isLoading ? (
-          <button onClick={() => handleRemoveTodo()}>
-            <FaTrash className="btn-trash" />
-          </button>
-        ) : (
-          <FaSpinner className="spinner" />
-        )}
-      </div>
-    </li>
+    <Wrapper>
+      <Title>{title}</Title>
+      <TrashIcon isLoading={isLoading} handleRemoveTodo={handleRemoveTodo} />
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.li`
+  position: relative;
+  list-style-type: none;
+  padding: 17px 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+  letter-spacing: 1.5px;
+  :hover {
+    opacity: 0.85;
+    background-color: #eaeaea;
+  }
+`;
+
+const Title = styled.span`
+  font-size: 18px;
+  white-space: pre-wrap;
+  word-break: break-all;
+`;
 
 export default TodoItem;
