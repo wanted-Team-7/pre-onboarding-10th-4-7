@@ -36,7 +36,7 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
       <span>{title}</span>
       <S.ItemOption>
         {!isRemoveLoading ? (
-          <button onClick={() => handleRemoveTodo()}>
+          <button onClick={handleRemoveTodo}>
             <FaTrash className="btn-trash" />
           </button>
         ) : (
