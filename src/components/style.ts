@@ -39,27 +39,41 @@ const TodoElement = styled.li`
 `;
 
 const Li = styled.li`
+  /* padding: 6px 12px; */
+  color: #000000;
   &:hover {
-    background-color: aqua;
+    background-color: #f2f2f2;
     cursor: default;
   }
 `;
 
 const DropDownContainer = styled.div`
+  top: 370px;
+  /* padding: 10px; */
   position: absolute;
-  width: 100%;
+  width: 97%;
   height: 200px;
   overflow-y: scroll;
-  background-color: aquamarine;
+
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.38);
+  color: #dedede;
+  ul {
+    list-style: none;
+  }
 `;
 
 const InputForm = styled.form`
   width: 100%;
   margin-bottom: 20px;
   display: flex;
-  border-radius: calc(0.5 * 100px);
-  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.38);
   justify-content: space-evenly;
+  align-items: center;
+  border: 1px solid #dedede;
+  border-radius: 6px;
+
+  &:hover {
+    border: 3px solid #dedede;
+  }
 `;
 
 const Input = styled.input`
@@ -91,7 +105,14 @@ const spin = keyframes`
   }
   `;
 
+const SpinnerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
 const Spinner = styled(FaSpinner)`
+  color: #000000;
   font-size: 20px;
   animation: ${spin} 2s linear infinite;
   display: flex;
@@ -118,4 +139,5 @@ export const S = {
   Trash,
   Spinner,
   Empty,
+  SpinnerContainer,
 };

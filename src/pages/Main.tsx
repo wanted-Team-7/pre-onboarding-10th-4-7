@@ -47,7 +47,6 @@ const Main = () => {
             inputText={inputText}
             setTodos={setTodoListData}
             setInputText={setInputText}
-            setDropdownDisplay={setDropdownDisplay}
             setIsLoading={setIsLoading}
           />
         ) : null}
