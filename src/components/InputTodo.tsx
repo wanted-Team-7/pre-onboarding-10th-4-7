@@ -31,7 +31,7 @@ const InputTodo = ({
 }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const { ref, setFocus } = useFocus();
-  const searchDebounce = useDebounce();
+  const searchApiDebounce = useDebounce();
 
   useEffect(() => {
     setFocus();
@@ -85,7 +85,7 @@ const InputTodo = ({
     const { value } = e.target;
     setInputText(value);
     setIsLoading(true);
-    searchDebounce(() => fetchSearchResults(value));
+    searchApiDebounce(() => fetchSearchResults(value));
   };
 
   useEffect(() => {
