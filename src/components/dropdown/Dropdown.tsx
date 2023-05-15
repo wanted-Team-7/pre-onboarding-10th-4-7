@@ -1,39 +1,71 @@
 import { Ref, forwardRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { useRef, useCallback } from 'react';
 
 const Dropdown = forwardRef<
-  HTMLUListElement,
-  { data: string[]; debouncedInputText: string; isEnd: boolean }
->(({ data, debouncedInputText, isEnd }, ref: Ref<HTMLUListElement> | undefined) => {
-  // console.log('Dropdown rendering');
+  HTMLDivElement,
+  {
+    data: string[];
+    debouncedInputText: string;
+    getScrollData: () => Promise<void>;
+    isScrollDataLoading: boolean;
+  }
+>(
+  (
+    { data, debouncedInputText, getScrollData, isScrollDataLoading },
+    ref: Ref<HTMLDivElement> | undefined
+  ) => {
+    const observer = useRef<IntersectionObserver | null>(null);
 
-  return (
-    <StDropdownUl ref={ref}>
-      {data?.map((item, index) => {
-        const searchWordArray = item.split(debouncedInputText);
-        return (
-          <StDropdownLi key={index}>
-            {searchWordArray.map((item, index) => (
-              <span key={index}>
-                {item}
-                {index !== searchWordArray.length - 1 && (
-                  <StSearchText>{debouncedInputText}</StSearchText>
-                )}
-              </span>
-            ))}
-          </StDropdownLi>
-        );
-      })}
-      {isEnd && (
-        <StSpinnerContainer>
-          <AiOutlineLoading3Quarters className="spinner" />
-        </StSpinnerContainer>
-      )}
-      {data.length === 0 && <StTextNoResult>No Result</StTextNoResult>}
-    </StDropdownUl>
-  );
-});
+    const ElementRef: (node: HTMLDivElement | null) => void = useCallback(
+      node => {
+        if (observer.current) observer.current.disconnect(); // 최근 observer를 갖기위해 이전 observer disconnect 해주기
+        observer.current = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            getScrollData();
+          }
+        });
+
+        if (node) observer.current.observe(node); // 노드가 있으면 observer.current를 observe 해준다.
+      },
+      [getScrollData]
+    );
+
+    return (
+      <StDropdownContainer ref={ref}>
+        <StDropdownUl>
+          {data?.map((item, index) => {
+            const searchWordArray = item.split(debouncedInputText);
+            return (
+              <StDropdownLi key={index}>
+                {searchWordArray.map((item, index) => (
+                  <span key={index}>
+                    {item}
+                    {index !== searchWordArray.length - 1 && (
+                      <StSearchText>{debouncedInputText}</StSearchText>
+                    )}
+                  </span>
+                ))}
+              </StDropdownLi>
+            );
+          })}
+          {isScrollDataLoading ? (
+            <StSpinnerContainer>
+              <AiOutlineLoading3Quarters className="spinner" />
+            </StSpinnerContainer>
+          ) : (
+            <StScrollObserveDiv ref={ElementRef} />
+          )}
+
+          {data.length === 0 && <StTextNoResult>No Result</StTextNoResult>}
+        </StDropdownUl>
+      </StDropdownContainer>
+    );
+  }
+);
+
+const StDropdownContainer = styled.div``;
 
 const StDropdownUl = styled.ul`
   border-radius: 6px;
@@ -42,8 +74,8 @@ const StDropdownUl = styled.ul`
   overflow: auto;
 
   width: 580px;
-  min-height: 100px;
-  height: 200px;
+  min-height: 50px;
+  max-height: 200px;
   top: 46%;
 
   margin-top: 8px;
@@ -83,5 +115,7 @@ const StSpinnerContainer = styled.div`
     animation: spin 1s infinite linear;
   }
 `;
+
+const StScrollObserveDiv = styled.div``;
 
 export default Dropdown;

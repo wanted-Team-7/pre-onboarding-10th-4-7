@@ -8,7 +8,6 @@ import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
 import Dropdown from './dropdown/Dropdown';
 import { getSearchList } from '../api/todo';
-import useInfiniteScroll from '../hooks/useInfiniteScroll';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -19,8 +18,9 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<string[]>([]);
   const [page, setPage] = useState(1);
+  const [isScrollDataLoading, setIsScrollDataLoading] = useState(false);
   const { ref, setFocus } = useFocus();
-  const dropdownRef = useRef<HTMLUListElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const debouncedInputText = useDebounce(inputText, 500);
 
@@ -68,21 +68,32 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     }
   };
 
-  const getScrollData = async () => {
+  const getTypingData = async () => {
     try {
       const res = await getSearchList(debouncedInputText, page);
-      const scrollServerData = res.data.result;
-      setData([...data, ...scrollServerData]);
-      setPage(pre => pre + 1);
+      const serverData = res.data.result;
+      setData(serverData);
     } catch (error) {
       return console.log(error);
     }
   };
 
-  const { isEnd } = useInfiniteScroll({ onScrollEnd: getScrollData });
+  const getScrollData = async () => {
+    try {
+      if (data.length === 0) return;
+      setIsScrollDataLoading(true);
+      setPage(pre => pre + 1);
+      const res = await getSearchList(debouncedInputText, page);
+      const scrollServerData = res.data.result;
+      setData([...data, ...scrollServerData]);
+      setIsScrollDataLoading(false);
+    } catch (error) {
+      return console.log(error);
+    }
+  };
 
   useEffect(() => {
-    getScrollData();
+    getTypingData();
   }, [debouncedInputText]);
 
   return (
@@ -114,7 +125,8 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         ref={dropdownRef}
         data={data}
         debouncedInputText={debouncedInputText}
-        isEnd={isEnd}
+        getScrollData={getScrollData}
+        isScrollDataLoading={isScrollDataLoading}
       />
     </>
   );
