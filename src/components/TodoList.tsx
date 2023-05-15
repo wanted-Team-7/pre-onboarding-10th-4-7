@@ -28,5 +28,5 @@ const EmptyList = styled.div`
   font-size: 2.5rem;
   letter-spacing: 1.5rem;
   margin-left: 0.75rem;
-  color: #ececec;
+  color: ${({ theme }) => theme.color.COLOR_GRAY_3};
 `;

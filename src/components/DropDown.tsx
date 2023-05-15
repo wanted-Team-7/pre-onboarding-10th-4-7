@@ -77,8 +77,8 @@ const DropdownBox = styled.ul`
   z-index: 100;
   padding: 9px 5px 0px 5px;
   box-sizing: border-box;
-  background-color: #fff;
-  border: 1px solid #dedede;
+  background-color: ${({ theme }) => theme.color.COLOR_WHITE};
+  border: 1px solid ${({ theme }) => theme.color.COLOR_GRAY_4};
   border-radius: 5px;
   box-shadow: 0px 0px 1px rgba(50, 50, 50, 0.05), 0px 2px 4px rgba(50, 50, 50, 0.1);
   overflow-y: scroll;
@@ -90,7 +90,7 @@ const DropdownBox = styled.ul`
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.48);
     background-clip: padding-box;
-    border: 2px solid transparent;
+    border: 2px solid ${({ theme }) => theme.color.COLOR_NONE};
   }
 `;
 
@@ -101,10 +101,10 @@ const DropdownItem = styled.li`
   padding: 6px 12px;
   border-radius: 3px;
   :hover {
-    background: #f2f2f2;
+    background: ${({ theme }) => theme.color.COLOR_GRAY_1};
   }
   :active {
-    background: #d5f4f1;
+    background: ${({ theme }) => theme.color.COLOR_MINT_1};
   }
 `;
 
@@ -127,5 +127,5 @@ const Text = styled.p`
 `;
 
 const Highlight = styled.span`
-  color: #2bc9ba;
+  color: ${({ theme }) => theme.color.COLOR_MINT_2};
 `;

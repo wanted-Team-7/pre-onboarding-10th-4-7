@@ -55,19 +55,19 @@ export default TodoItem;
 const Item = styled.li`
   list-style-type: none;
   padding: 17px 1.5rem;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid ${({ theme }) => theme.color.COLOR_GRAY_2};
   font-size: 1.2rem;
   letter-spacing: 1.5px;
   &:hover {
     opacity: 0.85;
-    background-color: #eaeaea;
+    background-color: ${({ theme }) => theme.color.COLOR_GRAY_2};
   }
 `;
 
 const ItemOption = styled.div`
   float: right;
   button {
-    background-color: transparent;
+    background-color: ${({ theme }) => theme.color.COLOR_NONE};
     border: none;
     cursor: pointer;
   }

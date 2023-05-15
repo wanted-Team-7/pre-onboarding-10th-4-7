@@ -20,6 +20,6 @@ const LogoText = styled.h1`
   font-weight: 600;
   margin-bottom: 2rem;
   line-height: 1em;
-  color: #ececec;
+  color: ${({ theme }) => theme.color.COLOR_GRAY_3};
   text-align: center;
 `;

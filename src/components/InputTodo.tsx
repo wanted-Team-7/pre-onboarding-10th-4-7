@@ -92,10 +92,10 @@ const FormContainer = styled.form`
   margin-bottom: 20px;
   display: flex;
   border-radius: 6px;
-  border: 1px solid #dedede;
+  border: 1px solid ${({ theme }) => theme.color.COLOR_GRAY_4};
   justify-content: space-evenly;
   &:hover {
-    border: 3px solid #dedede;
+    border: 3px solid ${({ theme }) => theme.color.COLOR_GRAY_4};
     margin-top: -2px;
     margin-bottom: 18px;
   }
@@ -110,14 +110,14 @@ const InputText = styled.input`
   height: 45px;
   outline: none;
   border: none;
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.color.COLOR_NONE};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
 const InputSubmit = styled.button`
-  background: transparent;
+  background: ${({ theme }) => theme.color.COLOR_NONE};
   cursor: pointer;
   display: flex;
   align-items: center;
