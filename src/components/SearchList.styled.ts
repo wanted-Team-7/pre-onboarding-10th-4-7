@@ -22,3 +22,12 @@ export const SearchListBox = styled.ul`
     margin-top: 12px;
   }
 `;
+
+export const SearchItem = styled.li<{ isFocus: boolean }>`
+  padding: 6px 12px;
+  background-color: ${props => (props.isFocus ? '#F2F2F2' : '')};
+  border-radius: 3px;
+  > span {
+    color: #2bc9ba;
+  }
+`;
