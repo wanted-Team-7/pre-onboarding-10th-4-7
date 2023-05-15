@@ -3,19 +3,53 @@ import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
+import { getSearchList } from '../api/todo';
+import { useDebounce } from '../hooks/useDebounce';
+import { LIMIT } from '../constant';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+  setSearchList: React.Dispatch<React.SetStateAction<string[]>>;
+  searchList: string[] | undefined;
+  currentPage: number;
+  inputText: string;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const InputTodo = ({ setTodos }: InputTodoType) => {
-  const [inputText, setInputText] = useState('');
+const InputTodo = ({
+  setTodos,
+  setSearchList,
+  searchList,
+  currentPage,
+  inputText,
+  setInputText,
+  setCurrentPage,
+}: InputTodoType) => {
   const [isLoading, setIsLoading] = useState(false);
+  const debounceValue = useDebounce(inputText, 500);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
+
+  useEffect(() => {
+    if (currentPage !== 1) {
+      console.log('new Search');
+      setSearchList([]);
+      setCurrentPage(1);
+    } else {
+      (async () => {
+        const result = await getSearchList(debounceValue, currentPage, LIMIT);
+        setSearchList(result.result);
+      })();
+    }
+  }, [debounceValue]);
+
+  const onChangeInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -52,7 +86,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={e => setInputText(e.target.value)}
+        onChange={onChangeInputValue}
         disabled={isLoading}
       />
       {!isLoading ? (
