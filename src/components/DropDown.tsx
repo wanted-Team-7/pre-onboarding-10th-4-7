@@ -3,6 +3,7 @@ import { S } from './style';
 import { PER_PAGE_LIMIT_COUNT } from '../util/constant';
 import { getSearchList, createTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
 
 interface DropDownProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,8 +35,8 @@ const DropDown = ({
   const preventRef = useRef(true);
   const flag = useRef(true);
 
+  // IntersectionObserver 옵저버 생성
   useEffect(() => {
-    //옵저버 생성
     const observer = new IntersectionObserver(obsHandler, { threshold: 1 });
     if (target.current) observer.observe(target.current);
     return () => {
@@ -44,13 +45,13 @@ const DropDown = ({
   }, []);
 
   // page 증가에 따른 새로운 data 불러오기
+  // 문제점. getPost() api 호출을 이곳에서 다 해버리니까 DropDown에서 여러 가지 일을 하는 느낌.
   useEffect(() => {
     getPost();
   }, [currentPage]);
 
+  //옵저버 콜백함수
   const obsHandler = (entries: any) => {
-    //옵저버 콜백함수
-
     if (flag.current) {
       flag.current = false;
       return;
@@ -102,21 +103,32 @@ const DropDown = ({
 
   return (
     <S.DropDownContainer>
-      <ul>
-        {searchList?.map((e: string, idx: number) => (
-          <S.Li key={idx} onClick={handleAddTodoElement}>
-            {e.split(inputText)[0]}
-            <span style={{ color: '#2BC9BA' }}>{inputText}</span>
-            {e.split(inputText)[1]}
-          </S.Li>
-        ))}
-        {isLoading && !loaderFlag.current ? (
-          <S.SpinnerContainer style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <S.Spinner className="spinner" />
-          </S.SpinnerContainer>
-        ) : null}
-        <li ref={target}></li>
-      </ul>
+      {searchList?.length === 0 ? (
+        <span>검색어 없음</span>
+      ) : (
+        <ul>
+          {searchList?.map((e: string, idx: number) => (
+            <S.Li key={idx} onClick={handleAddTodoElement}>
+              {e.split(inputText)[0]}
+              <span style={{ color: '#2BC9BA' }}>{inputText}</span>
+              {e.split(inputText)[1]}
+            </S.Li>
+          ))}
+          {isLoading && !loaderFlag.current ? (
+            <S.SpinnerContainer
+              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+            >
+              <S.Spinner />
+            </S.SpinnerContainer>
+          ) : (
+            <li style={{ display: 'flex', justifyContent: 'center' }}>
+              <BiDotsHorizontalRounded style={{ color: 'black' }} />
+            </li>
+          )}
+
+          <li ref={target} style={{ display: 'flex', justifyContent: 'center' }}></li>
+        </ul>
+      )}
     </S.DropDownContainer>
   );
 };
