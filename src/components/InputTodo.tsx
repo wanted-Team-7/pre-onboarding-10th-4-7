@@ -10,6 +10,7 @@ interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   getSearchKeywordHandler: (input: string) => Promise<void>;
+  keydownHandler: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const InputTodo = ({
@@ -17,6 +18,7 @@ const InputTodo = ({
   inputText,
   setInputText,
   getSearchKeywordHandler,
+  keydownHandler,
 }: InputTodoType) => {
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
@@ -72,6 +74,7 @@ const InputTodo = ({
         ref={ref}
         value={inputText}
         onChange={e => setInputText(e.target.value)}
+        onKeyDown={keydownHandler}
         disabled={isLoading}
       />
       {!isLoading ? (
