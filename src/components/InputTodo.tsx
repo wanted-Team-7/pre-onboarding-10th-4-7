@@ -1,9 +1,9 @@
-import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
+import { FaPlusCircle, FaSpinner, FaSistrix } from 'react-icons/fa';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
-
+import { SearchIcon } from './InputTodo.styled';
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
 }
@@ -47,6 +47,9 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
 
   return (
     <form className="form-container" onSubmit={handleSubmit}>
+      <SearchIcon>
+        <FaSistrix />
+      </SearchIcon>
       <input
         className="input-text"
         placeholder="Add new todo..."
