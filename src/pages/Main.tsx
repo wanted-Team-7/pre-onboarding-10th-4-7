@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import Header from '../components/Header';
@@ -14,6 +14,7 @@ const Main = () => {
   const [inputText, setInputText] = useState<string>('');
   const [dropdownDisplay, setDropdownDisplay] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const loaderFlag = useRef(true);
 
   useEffect(() => {
     (async () => {
@@ -27,16 +28,14 @@ const Main = () => {
       <S.Inner>
         <Header />
         <InputTodo
-          setTodos={setTodoListData}
           searchList={searchList}
           setSearchList={setSearchList}
-          currentPage={currentPage}
           inputText={inputText}
           setInputText={setInputText}
           setCurrentPage={setCurrentPage}
           setDropdownDisplay={setDropdownDisplay}
           isLoading={isLoading}
-          setIsLoading={setIsLoading}
+          loaderFlag={loaderFlag}
         />
         {dropdownDisplay ? (
           <DropDown
@@ -48,6 +47,8 @@ const Main = () => {
             setTodos={setTodoListData}
             setInputText={setInputText}
             setIsLoading={setIsLoading}
+            isLoading={isLoading}
+            loaderFlag={loaderFlag}
           />
         ) : null}
         <TodoList todos={todoListData} setTodos={setTodoListData} />

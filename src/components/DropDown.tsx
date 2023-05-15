@@ -1,18 +1,20 @@
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { S } from './style';
-import { LIMIT } from '../constant';
+import { PER_PAGE_LIMIT_COUNT } from '../util/constant';
 import { getSearchList, createTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 
 interface DropDownProps {
-  searchList: string[] | undefined;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchList: React.Dispatch<React.SetStateAction<string[]>>;
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
-  currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  searchList: string[] | undefined;
+  isLoading: boolean;
+  currentPage: number;
   inputText: string;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loaderFlag: React.MutableRefObject<boolean>;
 }
 
 const DropDown = ({
@@ -24,12 +26,13 @@ const DropDown = ({
   setTodos,
   setInputText,
   setIsLoading,
+  isLoading,
+  loaderFlag,
 }: DropDownProps) => {
   const target = useRef<HTMLLIElement>(null);
   const endRef = useRef(false);
   const preventRef = useRef(true);
   const flag = useRef(true);
-  const [load, setLoad] = useState<boolean>(false);
 
   useEffect(() => {
     //옵저버 생성
@@ -43,29 +46,28 @@ const DropDown = ({
   // page 증가에 따른 새로운 data 불러오기
   useEffect(() => {
     getPost();
-    console.log('get list', endRef.current, currentPage);
   }, [currentPage]);
 
   const obsHandler = (entries: any) => {
     //옵저버 콜백함수
-    const test = entries[0];
+
     if (flag.current) {
       flag.current = false;
       return;
     }
 
-    if (test.isIntersecting && endRef.current === false && preventRef.current === true) {
+    if (entries[0].isIntersecting && endRef.current === false && preventRef.current === true) {
       preventRef.current = false; //옵저버 중복 실행 방지
       setCurrentPage(prev => prev + 1); //페이지 값 증가
     }
   };
 
-  const onClickElement = async (e: any) => {
+  // SearchList element click event
+  const handleAddTodoElement = async (e: React.MouseEvent<HTMLLIElement>) => {
     try {
       setIsLoading(true);
       setInputText('');
-      const newItem = { title: e.target.innerText };
-
+      const newItem = { title: e.currentTarget.textContent! };
       const { data } = await createTodo(newItem);
       if (data) {
         setTodos(prev => [...prev, data]);
@@ -77,14 +79,12 @@ const DropDown = ({
     }
   };
 
+  // get search list api function
   const getPost = useCallback(async () => {
-    setLoad(true);
     try {
-      const res = await getSearchList(inputText, currentPage, LIMIT);
-      console.log(searchList?.length, currentPage);
-
+      setIsLoading(true);
+      const res = await getSearchList(inputText, currentPage, PER_PAGE_LIMIT_COUNT);
       setSearchList(prev => [...prev, ...res.result]);
-
       if (res.total === searchList?.length && searchList?.length !== 0) {
         // 모든 데이터를 받아왔을 경우, 무한 스크롤 종료 flag 설정
         endRef.current = true;
@@ -95,7 +95,8 @@ const DropDown = ({
     } catch (error) {
       console.log(error);
     } finally {
-      setLoad(false);
+      setIsLoading(false);
+      loaderFlag.current = false;
     }
   }, [currentPage]);
 
@@ -103,18 +104,18 @@ const DropDown = ({
     <S.DropDownContainer>
       <ul>
         {searchList?.map((e: string, idx: number) => (
-          <S.Li key={idx} onClick={onClickElement}>
+          <S.Li key={idx} onClick={handleAddTodoElement}>
             {e.split(inputText)[0]}
             <span style={{ color: '#2BC9BA' }}>{inputText}</span>
             {e.split(inputText)[1]}
           </S.Li>
         ))}
-        {load === true ? (
+        {isLoading && !loaderFlag.current ? (
           <S.SpinnerContainer style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <S.Spinner className="spinner" />
           </S.SpinnerContainer>
         ) : null}
-        <li ref={target}>target</li>
+        <li ref={target}></li>
       </ul>
     </S.DropDownContainer>
   );

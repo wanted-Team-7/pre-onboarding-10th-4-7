@@ -1,9 +1,9 @@
-import { FaSpinner, FaTrash } from 'react-icons/fa';
 import { useCallback, useState, useEffect } from 'react';
 import { deleteTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import { S } from './style';
-
+import { ellipsis } from '../util/ellipsis';
+import { LIMIT_STR_LENGTH } from '../util/constant';
 interface TodoItemTypes {
   id: string;
   title: string;
@@ -35,7 +35,7 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
 
   return (
     <S.TodoElement>
-      <span>{title}</span>
+      <span>{ellipsis(title, LIMIT_STR_LENGTH)}</span>
       <div>
         {!isLoading ? (
           <button onClick={() => handleRemoveTodo()}>
