@@ -1,11 +1,11 @@
-import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
+import { FaSpinner } from 'react-icons/fa';
 import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
-import useFocus from '../hooks/useFocus';
 import { getSearchList } from '../api/todo';
 import { useDebounce } from '../hooks/useDebounce';
 import { LIMIT } from '../constant';
+import { S } from './style';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -13,8 +13,12 @@ interface InputTodoType {
   searchList: string[] | undefined;
   currentPage: number;
   inputText: string;
+
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  setDropdownDisplay: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
 }
 
 const InputTodo = ({
@@ -25,16 +29,16 @@ const InputTodo = ({
   inputText,
   setInputText,
   setCurrentPage,
+  setDropdownDisplay,
+  isLoading,
+  setIsLoading,
 }: InputTodoType) => {
-  const [isLoading, setIsLoading] = useState(false);
   const debounceValue = useDebounce(inputText, 500);
-  const { ref, setFocus } = useFocus();
 
   useEffect(() => {
-    setFocus();
-  }, [setFocus]);
+    if (debounceValue.length !== 0) setDropdownDisplay(true);
+    else setDropdownDisplay(false);
 
-  useEffect(() => {
     if (currentPage !== 1) {
       console.log('new Search');
       setSearchList([]);
@@ -58,11 +62,13 @@ const InputTodo = ({
         setIsLoading(true);
 
         const trimmed = inputText.trim();
+
         if (!trimmed) {
           return alert('Please write something');
         }
 
         const newItem = { title: trimmed };
+
         const { data } = await createTodo(newItem);
 
         if (data) {
@@ -80,23 +86,15 @@ const InputTodo = ({
   );
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <input
-        className="input-text"
+    <S.InputForm onSubmit={handleSubmit}>
+      <S.Input
         placeholder="Add new todo..."
-        ref={ref}
         value={inputText}
         onChange={onChangeInputValue}
         disabled={isLoading}
       />
-      {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
-      ) : (
-        <FaSpinner className="spinner" />
-      )}
-    </form>
+      {isLoading ? <S.Spinner /> : null}
+    </S.InputForm>
   );
 };
 
