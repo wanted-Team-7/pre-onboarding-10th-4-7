@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import TodoList from '../components/TodoList';
@@ -10,6 +10,26 @@ const Main = () => {
   const [inputText, setInputText] = useState<string>('');
   const [searchKeywordList, setSearchKeywordList] = useState<string[]>([]);
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+  const [focusIndex, setFocusIndex] = useState<number>(-1);
+  const focusRef = useRef<HTMLUListElement>(null);
+
+  const keydownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) return;
+    switch (e.key) {
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusIndex(prevIndex => (prevIndex <= 0 ? searchKeywordList.length - 1 : prevIndex - 1));
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusIndex(prevIndex => (prevIndex >= searchKeywordList.length - 1 ? 0 : prevIndex + 1));
+        break;
+      case 'Enter':
+        break;
+      default:
+        break;
+    }
+  };
 
   const getSearchKeywordHandler = async (input: string) => {
     if (input.trim() === '') {
@@ -37,8 +57,15 @@ const Main = () => {
           inputText={inputText}
           setInputText={setInputText}
           getSearchKeywordHandler={getSearchKeywordHandler}
+          keydownHandler={keydownHandler}
         />
-        {searchKeywordList.length > 0 ? <SearchList searchKeywordList={searchKeywordList} /> : null}
+        {searchKeywordList.length > 0 ? (
+          <SearchList
+            searchKeywordList={searchKeywordList}
+            focusRef={focusRef}
+            focusIndex={focusIndex}
+          />
+        ) : null}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </div>
     </div>
