@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { getTodoList, searchTodoList } from '../api/todo';
+import { createTodo, getTodoList, searchTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import useFocus from '../hooks/useFocus';
 import Header from '../components/Header';
@@ -38,6 +38,15 @@ const Main = () => {
     setSearchListData(prev => [...prev, ...data.result]);
     setIsTotal(data.page * data.limit >= data.total);
     setIsSearchLoading(false);
+  };
+
+  const handleAddTodoClick = async (todo: string) => {
+    const { data } = await createTodo({ title: todo });
+    if (data) {
+      setTodoListData(prev => [...prev, data]);
+      setInputText('');
+      return;
+    }
   };
 
   useEffect(() => {
@@ -84,7 +93,7 @@ const Main = () => {
             isSearchLoading={isSearchLoading}
             isTotal={isTotal}
             handleSearchFetch={handleSearchFetch}
-            setTodos={setTodoListData}
+            handleAddTodoClick={handleAddTodoClick}
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />

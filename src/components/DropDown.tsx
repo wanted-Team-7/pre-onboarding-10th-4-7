@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { ReactComponent as Union } from '../assets/union_icon.svg';
 import { ReactComponent as Spinner } from '../assets/spinner_icon.svg';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { createTodo } from '../api/todo';
-import { TodoTypes } from '../types/todo';
 
 interface DropdownType {
   dropdownRef: React.RefObject<HTMLUListElement>;
@@ -12,7 +10,7 @@ interface DropdownType {
   isSearchLoading: boolean;
   isTotal: boolean;
   handleSearchFetch: (type: string) => void;
-  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+  handleAddTodoClick: (todo: string) => void;
 }
 
 function DropDown({
@@ -21,7 +19,7 @@ function DropDown({
   isSearchLoading,
   isTotal,
   handleSearchFetch,
-  setTodos,
+  handleAddTodoClick,
 }: DropdownType) {
   const onIntersect: IntersectionObserverCallback = ([{ isIntersecting }]) => {
     if (isIntersecting && !isTotal && !isSearchLoading) {
@@ -29,13 +27,6 @@ function DropDown({
     }
   };
   const { setTarget } = useIntersectionObserver({ onIntersect });
-
-  const handleAddTodoClick = async (todo: string) => {
-    const { data } = await createTodo({ title: todo });
-    if (data) {
-      return setTodos(prev => [...prev, data]);
-    }
-  };
 
   return (
     <DropdownBox ref={dropdownRef}>
