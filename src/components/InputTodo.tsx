@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
-import { SearchIcon } from './InputTodo.styled';
+import { SearchIcon } from '../style/InputTodo.styled';
 
 interface InputTodoType {
   inputText: string;
