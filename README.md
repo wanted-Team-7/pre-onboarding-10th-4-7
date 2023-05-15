@@ -316,7 +316,7 @@ const searchTerm = useDebounce(inputText, 500);
 
 |dropdown|dropdown 하단 표시아이콘,<br /> loading spinner |
 |---|---|
-|![캡처_2023_05_15_15_30_45_521](https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/assets/118191378/4d34c896-aa25-460d-8db3-70d3fa8fb049)|![녹화_2023_05_15_15_32_19_49](https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/assets/118191378/069fac70-5672-4e02-a93b-63fd1421620b)|
+|![캡처_2023_05_15_15_30_45_521](https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/assets/118191378/4d34c896-aa25-460d-8db3-70d3fa8fb049)|![녹화_2023_05_16_02_27_45_443](https://github.com/minnyoung/minnyoung/assets/118191378/963855e5-ef9b-4895-9fb7-d706ead4984f)|
 
 <br/>
 
