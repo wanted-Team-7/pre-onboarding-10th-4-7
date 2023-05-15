@@ -54,13 +54,13 @@ split 메서드를 사용하여 Todo 키워드를 기준으로 분리하였고, 
 ## 2) Debounce
 ---
 ```tsx
- useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      getSearchKeywordHandler(inputText);
-    }, 500);
+useEffect(() => {
+  const debounceTimer = setTimeout(() => {
+    getSearchKeywordHandler(inputText);
+  }, 500);
 
-    return () => clearTimeout(debounceTimer);
-  }, [inputText]);
+  return () => clearTimeout(debounceTimer);
+}, [inputText]);
 ```
 Todo 키워드가 입력될 때 마다 api 요청을 보내지 않도록 디바운싱 처리를 했습니다.ㅑ
 
@@ -85,8 +85,34 @@ export const searchTodoKeyword = async ({ keyword, page }: SearchKeywordType) =>
 ```
 기존에 작성되어있던 api 호출 함수 코드 구조대로 Todo 키워드로 추천 키워드를 검색하는 api 요청 함수를 작성했습니다.
 
+<br />
 
-## 4) 무한 스크롤 구현
+## 4) 추천 키워드 Todo에 추가하기
+```tsx
+// Main.tsx
+const addKeywordTodo = async (keyword: string) => {
+    const newItem = { title: keyword };
+    const { data } = await createTodo(newItem);
+
+    if (data) {
+      return setTodoListData(prev => [...prev, data]);
+    }
+  };
+
+// SearchListItem.tsx
+const selectRelativeKeyword = (e: React.MouseEvent<HTMLLIElement>) => {
+  const data = e.currentTarget.innerText;
+  
+  addKeywordTodo(data);
+
+  setInputText('');
+};
+```
+추천 검색어 아이템을 클릭하면 Todo에 추가하고, input 입력 창은 빈칸으로 비우는 로직을 구현했습니다.
+
+<br />
+
+## 5) 무한 스크롤 구현
 ---
 
 구현 중입니다.
