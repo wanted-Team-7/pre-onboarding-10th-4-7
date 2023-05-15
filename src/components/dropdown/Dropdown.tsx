@@ -10,6 +10,7 @@ const Dropdown = forwardRef<HTMLUListElement, { data: string[] }>(
         {data?.map((item, index) => (
           <StDropdownLi key={index}>{item}</StDropdownLi>
         ))}
+        {data.length === 0 && <StTextNoResult>No Result</StTextNoResult>}
       </StDropdownUl>
     );
   }
@@ -19,8 +20,11 @@ const StDropdownUl = styled.ul`
   border-radius: 6px;
   border: 1px solid #dedede;
   background-color: white;
+  overflow: auto;
 
   width: 580px;
+  min-height: 100px;
+  height: 200px;
   top: 46%;
 
   margin-top: 8px;
@@ -29,6 +33,24 @@ const StDropdownUl = styled.ul`
   position: absolute;
 `;
 
-const StDropdownLi = styled.div``;
+const StDropdownLi = styled.div`
+  padding: 6px 20px;
+  margin: 0 4px;
+  text-overflow: ellipsis;
+  border-radius: 3px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f2f2;
+  }
+  :focus {
+    background-color: #2bc9ba;
+  }
+`;
+
+const StTextNoResult = styled.div`
+  padding: 6px 20px;
+  margin: 0 4px;
+  color: #c6c6c6;
+`;
 
 export default Dropdown;

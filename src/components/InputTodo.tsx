@@ -27,17 +27,21 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   }, [setFocus]);
 
   useEffect(() => {
-    try {
-      if (debouncedInputText.length !== 0) {
-        apiRequest.get(`/search?q=${debouncedInputText}&page=1&limit=10`).then(res => {
-          setData(res.data.result);
-          console.log(data);
-        });
+    (async () => {
+      if (inputText === null || inputText.trim() === '') return;
+      let serverData;
+      try {
+        serverData = (await apiRequest.get(`/search?q=${debouncedInputText}&page=1&limit=10`)).data
+          .result;
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [inputText]);
+
+      if (serverData === null) return;
+
+      setData(serverData);
+    })();
+  }, [debouncedInputText]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
