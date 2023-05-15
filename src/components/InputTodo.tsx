@@ -95,6 +95,11 @@ const InputTodo = ({ setTodos, isElementfocus, setIsElementfocus }: InputTodoTyp
           onChange={e => {
             setInputText(e.target.value);
           }}
+          onKeyDown={event => {
+            if (event.key === 'Escape') {
+              setIsVisibleRecommendList(false);
+            }
+          }}
           disabled={isLoading}
         />
         {isLoading && <Spinner />}
