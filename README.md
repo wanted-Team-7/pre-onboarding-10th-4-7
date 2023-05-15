@@ -24,8 +24,8 @@ export default function useDebounce(delay = 500) {
 }
 ```
 1. useEffect로 디바운스를 처리하기엔 부담이 좀 큰 것 같아서 useRef를 활용하여 디바운스 훅을 만들었습니다.
-2. 이 훅은 다음과 같은 동작을 하는 함수 debounce를 반환합니다.
-3. 타이핑 동작을 시작하면 timerId에 setTimeout 설정값이 저장되고, 타이핑을 할 때마다 이전 값을 clear하고 새로운 time값을 저장합니다.
+2. 이 훅은 다음과 같은 동작을 하는 debounce 함수를 반환합니다.
+3. 동작을 시작하면 timerId에 setTimeout값이 저장되고, 재실행 될 때마다 이전 값을 clear하고 새로운 time값을 저장합니다.
 4. 지정한 delay 시간이 지나면 debounce 함수에 전달된 콜백함수가 실행됩니다. ('값'이 아닌 '동작'을 디바운스 합니다)
 5. 훅의 매개변수인 delay의 초깃값 500은 timeout 시간 값으로 이해하기에 어려움이 없어보여 변수화하지 않았습니다.
 
@@ -56,7 +56,7 @@ export default function useDebounce(delay = 500) {
 ```
 1. useDebounce()를 실행하여 디바운스를 가져옵니다. => searchApiDebounce
 2. 디바운스할 함수 fetchSearchResults를 정의한 후 필요한 곳에서 디바운스를 실행합니다. => searchApiDebounce(() => fetchSearchResults(value));
-3. 함수 fetchSearchResults를는 선언이 최초에 실행되도록 메모이징 처리를 하였습니다.
+3. 함수 fetchSearchResults는 최초 한번만 선언되도록 메모이징 처리를 하였습니다.
 
 <br />
 
@@ -168,8 +168,9 @@ export const getSearchTodos = async (
 2. 요청할 데이터 page와 데이터 개수는 인자로 전달할 수 있고, 기본값을 1페이지와 10개로 설정하였습니다.
 3. apiRequest를 사용하지 않고 baseInstance를 사용하였는데, 추후에 리팩토링할 예정입니다.
 
+
 ### 3. Dropdown 아이템 클릭시 리스트에 추가
-...
+1. 설명할게 없어서 넘기겠습니다...
 
 ### 4. DropDown
 1. 아이템마다 검색어와 동일한 문자열은 다른 스타일을 적용함
