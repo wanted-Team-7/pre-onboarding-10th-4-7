@@ -1,9 +1,12 @@
 import { ImSearch, ImSpinner8 } from 'react-icons/im';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo, getSearchTodos } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import styled from 'styled-components';
+import useDebounce from '../hooks/useDebounce';
+
+const FIRST_PAGE = 1;
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -15,8 +18,6 @@ interface InputTodoType {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsFocus: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-const DEBOUNCE_TIMEOUT_SEC = 0.3;
 
 const InputTodo = ({
   setTodos,
@@ -30,6 +31,7 @@ const InputTodo = ({
 }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const { ref, setFocus } = useFocus();
+  const searchDebounce = useDebounce();
 
   useEffect(() => {
     setFocus();
@@ -65,24 +67,26 @@ const InputTodo = ({
     [inputText, setTodos]
   );
 
-  useEffect(() => {
-    if (inputText === '') return;
+  const fetchSearchResults = useCallback(async (query: string) => {
+    console.log('use debouence', query);
+    try {
+      const data = query === '' ? { result: [] } : await getSearchTodos(query);
+      setSearchResults(data.result);
+      setCurrentPage(FIRST_PAGE);
+      console.log('search data: ', data);
+    } catch (error) {
+      console.error('Fetch error! ', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-    const debounceTimeout = setTimeout(async () => {
-      try {
-        setIsLoading(true);
-        const data = await getSearchTodos(inputText);
-        setSearchResults(data.result);
-        setCurrentPage(1);
-        console.log('search data: ', data);
-      } catch (error) {
-        console.error('Fetch error! ', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }, DEBOUNCE_TIMEOUT_SEC * 1000);
-    return () => clearTimeout(debounceTimeout);
-  }, [inputText]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setInputText(value);
+    setIsLoading(true);
+    searchDebounce(() => fetchSearchResults(value));
+  };
 
   useEffect(() => {
     if (currentPage === 1) return;
@@ -118,8 +122,7 @@ const InputTodo = ({
         placeholder="Add new todo..."
         ref={ref}
         value={inputText}
-        onChange={e => setInputText(e.target.value)}
-        disabled={isLoading}
+        onChange={handleInputChange}
       />
       {/* {!isLoading ? (
         <button className="input-submit" type="submit">
