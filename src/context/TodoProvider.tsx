@@ -1,22 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { createTodo, deleteTodo, getTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
-
-interface TodoContextType {
-  inputText: string;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
-  todoListData: TodoTypes[];
-  isAddLoading: boolean;
-}
-
-interface TodoDispatchType {
-  handleRemoveTodo: (
-    id: string,
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-  ) => Promise<void>;
-  handleAddTodo: (todo: string) => Promise<void>;
-  handleSubmit: (event: React.FormEvent) => Promise<void>;
-}
+import { TodoContextType, TodoDispatchType } from '../types/context';
 
 const TodoContext = createContext<TodoContextType | null>(null);
 const TodoDispatchContext = createContext<TodoDispatchType | null>(null);

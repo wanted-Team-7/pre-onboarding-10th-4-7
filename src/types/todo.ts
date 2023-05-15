@@ -4,3 +4,8 @@ export interface TodoTypes {
   updatedAt: string;
   id: string;
 }
+
+export interface TodoItemTypes {
+  id: string;
+  title: string;
+}

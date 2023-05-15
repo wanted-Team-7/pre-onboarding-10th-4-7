@@ -1,15 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import { searchTodoList } from '../api/todo';
-
-interface SearchContextType {
-  isTotal: boolean;
-  isSearchLoading: boolean;
-  searchListData: string[];
-}
-
-interface SearchDispatchType {
-  handleSearchFetch: (type: string, inputText: string) => Promise<void>;
-}
+import { SearchContextType, SearchDispatchType } from '../types/context';
 
 const SearchContext = createContext<SearchContextType | null>(null);
 const SearchDispatchContext = createContext<SearchDispatchType | null>(null);

@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { TodoItemTypes } from '../types/todo';
 import TrashIcon from '../icon/TrashIcon';
 import SpinnerIcon from '../icon/SpinnerIcon';
 import { useTodoDispatch } from '../context/TodoProvider';
-
-interface TodoItemTypes {
-  id: string;
-  title: string;
-}
 
 const TodoItem = ({ id, title }: TodoItemTypes) => {
   const [isLoading, setIsLoading] = useState(false);
