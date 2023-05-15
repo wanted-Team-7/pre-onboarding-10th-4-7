@@ -45,7 +45,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         e.preventDefault();
         setIsLoading(true);
 
-        const trimmed = debouncedInputText.trim();
+        const trimmed = inputText.trim();
         if (!trimmed) {
           return alert('Please write something');
         }
