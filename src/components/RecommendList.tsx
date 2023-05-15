@@ -26,6 +26,7 @@ const RecommendList = ({
   const onRecommendList = async () => {
     if (searchTerm) {
       const { data } = await getRecommendList(searchTerm, recommendListPage);
+      if (!data.total) return setIsVisibleRecommendList(false);
       if (data.total > 10) setisVisibleaddContentsIcon(true);
       setIsVisibleRecommendList(true);
       setRecommendList(data.result);
