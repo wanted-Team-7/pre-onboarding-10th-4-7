@@ -1,5 +1,5 @@
 import { ImSearch, ImSpinner8 } from 'react-icons/im';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo, getSearchTodos } from '../api/todo';
 import useFocus from '../hooks/useFocus';
@@ -87,6 +87,7 @@ const InputTodo = ({
     searchApiDebounce(() => fetchSearchResults(value));
   };
 
+  // infinite query
   useEffect(() => {
     if (currentPage === 1) return;
     (async () => {
@@ -119,13 +120,6 @@ const InputTodo = ({
         value={inputText}
         onChange={handleInputChange}
       />
-      {/* {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
-      ) : (
-        <FaSpinner className="spinner" />
-      )} */}
       {isLoading && <SpinIcon />}
     </TodoFormContainer>
   );

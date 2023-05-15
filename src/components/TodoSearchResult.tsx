@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { TodoDispatchContext } from '../pages/Main';
 import { createTodo } from '../api/todo';
@@ -30,8 +30,6 @@ function TodoSearchResult({ value }: ITodoSearchResult) {
       {value.length > 40 ? value.slice(0, 39) + '...' : value}
     </ItemContainer>
   );
-  // return <ItemContainer>{value}</ItemContainer>;
-  // return <ItemContainer>hasdfkalsdnfhbkjashdfnkasdfhklsdfadsfasdfalhsdnfjlkbabs</ItemContainer>;
 }
 
 const ItemContainer = styled.div<{ isClicked: boolean }>`

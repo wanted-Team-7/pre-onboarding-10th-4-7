@@ -33,12 +33,6 @@ export const deleteTodo = async (id: string) => {
   }
 };
 
-interface IResponse {
-  opcode: number;
-  message: string;
-  data: IData;
-}
-
 interface IData {
   q: string;
   page: number;

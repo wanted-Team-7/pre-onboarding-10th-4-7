@@ -47,14 +47,6 @@ const Main = () => {
             setIsLoading={setIsLoading}
             setIsFocus={setIsFocus}
           />
-          {/* {searchResults.length !== 0 && (
-          <TodoDropDown
-            searchResults={searchResults}
-            setCurrentPage={setCurrentPage}
-            isHidden={isHidden}
-            isLoading={isLoading}
-          />
-        )} */}
           {isFocus && inputText.length !== 0 && (
             <TodoDropDown
               searchResults={searchResults}
