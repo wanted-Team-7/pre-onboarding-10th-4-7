@@ -26,7 +26,11 @@ const InputTodo = ({
   }, [setFocus]);
 
   useEffect(() => {
-    getSearchKeywordHandler(inputText);
+    const debounceTimer = setTimeout(() => {
+      getSearchKeywordHandler(inputText);
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
   }, [inputText]);
 
   const handleSubmit = useCallback(
