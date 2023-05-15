@@ -7,6 +7,7 @@ import useFocus from '../hooks/useFocus';
 import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
 import Dropdown from './dropdown/Dropdown';
+import apiRequest from '../api';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -15,14 +16,28 @@ interface InputTodoType {
 const InputTodo = ({ setTodos }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<string[]>([]);
   const { ref, setFocus } = useFocus();
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLUListElement>(null);
 
   const debouncedInputText = useDebounce(inputText, 500);
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
+
+  useEffect(() => {
+    try {
+      if (debouncedInputText.length !== 0) {
+        apiRequest.get(`/search?q=${debouncedInputText}&page=1&limit=10`).then(res => {
+          setData(res.data.result);
+          console.log(data);
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [inputText]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -89,7 +104,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
           )}
         </StForm>
       </StFormContainer>
-      <Dropdown ref={dropdownRef} />
+      <Dropdown ref={dropdownRef} data={data} />
     </>
   );
 };
