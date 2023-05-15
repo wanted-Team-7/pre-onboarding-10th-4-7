@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import TodoList from '../components/TodoList';
 import SearchList from '../components/SearchList';
-import { getTodoList, searchTodoKeyword } from '../api/todo';
+import { createTodo, getTodoList, searchTodoKeyword } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 
 const Main = () => {
@@ -28,6 +28,15 @@ const Main = () => {
         break;
       default:
         break;
+    }
+  };
+
+  const addKeywordTodo = async (keyword: string) => {
+    const newItem = { title: keyword };
+    const { data } = await createTodo(newItem);
+
+    if (data) {
+      return setTodoListData(prev => [...prev, data]);
     }
   };
 
@@ -65,6 +74,8 @@ const Main = () => {
             focusRef={focusRef}
             focusIndex={focusIndex}
             inputText={inputText}
+            setInputText={setInputText}
+            addKeywordTodo={addKeywordTodo}
           />
         ) : null}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
