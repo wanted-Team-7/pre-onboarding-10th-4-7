@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ReactComponent as Union } from '../assets/union_icon.svg';
+import { ReactComponent as Spinner } from '../assets/spinner_icon.svg';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 interface DropdownType {
@@ -27,13 +29,13 @@ function DropDown({
   return (
     <DropdownBox ref={dropdownRef}>
       <DropdownList>
-        {searchListData.length === 0 ? (
-          <Typing>검색 결과 없음</Typing>
-        ) : (
-          searchListData.map((item, idx) => <DropdownItem key={idx}>{item}</DropdownItem>)
-        )}
-        {searchListData.length > 0 && (
-          <div ref={setTarget}>{isSearchLoading ? <p>loading...</p> : !isTotal && <p>...</p>}</div>
+        {searchListData.map((item, idx) => (
+          <DropdownItem key={idx}>{item}</DropdownItem>
+        ))}
+        {!isTotal && (
+          <IntersectionBox ref={setTarget}>
+            {isSearchLoading ? <Spinner className="spinner" /> : !isTotal && <Union />}
+          </IntersectionBox>
         )}
       </DropdownList>
     </DropdownBox>
@@ -67,13 +69,26 @@ const DropdownBox = styled.div`
 
 const DropdownList = styled.ul``;
 
-const Typing = styled.p`
-  box-sizing: border-box;
-  padding: 6px 12px;
-`;
-
 const DropdownItem = styled.li`
   list-style-type: none;
   box-sizing: border-box;
   padding: 6px 12px;
+  border-radius: 3px;
+  :hover {
+    background: #f2f2f2;
+  }
+  :active {
+    background: #d5f4f1;
+  }
+`;
+
+const IntersectionBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 29px;
+  .spinner {
+    animation: spin 0.8s infinite ease-in-out;
+  }
 `;

@@ -77,7 +77,7 @@ const Main = () => {
           setInputText={setInputText}
           handleSearchFetch={handleSearchFetch}
         />
-        {isDropdownOpen && (
+        {isDropdownOpen && inputText && searchListData.length > 0 && (
           <DropDown
             dropdownRef={dropdownRef}
             searchListData={searchListData}
