@@ -1,10 +1,8 @@
-import { FaSpinner } from 'react-icons/fa';
-import { useCallback, useEffect, useState } from 'react';
+import { FiSearch } from 'react-icons/fi';
+import { useCallback, useEffect } from 'react';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
-import { getSearchList } from '../api/todo';
 import { useDebounce } from '../hooks/useDebounce';
-import { LIMIT } from '../constant';
 import { S } from './style';
 
 interface InputTodoType {
@@ -24,7 +22,6 @@ interface InputTodoType {
 const InputTodo = ({
   setTodos,
   setSearchList,
-  searchList,
   currentPage,
   inputText,
   setInputText,
@@ -36,18 +33,14 @@ const InputTodo = ({
   const debounceValue = useDebounce(inputText, 500);
 
   useEffect(() => {
-    if (debounceValue.length !== 0) setDropdownDisplay(true);
-    else setDropdownDisplay(false);
+    if (debounceValue.length !== 0)
+      setDropdownDisplay(true); // 검색어 입력할 경우 DropDown display(true)
+    else setDropdownDisplay(false); // 검색어가 없을 경우 DropDown display(false)
 
+    // 재검색할 경우
     if (currentPage !== 1) {
-      console.log('new Search');
       setSearchList([]);
       setCurrentPage(1);
-    } else {
-      (async () => {
-        const result = await getSearchList(debounceValue, currentPage, LIMIT);
-        setSearchList(result.result);
-      })();
     }
   }, [debounceValue]);
 
@@ -87,6 +80,7 @@ const InputTodo = ({
 
   return (
     <S.InputForm onSubmit={handleSubmit}>
+      <FiSearch />
       <S.Input
         placeholder="Add new todo..."
         value={inputText}
