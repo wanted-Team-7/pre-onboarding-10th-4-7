@@ -1,21 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { DropdownType, HighlightType } from '../types/dropdown';
 import { ReactComponent as Union } from '../assets/union_icon.svg';
 import { ReactComponent as Spinner } from '../assets/spinner_icon.svg';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { useSearchDispatch, useSearchState } from '../context/SearchProvider';
-
-interface DropdownType {
-  dropdownRef: React.RefObject<HTMLUListElement>;
-  searchListData: string[];
-  inputText: string;
-  handleAddTodoClick: (todo: string) => void;
-}
-
-interface HighlightType {
-  text: string;
-  highlight: string;
-}
 
 function HighlightedText({ text, highlight }: HighlightType) {
   const parts = text.split(highlight);
