@@ -12,6 +12,7 @@ const Main = () => {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
   const [focusIndex, setFocusIndex] = useState<number>(-1);
   const focusRef = useRef<HTMLUListElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const keydownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
@@ -41,13 +42,21 @@ const Main = () => {
   };
 
   const getSearchKeywordHandler = async (input: string) => {
-    if (input.trim() === '') {
-      setSearchKeywordList([]);
-      return;
-    }
+    try {
+      setIsLoading(true);
+      if (input.trim() === '') {
+        setSearchKeywordList([]);
+        return;
+      }
+      const { data } = await searchTodoKeyword({ keyword: input, page: 1 });
 
-    const { data } = await searchTodoKeyword({ keyword: input, page: 1 });
-    setSearchKeywordList(data.result);
+      setSearchKeywordList(data.result);
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -76,6 +85,7 @@ const Main = () => {
             inputText={inputText}
             setInputText={setInputText}
             addKeywordTodo={addKeywordTodo}
+            isLoading={isLoading}
           />
         ) : null}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
