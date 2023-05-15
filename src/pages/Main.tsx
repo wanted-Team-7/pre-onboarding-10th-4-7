@@ -1,44 +1,23 @@
 import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { searchTodoList } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import TodoList from '../components/TodoList';
 import DropDown from '../components/DropDown';
 import { useTodoDispatch, useTodoState } from '../context/TodoProvider';
+import { useSearchState } from '../context/SearchProvider';
 
 const Main = () => {
   const { inputText } = useTodoState();
+  const { searchListData } = useSearchState();
   const { handleAddTodo } = useTodoDispatch();
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [isTotal, setIsTotal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchListData, setSearchListData] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { ref: inputRef, setFocus: setInputFocus } = useFocus();
   const dropdownRef = useRef<HTMLUListElement>(null);
 
   const handleInputClick = () => {
     setIsDropdownOpen(true);
-  };
-
-  const handleSearchFetch = async (type: string) => {
-    if (inputText.trim() === '') {
-      setSearchListData([]);
-      return;
-    }
-    if (type === 'first') {
-      setCurrentPage(1);
-      setSearchListData([]);
-    }
-    if (type === 'scroll') setCurrentPage(prev => prev + 1);
-    setIsSearchLoading(true);
-    const updateCurrentPage = type === 'scroll' ? currentPage + 1 : 1;
-    const { data } = await searchTodoList({ q: inputText, page: updateCurrentPage, limit: 10 });
-    setSearchListData(prev => [...prev, ...data.result]);
-    setIsTotal(data.page * data.limit >= data.total);
-    setIsSearchLoading(false);
   };
 
   useEffect(() => {
@@ -66,16 +45,12 @@ const Main = () => {
           inputRef={inputRef}
           setInputFocus={setInputFocus}
           handleInputClick={handleInputClick}
-          handleSearchFetch={handleSearchFetch}
         />
         {isDropdownOpen && inputText && searchListData.length > 0 && (
           <DropDown
             dropdownRef={dropdownRef}
             searchListData={searchListData}
-            isSearchLoading={isSearchLoading}
-            isTotal={isTotal}
             inputText={inputText}
-            handleSearchFetch={handleSearchFetch}
             handleAddTodoClick={handleAddTodo}
           />
         )}

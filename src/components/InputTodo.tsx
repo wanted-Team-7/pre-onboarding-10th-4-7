@@ -4,26 +4,22 @@ import useDebounce from '../hooks/useDebounce';
 import PlusIcon from '../icon/PlusIcon';
 import SpinnerIcon from '../icon/SpinnerIcon';
 import { useTodoDispatch, useTodoState } from '../context/TodoProvider';
+import { useSearchDispatch } from '../context/SearchProvider';
 
 interface InputTodoType {
   inputRef: React.RefObject<HTMLInputElement>;
   setInputFocus: () => void;
   handleInputClick: () => void;
-  handleSearchFetch: (type: string) => void;
 }
 
-const InputTodo = ({
-  inputRef,
-  setInputFocus,
-  handleInputClick,
-  handleSearchFetch,
-}: InputTodoType) => {
+const InputTodo = ({ inputRef, setInputFocus, handleInputClick }: InputTodoType) => {
   const { handleSubmit } = useTodoDispatch();
+  const { handleSearchFetch } = useSearchDispatch();
   const { inputText, setInputText, isAddLoading } = useTodoState();
   const debouncedSearch = useDebounce(inputText, 500);
 
   useEffect(() => {
-    handleSearchFetch('first');
+    handleSearchFetch('first', inputText);
   }, [debouncedSearch]);
 
   useEffect(() => {

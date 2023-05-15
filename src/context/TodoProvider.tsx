@@ -21,8 +21,6 @@ interface TodoDispatchType {
 const TodoContext = createContext<TodoContextType | null>(null);
 const TodoDispatchContext = createContext<TodoDispatchType | null>(null);
 
-export const useTodo = () => useContext(TodoContext);
-
 export function TodoProvider({ children }: React.PropsWithChildren) {
   const [inputText, setInputText] = useState('');
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);

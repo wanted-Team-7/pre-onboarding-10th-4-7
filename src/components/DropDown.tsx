@@ -3,14 +3,12 @@ import styled from 'styled-components';
 import { ReactComponent as Union } from '../assets/union_icon.svg';
 import { ReactComponent as Spinner } from '../assets/spinner_icon.svg';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import { useSearchDispatch, useSearchState } from '../context/SearchProvider';
 
 interface DropdownType {
   dropdownRef: React.RefObject<HTMLUListElement>;
   searchListData: string[];
-  isSearchLoading: boolean;
-  isTotal: boolean;
   inputText: string;
-  handleSearchFetch: (type: string) => void;
   handleAddTodoClick: (todo: string) => void;
 }
 
@@ -34,18 +32,13 @@ function HighlightedText({ text, highlight }: HighlightType) {
   );
 }
 
-function DropDown({
-  dropdownRef,
-  searchListData,
-  isSearchLoading,
-  isTotal,
-  inputText,
-  handleSearchFetch,
-  handleAddTodoClick,
-}: DropdownType) {
+function DropDown({ dropdownRef, searchListData, inputText, handleAddTodoClick }: DropdownType) {
+  const { isTotal, isSearchLoading } = useSearchState();
+  const { handleSearchFetch } = useSearchDispatch();
+
   const onIntersect: IntersectionObserverCallback = ([{ isIntersecting }]) => {
     if (isIntersecting && !isTotal && !isSearchLoading) {
-      handleSearchFetch('scroll');
+      handleSearchFetch('scroll', inputText);
     }
   };
   const { setTarget } = useIntersectionObserver({ onIntersect });
