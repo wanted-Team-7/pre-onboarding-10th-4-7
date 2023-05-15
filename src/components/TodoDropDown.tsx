@@ -22,12 +22,12 @@ function TodoDropDown({ searchResults, setCurrentPage, isHidden, isLoading }: IT
 
   return (
     <DropDownItemContainer>
-      {searchResults.length === 0 ? (
-        <TodoSearchResultNone>검색어가 없습니다.</TodoSearchResultNone>
-      ) : (
+      {searchResults.length !== 0 &&
         searchResults?.map((searchResult, idx) => (
           <TodoSearchResult key={idx} value={searchResult} />
-        ))
+        ))}
+      {searchResults.length === 0 && !isLoading && (
+        <TodoSearchResultNone>검색어가 없습니다.</TodoSearchResultNone>
       )}
 
       {searchResults.length !== 0 && isLoading && (
