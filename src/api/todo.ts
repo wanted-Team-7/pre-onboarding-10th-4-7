@@ -61,8 +61,6 @@ export const getSearchTodos = async (
         limit,
       },
     });
-    console.log('1: ', response);
-
     return response.data;
   } catch (error) {
     throw new Error('API getSearchTodos error');

@@ -26,7 +26,6 @@ const Main = () => {
   useEffect(() => {
     (async () => {
       const { data } = await getTodoList();
-      console.log('get Todo list: ', data);
       setTodoListData(data || []);
     })();
   }, []);

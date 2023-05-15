@@ -45,7 +45,6 @@ const InputTodo = ({
       try {
         e.preventDefault();
         setIsLoading(true);
-        console.log('start');
 
         const trimmed = inputText.trim();
         if (!trimmed) {
@@ -62,7 +61,6 @@ const InputTodo = ({
         console.error(error);
         alert('Something went wrong.');
       } finally {
-        console.log('end');
         setInputText('');
         setIsLoading(false);
       }
@@ -71,12 +69,10 @@ const InputTodo = ({
   );
 
   const fetchSearchResults = useCallback(async (query: string) => {
-    console.log('use debouence', query);
     try {
       const data = query === '' ? { result: [] } : await getSearchTodos(query);
       setSearchResults(data.result);
       setCurrentPage(FIRST_PAGE);
-      console.log('search data: ', data);
     } catch (error) {
       console.error('Fetch error! ', error);
     } finally {
@@ -93,7 +89,6 @@ const InputTodo = ({
 
   useEffect(() => {
     if (currentPage === 1) return;
-    console.log('infinite fetch');
     (async () => {
       try {
         setIsLoading(true);
