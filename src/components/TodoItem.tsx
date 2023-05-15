@@ -34,6 +34,9 @@ const TodoItem = ({ id, title }: TodoItemTypes) => {
 export default TodoItem;
 
 const Item = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   list-style-type: none;
   padding: 17px 1.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.color.COLOR_GRAY_2};
