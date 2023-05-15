@@ -2,14 +2,14 @@ import { FaSpinner, FaTrash } from 'react-icons/fa';
 import styled from 'styled-components';
 
 interface TrashIconProps {
-  isLoading: boolean;
+  isDeleting: boolean;
   handleRemoveTodo: () => void;
 }
 
-const TrashIcon = ({ isLoading, handleRemoveTodo }: TrashIconProps) => {
+const TrashIcon = ({ isDeleting, handleRemoveTodo }: TrashIconProps) => {
   return (
     <Wrapper>
-      {!isLoading ? (
+      {!isDeleting ? (
         <button onClick={() => handleRemoveTodo()}>
           <FaTrash className="btn-trash" />
         </button>

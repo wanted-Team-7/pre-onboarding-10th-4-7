@@ -3,7 +3,7 @@ import SearchIcon from './SearchIcon';
 import SpinnerIcon from './SpinnerIcon';
 import { ChangeEvent } from 'react';
 
-interface InputTodoType {
+interface InputTodoProps {
   isTyping: boolean;
   isLoading: boolean;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
@@ -14,7 +14,7 @@ interface InputTodoType {
   isFocused: boolean;
 }
 
-interface WrapperType {
+interface StyledFormProps {
   isFocused: boolean;
   isTyping: boolean;
 }
@@ -28,24 +28,24 @@ const InputTodo = ({
   handleFocus,
   handleBlur,
   isFocused,
-}: InputTodoType) => {
+}: InputTodoProps) => {
   return (
-    <Wrapper onSubmit={handleSubmit} isFocused={isFocused} isTyping={isTyping}>
+    <StyledForm onSubmit={handleSubmit} isFocused={isFocused} isTyping={isTyping}>
       <SearchIcon />
-      <Input
+      <StyledInput
         placeholder="Add new todo..."
         value={inputText}
-        onChange={e => onChangeInput(e)}
+        onChange={onChangeInput}
         disabled={isLoading}
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
       {isLoading && <SpinnerIcon />}
-    </Wrapper>
+    </StyledForm>
   );
 };
 
-const Wrapper = styled.form<WrapperType>`
+const StyledForm = styled.form<StyledFormProps>`
   position: relative;
   width: 100%;
   height: 44px;
@@ -72,7 +72,7 @@ const Wrapper = styled.form<WrapperType>`
   `}
 `;
 
-const Input = styled.input`
+const StyledInput = styled.input`
   font-size: 1rem;
   font-weight: 400;
   width: 85%;

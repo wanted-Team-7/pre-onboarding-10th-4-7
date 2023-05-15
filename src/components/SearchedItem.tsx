@@ -7,36 +7,40 @@ interface SearchedItemProps {
   setInputText: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface LiProps {
-  isClicked: boolean;
+interface ListItemProps {
+  isSelected: boolean;
 }
 
 const SearchedItem = ({ item, inputText, setInputText }: SearchedItemProps) => {
-  const [isClicked, setIsClicked] = useState(false);
+  // isSelected : 아이템이 선택되었는지 여부.
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+
+  // splitItem : 검색어를 기준으로 아이템을 분리한 배열을 생성합니다.
   const splitItem = item.split(new RegExp(`(${inputText})`, 'gi'));
 
-  const handleClick = (event: React.MouseEvent) => {
+  // handleItemClick : 아이템을 클릭했을 때 실행되는 처리 함수.
+  const handleItemClick = (event: React.MouseEvent) => {
     event.preventDefault();
-    setIsClicked(!isClicked);
-    setInputText(item); // 클릭 이벤트 발생시 inputText 업데이트
+    setIsSelected(!isSelected);
+    setInputText(item);
   };
 
   return (
-    <Li onMouseDown={handleClick} isClicked={isClicked}>
-      <Content>
+    <ListItem onMouseDown={handleItemClick} isSelected={isSelected}>
+      <ItemContent>
         {splitItem.map((part, index) =>
           part.toLowerCase() === inputText.toLowerCase() ? (
-            <HilightText key={index}>{part}</HilightText>
+            <HighlightedText key={index}>{part}</HighlightedText>
           ) : (
             part
           )
         )}
-      </Content>
-    </Li>
+      </ItemContent>
+    </ListItem>
   );
 };
 
-const Li = styled.li<LiProps>`
+const ListItem = styled.li<ListItemProps>`
   padding: 5px 3px;
   list-style-type: none;
   cursor: pointer;
@@ -49,12 +53,13 @@ const Li = styled.li<LiProps>`
   }
 `;
 
-const Content = styled.span`
+const ItemContent = styled.span`
   padding-left: 10px;
 `;
 
-const HilightText = styled.span`
+const HighlightedText = styled.span`
   font-weight: bold;
   color: #2bc9ba;
 `;
+
 export default SearchedItem;

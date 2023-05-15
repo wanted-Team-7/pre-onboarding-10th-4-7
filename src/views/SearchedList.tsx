@@ -20,23 +20,24 @@ const SearchedList = ({
   isMoreLoading,
 }: SearchedListProps) => {
   return (
-    <Container>
+    <ListContainer>
       <ul>
-        {searchedResponse.map((item: string, index: number) => (
+        {searchedResponse.map((item, index) => (
           <SearchedItem key={index} item={item} inputText={inputText} setInputText={setInputText} />
         ))}
       </ul>
       {isMoreLoading ? (
-        <Content>
+        <LoadingContent>
           <FaSpinner className="btn-spinner" />
-        </Content>
+        </LoadingContent>
       ) : (
-        !isNoMoreData && <HiddenData ref={lastItemRef}>...</HiddenData>
+        !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
-    </Container>
+    </ListContainer>
   );
 };
-const Container = styled.div`
+
+const ListContainer = styled.div`
   z-index: 1;
   position: absolute;
   padding: 9px 5px;
@@ -46,16 +47,15 @@ const Container = styled.div`
   background-color: #fff;
   border: 1px solid #dedede;
   box-shadow: 0 2px 4px 0 rgba(50, 50, 50, 0.1);
-
   overflow-y: scroll;
 `;
 
-const HiddenData = styled.div`
+const LoadingIndicator = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-const Content = styled.div`
+const LoadingContent = styled.div`
   position: relative;
   height: 30px;
   display: flex;
@@ -66,4 +66,5 @@ const Content = styled.div`
     animation: spin 2s linear infinite;
   }
 `;
+
 export default SearchedList;
