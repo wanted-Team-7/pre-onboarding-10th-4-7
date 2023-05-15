@@ -117,6 +117,14 @@ const IntersectionBox = styled.div`
   .spinner {
     animation: spin 0.8s infinite ease-in-out;
   }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const Text = styled.p`
