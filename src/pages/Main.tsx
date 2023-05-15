@@ -92,6 +92,7 @@ const Main = () => {
             searchListData={searchListData}
             isSearchLoading={isSearchLoading}
             isTotal={isTotal}
+            inputText={inputText}
             handleSearchFetch={handleSearchFetch}
             handleAddTodoClick={handleAddTodoClick}
           />

@@ -9,8 +9,29 @@ interface DropdownType {
   searchListData: string[];
   isSearchLoading: boolean;
   isTotal: boolean;
+  inputText: string;
   handleSearchFetch: (type: string) => void;
   handleAddTodoClick: (todo: string) => void;
+}
+
+interface HighlightType {
+  text: string;
+  highlight: string;
+}
+
+function HighlightedText({ text, highlight }: HighlightType) {
+  const parts = text.split(highlight);
+
+  return (
+    <Text>
+      {parts.map((part, index) => (
+        <React.Fragment key={index}>
+          {part}
+          {index !== parts.length - 1 && <Highlight>{highlight}</Highlight>}
+        </React.Fragment>
+      ))}
+    </Text>
+  );
 }
 
 function DropDown({
@@ -18,6 +39,7 @@ function DropDown({
   searchListData,
   isSearchLoading,
   isTotal,
+  inputText,
   handleSearchFetch,
   handleAddTodoClick,
 }: DropdownType) {
@@ -32,7 +54,7 @@ function DropDown({
     <DropdownBox ref={dropdownRef}>
       {searchListData.map((item, idx) => (
         <DropdownItem key={idx} onClick={() => handleAddTodoClick(item)}>
-          {item}
+          <HighlightedText text={item} highlight={inputText} />
         </DropdownItem>
       ))}
       {!isTotal && (
@@ -95,4 +117,15 @@ const IntersectionBox = styled.div`
   .spinner {
     animation: spin 0.8s infinite ease-in-out;
   }
+`;
+
+const Text = styled.p`
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 20px;
+`;
+
+const Highlight = styled.span`
+  color: #2bc9ba;
 `;
