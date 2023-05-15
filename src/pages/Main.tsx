@@ -10,6 +10,7 @@ import TodoDropDown from '../components/TodoDropDown';
 interface ITodoDispatchContext {
   setTodoListData: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
+  setSearchResults: React.Dispatch<React.SetStateAction<string[]>>;
 }
 export const TodoDispatchContext = createContext<ITodoDispatchContext | undefined>(undefined);
 
@@ -31,7 +32,7 @@ const Main = () => {
   }, []);
 
   return (
-    <TodoDispatchContext.Provider value={{ setTodoListData, setInputText }}>
+    <TodoDispatchContext.Provider value={{ setTodoListData, setInputText, setSearchResults }}>
       <TodoContainer>
         <TodoInner>
           <Header />
@@ -55,7 +56,7 @@ const Main = () => {
             isLoading={isLoading}
           />
         )} */}
-          {isFocus && (
+          {isFocus && inputText.length !== 0 && (
             <TodoDropDown
               searchResults={searchResults}
               setCurrentPage={setCurrentPage}

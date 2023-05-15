@@ -15,6 +15,7 @@ function TodoSearchResult({ value }: ITodoSearchResult) {
       if (data) {
         dispatch?.setTodoListData(prevTodos => [...prevTodos, data]);
         dispatch?.setInputText('');
+        dispatch?.setSearchResults([]);
       }
     } catch (error) {
       console.error(error);
