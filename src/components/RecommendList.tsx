@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getRecommendList } from '../api/todo';
 import styled from 'styled-components';
+import Spinner from './common/Spinner';
 
 interface RecommendListType {
   searchTerm: string;
@@ -17,12 +18,16 @@ const RecommendList = ({
   isVisibleRecommendList,
   setIsVisibleRecommendList,
 }: RecommendListType) => {
-  const [recommendList, setRecommendList] = useState([]);
+  const [recommendList, setRecommendList] = useState<string[]>([]);
+  const [recommendListPage, setRecommendListPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVisibleaddContentsIcon, setisVisibleaddContentsIcon] = useState(false);
 
   const onRecommendList = async () => {
     if (searchTerm) {
+      const { data } = await getRecommendList(searchTerm, recommendListPage);
+      if (data.total > 10) setisVisibleaddContentsIcon(true);
       setIsVisibleRecommendList(true);
-      const { data } = await getRecommendList(searchTerm);
       setRecommendList(data.result);
     }
   };
@@ -38,6 +43,13 @@ const RecommendList = ({
     setIsVisibleRecommendList(false);
   };
 
+  const clickAddContentsIcon = async () => {
+    setIsLoading(true);
+    setRecommendListPage(prev => prev + 1);
+    const { data } = await getRecommendList(searchTerm, recommendListPage);
+    setIsLoading(false);
+    setRecommendList(prev => [...prev, ...data.result]);
+  };
   return (
     <S.DropdownContainer visible={isVisibleRecommendList}>
       {recommendList.map((recommendWord: string, index) => (
@@ -65,6 +77,8 @@ const RecommendList = ({
           })}
         </S.DropdownItem>
       ))}
+      {isVisibleaddContentsIcon &&
+        (!isLoading ? <S.AddIcon onClick={clickAddContentsIcon}>...</S.AddIcon> : <Spinner />)}
     </S.DropdownContainer>
   );
 };
@@ -128,5 +142,18 @@ const S = {
   `,
   SameText: styled.span`
     color: #2bc9ba;
+  `,
+  AddIcon: styled.div`
+    width: 100%;
+    height: 20px;
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 500;
+    color: #9f9f9f;
+    :hover {
+      cursor: pointer;
+    }
   `,
 };
