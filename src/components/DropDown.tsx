@@ -1,22 +1,10 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 import { S } from './style';
 import { PER_PAGE_LIMIT_COUNT } from '../util/constant';
 import { getSearchList, createTodo } from '../api/todo';
-import { TodoTypes } from '../types/todo';
-import { BiDotsHorizontalRounded } from 'react-icons/bi';
-
-interface DropDownProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setSearchList: React.Dispatch<React.SetStateAction<string[]>>;
-  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  searchList: string[] | undefined;
-  isLoading: boolean;
-  currentPage: number;
-  inputText: string;
-  inputLoading: boolean;
-}
+import { DropDownProps } from '../types/Props';
+import Spinner from './Spinner';
+import Dot from './Dot';
 
 const DropDown = ({
   searchList,
@@ -79,7 +67,7 @@ const DropDown = ({
   };
 
   // get search list api function
-  const getDataScroll = useCallback(async () => {
+  const getDataScroll = async () => {
     try {
       setIsLoading(true);
       const res = await getSearchList(inputText, currentPage, PER_PAGE_LIMIT_COUNT);
@@ -96,36 +84,35 @@ const DropDown = ({
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage]);
+  };
+
+  const NoResult = () => {
+    return <span>검색어 없음</span>;
+  };
+
+  // search 데이터가 없을 경우 NoResult component 반환
+  if (searchList?.length === 0) {
+    return (
+      <S.DropDownContainer>
+        <NoResult />
+      </S.DropDownContainer>
+    );
+  }
 
   return (
     <S.DropDownContainer>
-      {searchList?.length === 0 ? (
-        <span>검색어 없음</span>
-      ) : (
-        <ul>
-          {searchList?.map((e: string, idx: number) => (
-            <S.Li key={idx} onClick={handleAddTodoElement}>
-              {e.split(inputText)[0]}
-              <span style={{ color: '#2BC9BA' }}>{inputText}</span>
-              {e.split(inputText)[1]}
-            </S.Li>
-          ))}
-          {isLoading ? (
-            <S.SpinnerContainer
-              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-            >
-              <S.Spinner />
-            </S.SpinnerContainer>
-          ) : (
-            <li style={{ display: 'flex', justifyContent: 'center' }}>
-              <BiDotsHorizontalRounded style={{ color: 'black' }} />
-            </li>
-          )}
+      <ul>
+        {searchList?.map((str: string, idx: number) => (
+          <S.Li key={idx} onClick={handleAddTodoElement}>
+            {str.split(inputText)[0]}
+            <span style={{ color: '#2BC9BA' }}>{inputText}</span>
+            {str.split(inputText)[1]}
+          </S.Li>
+        ))}
+        {isLoading ? <Spinner /> : <Dot />}
 
-          <li ref={target} style={{ display: 'flex', justifyContent: 'center' }}></li>
-        </ul>
-      )}
+        <S.ObserveTarget ref={target}></S.ObserveTarget>
+      </ul>
     </S.DropDownContainer>
   );
 };

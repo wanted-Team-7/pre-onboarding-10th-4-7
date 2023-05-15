@@ -5,19 +5,7 @@ import { S } from './style';
 import { INIT_PAGE, DELAY_TIME, LIMIT_STR_LENGTH, PER_PAGE_LIMIT_COUNT } from '../util/constant';
 import { ellipsis } from '../util/ellipsis';
 import { getSearchList } from '../api/todo';
-
-interface InputTodoType {
-  setSearchList: React.Dispatch<React.SetStateAction<string[]>>;
-  searchList: string[] | undefined;
-  inputText: string;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  setDropdownDisplay: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
-  currentPage: number;
-  setInputLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  inputLoading: boolean;
-}
+import { InputTodoType } from '../types/Props';
 
 const InputTodo = ({
   setSearchList,

@@ -54,7 +54,7 @@ const DropDownContainer = styled.div`
   top: 355px;
   padding: 10px;
   position: absolute;
-  width: 97%;
+  width: 94%;
   height: 200px;
   overflow-y: scroll;
   background-color: #ffffff;
@@ -132,6 +132,11 @@ const Empty = styled.div`
   margin-left: 0.75rem;
   color: #ececec;
 `;
+
+const ObserveTarget = styled.li`
+  display: flex;
+  justify-content: 'center';
+`;
 export const S = {
   Li,
   DropDownContainer,
@@ -144,4 +149,5 @@ export const S = {
   Spinner,
   Empty,
   SpinnerContainer,
+  ObserveTarget,
 };
