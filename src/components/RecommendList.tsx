@@ -49,8 +49,13 @@ const RecommendList = ({
     setIsGetListLoading(true);
     setRecommendListPage(prev => prev + 1);
     const { data } = await getRecommendList(searchTerm, recommendListPage);
-    setIsGetListLoading(false);
-    setRecommendList(prev => [...prev, ...data.result]);
+    if (data.qty === 0) {
+      setIsGetListLoading(false);
+      setisShowAddContentsIcon(false);
+    } else {
+      setIsGetListLoading(false);
+      setRecommendList(prev => [...prev, ...data.result]);
+    }
   };
 
   const onIntersect: IntersectionObserverCallback = async ([entry], observer) => {
