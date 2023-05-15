@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import Header from '../components/Header';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 const Main = () => {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+  const [isElementfocus, setIsElementfocus] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -20,7 +21,11 @@ const Main = () => {
     <S.Container>
       <S.Inner>
         <Header />
-        <InputTodo setTodos={setTodoListData} />
+        <InputTodo
+          setTodos={setTodoListData}
+          isElementfocus={isElementfocus}
+          setIsElementfocus={setIsElementfocus}
+        />
         <TodoList todos={todoListData} setTodos={setTodoListData} />
       </S.Inner>
     </S.Container>
