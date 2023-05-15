@@ -27,6 +27,10 @@ export const SearchItem = styled.li<{ isFocus: boolean }>`
   padding: 6px 12px;
   background-color: ${props => (props.isFocus ? '#F2F2F2' : '')};
   border-radius: 3px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f2f2;
+  }
   > span {
     color: #2bc9ba;
   }
