@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import TodoSearchResult from './TodoSearchResult';
 import { ImSpinner8 } from 'react-icons/im';
-import { useEffect, useRef, useState } from 'react';
-import { getSearchTodos } from '../api/todo';
+import useObserve from '../hooks/useObserve';
+import { useCallback } from 'react';
 
 interface ITodoDropDown {
   searchResults: string[];
@@ -12,26 +12,13 @@ interface ITodoDropDown {
 }
 
 function TodoDropDown({ searchResults, setCurrentPage, isHidden, isLoading }: ITodoDropDown) {
-  const observerTarget = useRef<HTMLDivElement>(null);
-
-  // observe
-  useEffect(() => {
-    console.log('oberseve 실행');
-    const observer = new IntersectionObserver(
-      entries => {
-        const [entry] = entries;
-        if (!entry.isIntersecting) return;
-        console.log('oberseve: ', entry);
-        setCurrentPage(prev => prev + 1);
-      },
-      {
-        root: null,
-        threshold: 1,
-      }
-    );
-    observer.observe(observerTarget.current as Element);
-    return () => observer.disconnect();
+  const HandleIntersect = useCallback(() => {
+    setCurrentPage(prev => prev + 1);
   }, []);
+  const { observerTarget } = useObserve<HTMLDivElement>(HandleIntersect, {
+    root: null,
+    threshold: 1,
+  });
 
   return (
     <DropDownItemContainer>
