@@ -9,6 +9,8 @@ import useDebounce from '../hooks/useDebounce';
 const FIRST_PAGE = 1;
 
 interface InputTodoType {
+  inputText: string;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
   setSearchResults: React.Dispatch<React.SetStateAction<string[]>>;
   currentPage: number;
@@ -20,6 +22,8 @@ interface InputTodoType {
 }
 
 const InputTodo = ({
+  inputText,
+  setInputText,
   setTodos,
   setSearchResults,
   currentPage,
@@ -29,7 +33,6 @@ const InputTodo = ({
   setIsLoading,
   setIsFocus,
 }: InputTodoType) => {
-  const [inputText, setInputText] = useState('');
   const { ref, setFocus } = useFocus();
   const searchApiDebounce = useDebounce();
 
@@ -112,9 +115,6 @@ const InputTodo = ({
       onSubmit={handleSubmit}
       onClick={() => {
         setIsFocus(true);
-      }}
-      onBlur={() => {
-        setIsFocus(false);
       }}
     >
       <SearchIcon />

@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { TodoDispatchContext } from '../pages/Main';
+import { createTodo } from '../api/todo';
 
 interface ITodoSearchResult {
   value: string;
 }
 
 function TodoSearchResult({ value }: ITodoSearchResult) {
-  return <ItemContainer>{value.length > 40 ? value.slice(0, 39) + '...' : value}</ItemContainer>;
+  const dispatch = useContext(TodoDispatchContext);
+  const handleClick = async () => {
+    try {
+      const { data } = await createTodo({ title: value });
+      if (data) {
+        dispatch?.setTodoListData(prevTodos => [...prevTodos, data]);
+        dispatch?.setInputText('');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong.');
+    }
+  };
+
+  return (
+    <ItemContainer onClick={handleClick}>
+      {value.length > 40 ? value.slice(0, 39) + '...' : value}
+    </ItemContainer>
+  );
   // return <ItemContainer>{value}</ItemContainer>;
   // return <ItemContainer>hasdfkalsdnfhbkjashdfnkasdfhklsdfadsfasdfalhsdnfjlkbabs</ItemContainer>;
 }
