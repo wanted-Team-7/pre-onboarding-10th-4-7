@@ -1,9 +1,10 @@
-import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
+import PlusIcon from '../icon/PlusIcon';
+import SpinnerIcon from '../icon/SpinnerIcon';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -75,10 +76,10 @@ const InputTodo = ({
       />
       {!isLoading ? (
         <InputSubmit type="submit">
-          <FaPlusCircle className="btn-plus" />
+          <PlusIcon />
         </InputSubmit>
       ) : (
-        <FaSpinner className="spinner" />
+        <SpinnerIcon />
       )}
     </FormContainer>
   );

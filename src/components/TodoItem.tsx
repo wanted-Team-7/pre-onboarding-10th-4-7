@@ -1,8 +1,9 @@
-import { FaSpinner, FaTrash } from 'react-icons/fa';
 import { useCallback, useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { deleteTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
-import styled from 'styled-components';
+import TrashIcon from '../icon/TrashIcon';
+import SpinnerIcon from '../icon/SpinnerIcon';
 
 interface TodoItemTypes {
   id: string;
@@ -39,10 +40,10 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
       <ItemOption>
         {!isLoading ? (
           <button onClick={() => handleRemoveTodo()}>
-            <FaTrash className="btn-trash" />
+            <TrashIcon />
           </button>
         ) : (
-          <FaSpinner className="spinner" />
+          <SpinnerIcon />
         )}
       </ItemOption>
     </Item>
