@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 export const SearchListBox = styled.ul`
   position: absolute;
+  display: flex;
+  flex-direction: column;
   width: 580px;
   height: 164px;
   padding: 9px 5px;
