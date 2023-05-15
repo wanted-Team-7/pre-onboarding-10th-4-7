@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getRecommendList } from '../api/todo';
 import styled from 'styled-components';
 import Spinner from './common/Spinner';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 interface RecommendListType {
   searchTerm: string;
@@ -51,6 +52,22 @@ const RecommendList = ({
     setIsGetListLoading(false);
     setRecommendList(prev => [...prev, ...data.result]);
   };
+
+  const onIntersect: IntersectionObserverCallback = async ([entry], observer) => {
+    if (entry.isIntersecting && !isGetListLoading) {
+      observer.unobserve(entry.target);
+      await clickAddContentsIcon();
+      observer.observe(entry.target);
+    }
+  };
+
+  const { setTarget } = useIntersectionObserver({
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5,
+    onIntersect,
+  });
+
   return (
     <S.DropdownContainer visible={isShowRecommendList}>
       {recommendList.map((recommendWord: string, index) => (
@@ -79,11 +96,7 @@ const RecommendList = ({
         </S.DropdownItem>
       ))}
       {isShowAddContentsIcon &&
-        (!isGetListLoading ? (
-          <S.AddIcon onClick={clickAddContentsIcon}>...</S.AddIcon>
-        ) : (
-          <Spinner />
-        ))}
+        (!isGetListLoading ? <S.AddIcon ref={setTarget}>...</S.AddIcon> : <Spinner />)}
     </S.DropdownContainer>
   );
 };
