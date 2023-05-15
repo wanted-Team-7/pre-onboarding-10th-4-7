@@ -12,7 +12,7 @@ interface TodoItemTypes {
 }
 
 const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isRemoveLoading, setIsRemoveLoading] = useState(false);
 
   const removeTodo = async () => {
     await deleteTodo(id);
@@ -20,14 +20,14 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
   };
 
   const handleRemoveTodo = useCallback(async () => {
-    setIsLoading(true);
+    setIsRemoveLoading(true);
     await removeTodo();
-    setIsLoading(false);
+    setIsRemoveLoading(false);
   }, [id, setTodos]);
 
   useEffect(() => {
     return () => {
-      setIsLoading(false);
+      setIsRemoveLoading(false);
     };
   }, []);
 
@@ -35,7 +35,7 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
     <S.Item>
       <span>{title}</span>
       <S.ItemOption>
-        {!isLoading ? (
+        {!isRemoveLoading ? (
           <button onClick={() => handleRemoveTodo()}>
             <FaTrash className="btn-trash" />
           </button>

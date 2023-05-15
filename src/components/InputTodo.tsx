@@ -16,8 +16,8 @@ interface InputTodoType {
 
 const InputTodo = ({ setTodos, isElementfocus, setIsElementfocus }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVisibleRecommendList, setIsVisibleRecommendList] = useState(false);
+  const [isAddTodoLoading, setIsAddTodoLoading] = useState(false);
+  const [isShowRecommendList, setIsShowRecommendList] = useState(false);
 
   const { ref, setFocus } = useFocus();
 
@@ -27,7 +27,7 @@ const InputTodo = ({ setTodos, isElementfocus, setIsElementfocus }: InputTodoTyp
 
   useEffect(() => {
     if (inputText === '') {
-      setIsVisibleRecommendList(false);
+      setIsShowRecommendList(false);
     }
   }, [inputText]);
 
@@ -53,7 +53,7 @@ const InputTodo = ({ setTodos, isElementfocus, setIsElementfocus }: InputTodoTyp
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setIsLoading(true);
+      setIsAddTodoLoading(true);
 
       const trimmedText = trimInputText(inputText);
 
@@ -62,7 +62,7 @@ const InputTodo = ({ setTodos, isElementfocus, setIsElementfocus }: InputTodoTyp
       }
 
       setInputText('');
-      setIsLoading(false);
+      setIsAddTodoLoading(false);
     },
     [inputText, setTodos]
   );
@@ -97,19 +97,19 @@ const InputTodo = ({ setTodos, isElementfocus, setIsElementfocus }: InputTodoTyp
           }}
           onKeyDown={event => {
             if (event.key === 'Escape') {
-              setIsVisibleRecommendList(false);
+              setIsShowRecommendList(false);
             }
           }}
-          disabled={isLoading}
+          disabled={isAddTodoLoading}
         />
-        {isLoading && <Spinner />}
+        {isAddTodoLoading && <Spinner />}
       </S.FormContainer>
       <RecommendList
         searchTerm={searchTerm}
         addTodo={addTodo}
         setInputText={setInputText}
-        isVisibleRecommendList={isVisibleRecommendList}
-        setIsVisibleRecommendList={setIsVisibleRecommendList}
+        isShowRecommendList={isShowRecommendList}
+        setIsShowRecommendList={setIsShowRecommendList}
       />
     </>
   );

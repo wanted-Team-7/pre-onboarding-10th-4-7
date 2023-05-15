@@ -7,52 +7,52 @@ interface RecommendListType {
   searchTerm: string;
   addTodo: (todo: string) => Promise<void>;
   setInputText: (inputText: string) => void;
-  isVisibleRecommendList: boolean;
-  setIsVisibleRecommendList: (isVisible: boolean) => void;
+  isShowRecommendList: boolean;
+  setIsShowRecommendList: (isVisible: boolean) => void;
 }
 
 const RecommendList = ({
   searchTerm,
   addTodo,
   setInputText,
-  isVisibleRecommendList,
-  setIsVisibleRecommendList,
+  isShowRecommendList,
+  setIsShowRecommendList,
 }: RecommendListType) => {
   const [recommendList, setRecommendList] = useState<string[]>([]);
   const [recommendListPage, setRecommendListPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVisibleaddContentsIcon, setisVisibleaddContentsIcon] = useState(false);
+  const [isGetListLoading, setIsGetListLoading] = useState(false);
+  const [isShowAddContentsIcon, setisShowAddContentsIcon] = useState(false);
 
-  const onRecommendList = async () => {
+  const onCreateRecommendList = async () => {
     if (searchTerm) {
       const { data } = await getRecommendList(searchTerm, recommendListPage);
-      if (!data.total) return setIsVisibleRecommendList(false);
-      if (data.total > 10) setisVisibleaddContentsIcon(true);
-      setIsVisibleRecommendList(true);
+      if (!data.total) return setIsShowRecommendList(false);
+      if (data.total > 10) setisShowAddContentsIcon(true);
+      setIsShowRecommendList(true);
       setRecommendList(data.result);
     }
   };
 
   useEffect(() => {
-    onRecommendList();
+    onCreateRecommendList();
   }, [searchTerm]);
 
   const clickDropdownItem = (event: React.MouseEvent<HTMLLIElement>) => {
     const data = event.currentTarget.innerText;
     addTodo(data);
     setInputText('');
-    setIsVisibleRecommendList(false);
+    setIsShowRecommendList(false);
   };
 
   const clickAddContentsIcon = async () => {
-    setIsLoading(true);
+    setIsGetListLoading(true);
     setRecommendListPage(prev => prev + 1);
     const { data } = await getRecommendList(searchTerm, recommendListPage);
-    setIsLoading(false);
+    setIsGetListLoading(false);
     setRecommendList(prev => [...prev, ...data.result]);
   };
   return (
-    <S.DropdownContainer visible={isVisibleRecommendList}>
+    <S.DropdownContainer visible={isShowRecommendList}>
       {recommendList.map((recommendWord: string, index) => (
         <S.DropdownItem
           key={`recommend-${index}`}
@@ -78,8 +78,12 @@ const RecommendList = ({
           })}
         </S.DropdownItem>
       ))}
-      {isVisibleaddContentsIcon &&
-        (!isLoading ? <S.AddIcon onClick={clickAddContentsIcon}>...</S.AddIcon> : <Spinner />)}
+      {isShowAddContentsIcon &&
+        (!isGetListLoading ? (
+          <S.AddIcon onClick={clickAddContentsIcon}>...</S.AddIcon>
+        ) : (
+          <Spinner />
+        ))}
     </S.DropdownContainer>
   );
 };
