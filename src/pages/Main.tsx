@@ -64,6 +64,7 @@ const Main = () => {
             searchKeywordList={searchKeywordList}
             focusRef={focusRef}
             focusIndex={focusIndex}
+            inputText={inputText}
           />
         ) : null}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
