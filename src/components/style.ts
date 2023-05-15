@@ -39,21 +39,25 @@ const TodoElement = styled.li`
 `;
 
 const Li = styled.li`
-  /* padding: 6px 12px; */
+  padding: 6px 12px;
   color: #000000;
   &:hover {
     background-color: #f2f2f2;
     cursor: default;
   }
+  &:active {
+    background-color: #d5f4f1;
+  }
 `;
 
 const DropDownContainer = styled.div`
-  top: 370px;
-  /* padding: 10px; */
+  top: 355px;
+  padding: 10px;
   position: absolute;
   width: 97%;
   height: 200px;
   overflow-y: scroll;
+  background-color: #ffffff;
 
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.38);
   color: #dedede;
