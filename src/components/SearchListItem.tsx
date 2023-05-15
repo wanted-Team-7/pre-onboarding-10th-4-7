@@ -9,7 +9,7 @@ interface SearchListItemTyep {
 const SearchListItem = ({ searchKeyword, isFocus }: SearchListItemTyep) => {
   const focusRef = useRef<HTMLLIElement>(null);
   useEffect(() => {
-    focusRef.current?.scrollIntoView(false);
+    focusRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [isFocus]);
   return (
     <SearchItem isFocus={isFocus} ref={focusRef}>
