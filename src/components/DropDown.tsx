@@ -39,11 +39,13 @@ function DropDown({ dropdownRef, searchListData, inputText, handleAddTodoClick }
           <HighlightedText text={item} highlight={inputText} />
         </DropdownItem>
       ))}
-      {!isTotal && (
-        <IntersectionBox ref={setTarget}>
-          {isSearchLoading ? <Spinner className="spinner" /> : !isTotal && <Union />}
-        </IntersectionBox>
-      )}
+      <IntersectionBox ref={setTarget}>
+        {isSearchLoading ? (
+          <Spinner className="spinner" />
+        ) : !isTotal ? (
+          <Union className="union" />
+        ) : null}
+      </IntersectionBox>
     </DropdownBox>
   );
 }
@@ -95,9 +97,12 @@ const IntersectionBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 29px;
   .spinner {
+    height: 29px;
     animation: spin 0.8s infinite ease-in-out;
+  }
+  .union {
+    height: 29px;
   }
   @keyframes spin {
     0% {
