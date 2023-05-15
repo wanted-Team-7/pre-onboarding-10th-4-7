@@ -14,7 +14,7 @@ const Main = () => {
   const [inputText, setInputText] = useState<string>('');
   const [dropdownDisplay, setDropdownDisplay] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
-  const loaderFlag = useRef(true);
+  const [inputLoading, setInputLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -35,8 +35,9 @@ const Main = () => {
           setCurrentPage={setCurrentPage}
           setDropdownDisplay={setDropdownDisplay}
           isLoading={isLoading}
-          loaderFlag={loaderFlag}
           currentPage={currentPage}
+          inputLoading={inputLoading}
+          setInputLoading={setInputLoading}
         />
         {dropdownDisplay ? (
           <DropDown
@@ -49,7 +50,7 @@ const Main = () => {
             setInputText={setInputText}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
-            loaderFlag={loaderFlag}
+            inputLoading={inputLoading}
           />
         ) : null}
         <TodoList todos={todoListData} setTodos={setTodoListData} />

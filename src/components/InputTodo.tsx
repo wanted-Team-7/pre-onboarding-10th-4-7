@@ -1,5 +1,5 @@
 import { FiSearch } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDebounce } from '../hooks/useDebounce';
 import { S } from './style';
 import { INIT_PAGE, DELAY_TIME, LIMIT_STR_LENGTH, PER_PAGE_LIMIT_COUNT } from '../util/constant';
@@ -14,8 +14,9 @@ interface InputTodoType {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   setDropdownDisplay: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
-  loaderFlag: React.MutableRefObject<boolean>;
   currentPage: number;
+  setInputLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  inputLoading: boolean;
 }
 
 const InputTodo = ({
@@ -25,12 +26,12 @@ const InputTodo = ({
   setCurrentPage,
   setDropdownDisplay,
   isLoading,
-  loaderFlag,
   currentPage,
+  inputLoading,
+  setInputLoading,
 }: InputTodoType) => {
   const debounceValue = useDebounce(inputText, DELAY_TIME);
-  const [inputLoading, setInputLoading] = useState<boolean>(false);
-
+  const loaderFlag = useRef(true);
   const getDataInput = async () => {
     try {
       setInputLoading(true);

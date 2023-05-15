@@ -15,7 +15,7 @@ interface DropDownProps {
   isLoading: boolean;
   currentPage: number;
   inputText: string;
-  loaderFlag: React.MutableRefObject<boolean>;
+  inputLoading: boolean;
 }
 
 const DropDown = ({
@@ -28,7 +28,7 @@ const DropDown = ({
   setInputText,
   setIsLoading,
   isLoading,
-  loaderFlag,
+  inputLoading,
 }: DropDownProps) => {
   const target = useRef<HTMLLIElement>(null);
   const endRef = useRef(false);
@@ -37,15 +37,15 @@ const DropDown = ({
 
   // IntersectionObserver 옵저버 생성
   useEffect(() => {
-    const observer = new IntersectionObserver(obsHandler, { threshold: 1 });
-    if (target.current) observer.observe(target.current);
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    if (target.current) {
+      observer.observe(target.current);
+    }
     return () => {
       observer.disconnect();
     };
-  }, []);
-
-  // page 증가에 따른 새로운 data 불러오기
-  // 문제점. getPost() api 호출을 이곳에서 다 해버리니까 DropDown에서 여러 가지 일을 하는 느낌.
+    // input loading이 끝마치고 observer target을 인식하기 위해서 inputLoading을 의존성으로 넣음
+  }, [inputLoading]);
 
   //옵저버 콜백함수
   const obsHandler = (entries: any) => {
@@ -57,7 +57,6 @@ const DropDown = ({
     if (entries[0].isIntersecting && endRef.current === false && preventRef.current === true) {
       preventRef.current = false; //옵저버 중복 실행 방지
       setCurrentPage(prev => prev + 1); //페이지 값 증가
-      console.log('hello');
       getDataScroll();
     }
   };
