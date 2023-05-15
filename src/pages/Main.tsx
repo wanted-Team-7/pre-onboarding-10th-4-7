@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import styled from 'styled-components';
 import { createTodo, getTodoList, searchTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import useFocus from '../hooks/useFocus';
@@ -74,8 +75,8 @@ const Main = () => {
   }, [dropdownRef, inputRef]);
 
   return (
-    <div className="container">
-      <div className="inner">
+    <Container>
+      <Inner>
         <Header />
         <InputTodo
           setTodos={setTodoListData}
@@ -98,9 +99,24 @@ const Main = () => {
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
-      </div>
-    </div>
+      </Inner>
+    </Container>
   );
 };
 
 export default Main;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+const Inner = styled.div`
+  width: 100%;
+  padding: 8rem 10px 4rem;
+  position: relative;
+`;

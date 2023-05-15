@@ -1,6 +1,3 @@
-/* 
- * 수정 자유롭게 해주셔도 괜찮습니다 :)
-*/
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,21 +10,6 @@ body {
   color: #444;
   background: #fff;
   height: 100vh;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.inner {
-  width: 100%;
-  padding: 8rem 10px 4rem;
-  position: relative;
 }
 
 .btn-plus {
@@ -45,57 +27,6 @@ body {
   opacity: 0.5;
 }
 
-.active-link {
-  color: orangered;
-  text-decoration: underline;
-}
-
-.main__content {
-  flex: 7;
-}
-
-.main__content h1 {
-  margin-bottom: 15px;
-  line-height: 30px;
-  font-size: 30px;
-}
-
-.main__content p {
-  line-height: 25px;
-}
-
-.empty-list {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  font-size: 2.5rem;
-  letter-spacing: 1.5rem;
-  margin-left: 0.75rem;
-  color: #ececec;
-}
-
-.item {
-  list-style-type: none;
-  padding: 17px 1.5rem;
-  border-bottom: 1px solid #eaeaea;
-  font-size: 1.2rem;
-  letter-spacing: 1.5px;
-}
-.item:hover {
-  opacity: 0.85;
-  background-color: #eaeaea;
-}
-
-.item-option {
-  float: right;
-}
-
-.item-option button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
 .spinner {
   font-size: 20px;
   animation: spin 2s linear infinite;
@@ -110,10 +41,4 @@ body {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.textInput {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #dfdfdf;
 }
