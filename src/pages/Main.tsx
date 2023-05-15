@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getTodoList, searchTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import useFocus from '../hooks/useFocus';
@@ -16,7 +16,7 @@ const Main = () => {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { ref: inputRef, setFocus: setInputFocus } = useFocus();
-  const { ref: dropdownRef } = useFocus();
+  const dropdownRef = useRef<HTMLUListElement>(null);
 
   const handleInputClick = () => {
     setIsDropdownOpen(true);
@@ -84,6 +84,7 @@ const Main = () => {
             isSearchLoading={isSearchLoading}
             isTotal={isTotal}
             handleSearchFetch={handleSearchFetch}
+            setTodos={setTodoListData}
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
