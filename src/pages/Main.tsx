@@ -1,20 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { createTodo, getTodoList, searchTodoList } from '../api/todo';
-import { TodoTypes } from '../types/todo';
+import { searchTodoList } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import TodoList from '../components/TodoList';
 import DropDown from '../components/DropDown';
+import { useTodoState } from '../context/TodoProvider';
 
 const Main = () => {
-  const [inputText, setInputText] = useState('');
+  const { inputText, handleAddTodo } = useTodoState();
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isTotal, setIsTotal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchListData, setSearchListData] = useState<string[]>([]);
-  const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { ref: inputRef, setFocus: setInputFocus } = useFocus();
   const dropdownRef = useRef<HTMLUListElement>(null);
@@ -41,22 +40,6 @@ const Main = () => {
     setIsSearchLoading(false);
   };
 
-  const handleAddTodoClick = async (todo: string) => {
-    const { data } = await createTodo({ title: todo });
-    if (data) {
-      setTodoListData(prev => [...prev, data]);
-      setInputText('');
-      return;
-    }
-  };
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await getTodoList();
-      setTodoListData(data || []);
-    })();
-  }, []);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -79,12 +62,9 @@ const Main = () => {
       <Inner>
         <Header />
         <InputTodo
-          setTodos={setTodoListData}
           inputRef={inputRef}
           setInputFocus={setInputFocus}
           handleInputClick={handleInputClick}
-          inputText={inputText}
-          setInputText={setInputText}
           handleSearchFetch={handleSearchFetch}
         />
         {isDropdownOpen && inputText && searchListData.length > 0 && (
@@ -95,10 +75,10 @@ const Main = () => {
             isTotal={isTotal}
             inputText={inputText}
             handleSearchFetch={handleSearchFetch}
-            handleAddTodoClick={handleAddTodoClick}
+            handleAddTodoClick={handleAddTodo}
           />
         )}
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoList />
       </Inner>
     </Container>
   );

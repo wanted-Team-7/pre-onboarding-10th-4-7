@@ -1,16 +1,16 @@
 import App from './App';
 import ReactDOM from 'react-dom';
-import { StrictMode } from 'react';
 import { ThemeProvider } from 'styled-components';
 import Theme from './styles/theme';
 import GlobalStyles from './styles/globalStyle';
+import { TodoProvider } from './context/TodoProvider';
 
 ReactDOM.render(
-  <StrictMode>
+  <TodoProvider>
     <ThemeProvider theme={Theme}>
       <GlobalStyles />
       <App />
     </ThemeProvider>
-  </StrictMode>,
+  </TodoProvider>,
   document.getElementById('root')
 );

@@ -1,31 +1,24 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
-import { TodoTypes } from '../types/todo';
-import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
 import PlusIcon from '../icon/PlusIcon';
 import SpinnerIcon from '../icon/SpinnerIcon';
+import { useTodoState } from '../context/TodoProvider';
 
 interface InputTodoType {
-  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
   inputRef: React.RefObject<HTMLInputElement>;
   setInputFocus: () => void;
   handleInputClick: () => void;
-  inputText: string;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
   handleSearchFetch: (type: string) => void;
 }
 
 const InputTodo = ({
-  setTodos,
   inputRef,
   setInputFocus,
   handleInputClick,
-  inputText,
-  setInputText,
   handleSearchFetch,
 }: InputTodoType) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { inputText, setInputText, isAddLoading, handleSubmit } = useTodoState();
   const debouncedSearch = useDebounce(inputText, 500);
 
   useEffect(() => {
@@ -36,34 +29,6 @@ const InputTodo = ({
     setInputFocus();
   }, [setInputFocus]);
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert('Please write something');
-        }
-
-        const newItem = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos(prev => [...prev, data]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert('Something went wrong.');
-      } finally {
-        setInputText('');
-        setIsLoading(false);
-      }
-    },
-    [inputText, setInputText, setTodos]
-  );
-
   return (
     <FormContainer onSubmit={handleSubmit}>
       <InputText
@@ -72,9 +37,9 @@ const InputTodo = ({
         value={inputText}
         onChange={e => setInputText(e.target.value)}
         onClick={handleInputClick}
-        disabled={isLoading}
+        disabled={isAddLoading}
       />
-      {!isLoading ? (
+      {!isAddLoading ? (
         <InputSubmit type="submit">
           <PlusIcon />
         </InputSubmit>
