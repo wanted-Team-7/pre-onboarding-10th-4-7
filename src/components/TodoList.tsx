@@ -1,4 +1,5 @@
 import { TodoTypes } from '../types/todo';
+import { S } from './style';
 import TodoItem from './TodoItem';
 
 interface TodoListTypes {
@@ -14,7 +15,7 @@ const TodoList = ({ todos, setTodos }: TodoListTypes) => {
       ))}
     </ul>
   ) : (
-    <div className="empty-list">...</div>
+    <S.Empty className="empty-list">...</S.Empty>
   );
 };
 

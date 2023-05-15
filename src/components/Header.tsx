@@ -1,21 +1,10 @@
-const Header = () => {
-  const headerStyle = {
-    padding: '20px 0',
-    lineHeight: '1.5em',
-  };
-  const titleStyle: React.CSSProperties = {
-    fontSize: '6rem',
-    fontWeight: '600',
-    marginBottom: '2rem',
-    lineHeight: '1em',
-    color: '#ececec',
-    textAlign: 'center',
-  };
+import { S } from './style';
 
+const Header = () => {
   return (
-    <header style={headerStyle}>
-      <h1 style={titleStyle}>Toodos</h1>
-    </header>
+    <S.Header>
+      <S.Title>Toodos</S.Title>
+    </S.Header>
   );
 };
 
