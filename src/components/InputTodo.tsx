@@ -7,7 +7,8 @@ import useFocus from '../hooks/useFocus';
 import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
 import Dropdown from './dropdown/Dropdown';
-import apiRequest from '../api';
+import { getSearchList } from '../api/todo';
+import useInfiniteScroll from '../hooks/useInfiniteScroll';
 
 interface InputTodoType {
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
@@ -17,6 +18,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
   const { ref, setFocus } = useFocus();
   const dropdownRef = useRef<HTMLUListElement>(null);
 
@@ -25,23 +27,6 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
   useEffect(() => {
     setFocus();
   }, [setFocus]);
-
-  useEffect(() => {
-    (async () => {
-      if (inputText === null || inputText.trim() === '') return;
-      let serverData;
-      try {
-        serverData = (await apiRequest.get(`/search?q=${debouncedInputText}&page=1&limit=10`)).data
-          .result;
-      } catch (error) {
-        console.log(error);
-      }
-
-      if (serverData === null) return;
-
-      setData(serverData);
-    })();
-  }, [debouncedInputText]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -83,6 +68,23 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
     }
   };
 
+  const getScrollData = async () => {
+    try {
+      const res = await getSearchList(debouncedInputText, page);
+      const scrollServerData = res.data.result;
+      setData([...data, ...scrollServerData]);
+      setPage(pre => pre + 1);
+    } catch (error) {
+      return console.log(error);
+    }
+  };
+
+  const { isEnd } = useInfiniteScroll({ onScrollEnd: getScrollData });
+
+  useEffect(() => {
+    getScrollData();
+  }, [debouncedInputText]);
+
   return (
     <>
       <StFormContainer>
@@ -108,7 +110,12 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
           )}
         </StForm>
       </StFormContainer>
-      <Dropdown ref={dropdownRef} data={data} debouncedInputText={debouncedInputText} />
+      <Dropdown
+        ref={dropdownRef}
+        data={data}
+        debouncedInputText={debouncedInputText}
+        isEnd={isEnd}
+      />
     </>
   );
 };

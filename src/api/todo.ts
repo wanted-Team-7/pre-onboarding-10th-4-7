@@ -30,3 +30,12 @@ export const deleteTodo = async (id: string) => {
     throw new Error('API deleteTodo error');
   }
 };
+
+export const getSearchList = async (inputValue: string, page: number) => {
+  try {
+    const response = await apiRequest.get(`search?q=${inputValue}&page=${page}&limit=10`);
+    return response;
+  } catch (error) {
+    throw new Error('API getSearchList error');
+  }
+};
