@@ -6,7 +6,7 @@ import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
-import Dropdown from './dropdown/Dropdown';
+import Dropdown from './Dropdown';
 import { getSearchList } from '../api/todo';
 
 interface InputTodoType {
