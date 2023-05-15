@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TrashIcon from '../icon/TrashIcon';
 import SpinnerIcon from '../icon/SpinnerIcon';
-import { useTodoState } from '../context/TodoProvider';
+import { useTodoDispatch } from '../context/TodoProvider';
 
 interface TodoItemTypes {
   id: string;
@@ -11,7 +11,7 @@ interface TodoItemTypes {
 
 const TodoItem = ({ id, title }: TodoItemTypes) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { handleRemoveTodo } = useTodoState();
+  const { handleRemoveTodo } = useTodoDispatch();
 
   useEffect(() => {
     return () => {

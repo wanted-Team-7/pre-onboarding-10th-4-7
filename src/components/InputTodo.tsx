@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useDebounce from '../hooks/useDebounce';
 import PlusIcon from '../icon/PlusIcon';
 import SpinnerIcon from '../icon/SpinnerIcon';
-import { useTodoState } from '../context/TodoProvider';
+import { useTodoDispatch, useTodoState } from '../context/TodoProvider';
 
 interface InputTodoType {
   inputRef: React.RefObject<HTMLInputElement>;
@@ -18,7 +18,8 @@ const InputTodo = ({
   handleInputClick,
   handleSearchFetch,
 }: InputTodoType) => {
-  const { inputText, setInputText, isAddLoading, handleSubmit } = useTodoState();
+  const { handleSubmit } = useTodoDispatch();
+  const { inputText, setInputText, isAddLoading } = useTodoState();
   const debouncedSearch = useDebounce(inputText, 500);
 
   useEffect(() => {

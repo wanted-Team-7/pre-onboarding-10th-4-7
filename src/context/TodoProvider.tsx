@@ -7,6 +7,9 @@ interface TodoContextType {
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   todoListData: TodoTypes[];
   isAddLoading: boolean;
+}
+
+interface TodoDispatchType {
   handleRemoveTodo: (
     id: string,
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
@@ -16,6 +19,7 @@ interface TodoContextType {
 }
 
 const TodoContext = createContext<TodoContextType | null>(null);
+const TodoDispatchContext = createContext<TodoDispatchType | null>(null);
 
 export const useTodo = () => useContext(TodoContext);
 
@@ -92,12 +96,17 @@ export function TodoProvider({ children }: React.PropsWithChildren) {
         setInputText,
         todoListData,
         isAddLoading,
-        handleAddTodo,
-        handleRemoveTodo,
-        handleSubmit,
       }}
     >
-      {children}
+      <TodoDispatchContext.Provider
+        value={{
+          handleAddTodo,
+          handleRemoveTodo,
+          handleSubmit,
+        }}
+      >
+        {children}
+      </TodoDispatchContext.Provider>
     </TodoContext.Provider>
   );
 }
@@ -106,6 +115,14 @@ export const useTodoState = () => {
   const state = useContext(TodoContext);
   if (!state) {
     throw new Error('TodoContextProvider not found');
+  }
+  return state;
+};
+
+export const useTodoDispatch = () => {
+  const state = useContext(TodoDispatchContext);
+  if (!state) {
+    throw new Error('TodoDispatchContextProvider not found');
   }
   return state;
 };
