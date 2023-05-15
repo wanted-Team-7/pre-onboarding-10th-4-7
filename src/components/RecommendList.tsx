@@ -45,7 +45,7 @@ const RecommendList = ({
     setIsShowRecommendList(false);
   };
 
-  const clickAddContentsIcon = async () => {
+  const scrollGetList = async () => {
     setIsGetListLoading(true);
     setRecommendListPage(prev => prev + 1);
     const { data } = await getRecommendList(searchTerm, recommendListPage);
@@ -56,7 +56,7 @@ const RecommendList = ({
   const onIntersect: IntersectionObserverCallback = async ([entry], observer) => {
     if (entry.isIntersecting && !isGetListLoading) {
       observer.unobserve(entry.target);
-      await clickAddContentsIcon();
+      await scrollGetList();
       observer.observe(entry.target);
     }
   };
