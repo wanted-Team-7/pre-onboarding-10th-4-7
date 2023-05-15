@@ -1,175 +1,246 @@
-# 📚 사전 과제: "Toodos"
+## 이준용 개인과제
 
-프론트엔드 채용 면접에 앞서 `사전 과제`가 있습니다.
-인터뷰에서 수정 및 구현 작업해주신 내용에 대해 질문을 드릴 예정입니다. 면접에서 편하게 답변을 해주시면 됩니다.
-
-> **Note**
-> _설명하시는 코드를 함께 볼 수 있도록 google meet에서 **화면 공유 준비**를 부탁드립니다._
-
-## 🎯 목표
-
-본 과제는 개발자의 하루 일과 중 가장 기본적인 업무인 **코드 리뷰** 및 **기능 구현**입니다. 해당 리포지토리는 *Toodos*라는 이름을 가진 `To-do 리스트` 앱입니다. 코드 리뷰를 통해 다른 개발자들과 협업하는 스타일과 기존 코드를 리팩토링하는 방식을 파악하고자 합니다. 또한 기능 명세서와 디자인 가이드를 통해 새로운 기능을 어떻게 구현하시는지 파악하기 위해 준비했습니다.
-
-## 🏠 Toodos 구조
-
-`Toodos` 앱의 폴더 구조입니다. 
-> **Warning**
-*__별도로 전달 받으신 api token을 `.env` 파일에 추가 부탁드립니다.__*
-
-```javascript
-src
- ┣ api
- ┃  ┗ index.js
- ┃  ┗ todo.js
- ┣ components
- ┃  ┣ Header.js
- ┃  ┣ InputTodo.js
- ┃  ┣ TodoItem.js
- ┃  ┗ TodoList.js
- ┣ hooks
- ┃  ┗ useFocus.js
- ┣ pages
- ┃  ┗ Main.js
- ┣ App.css
- ┣ App.js
- ┗ index.js
-.env // <--- YOU NEED THIS!
-
+## 폴더 구조
+```
+📦src
+ ┣ 📂api
+ ┃ ┣ 📜index.ts
+ ┃ ┗ 📜todo.ts
+ ┣ 📂assets
+ ┃ ┣ 📜spinner_icon.svg
+ ┃ ┗ 📜union_icon.svg
+ ┣ 📂components
+ ┃ ┣ 📜DropDown.tsx
+ ┃ ┣ 📜Header.tsx
+ ┃ ┣ 📜InputTodo.tsx
+ ┃ ┣ 📜TodoItem.tsx
+ ┃ ┗ 📜TodoList.tsx
+ ┣ 📂context
+ ┃ ┣ 📜SearchProvider.tsx
+ ┃ ┗ 📜TodoProvider.tsx
+ ┣ 📂hooks
+ ┃ ┣ 📜useDebounce.ts
+ ┃ ┣ 📜useFocus.ts
+ ┃ ┗ 📜useIntersectionObserver.ts
+ ┣ 📂icon
+ ┃ ┣ 📜PlusIcon.tsx
+ ┃ ┣ 📜SpinnerIcon.tsx
+ ┃ ┗ 📜TrashIcon.tsx
+ ┣ 📂pages
+ ┃ ┗ 📜Main.tsx
+ ┣ 📂styles
+ ┃ ┣ 📜globalStyle.ts
+ ┃ ┗ 📜theme.ts
+ ┣ 📂types
+ ┃ ┣ 📜context.ts
+ ┃ ┣ 📜dropdown.ts
+ ┃ ┗ 📜todo.ts
+ ┣ 📜App.tsx
+ ┣ 📜custom.d.ts
+ ┗ 📜index.tsx
 ```
 
-<br/>
+## 기능 구현
 
----
+### 드롭 다운 이벤트
 
-<br/>
+```ts
+const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
+const { ref: inputRef, setFocus: setInputFocus } = useFocus(); // input
+const dropdownRef = useRef<HTMLUListElement>(null); // dropdown
+```
 
-✨ 아래 3가지 `코드 리뷰`와 `기능 구현`, `문서화` 태스크를 수행 부탁드립니다.
+```ts
+const handleInputClick = () => {
+  setIsDropdownOpen(true);
+};
 
-## 👀 코드 리뷰
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    // 현재 inputRef와 dropdownRef에 값이 있는 상태이며 input, dropdown 외부 영역을 클릭 시 드롭다운 닫힘
+    if (
+      dropdownRef.current &&
+      inputRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      !inputRef.current.contains(event.target as Node)
+    ) {
+      setIsDropdownOpen(false);
+    }
+  };
+  document.addEventListener('click', handleClickOutside);
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+  };
+}, [dropdownRef, inputRef]);
+```
 
-1. 작성된 코드의 작동 방법을 익히신 후, 개선이 필요하다고 판단되는 부분이 있다면 수정해주세요.
-2. 더 나은 프로젝트 구조나, 패턴, 에러 처리, 스타일링, 테스팅 방법 등 자유롭게 작업해주세요.
+`handleInputClick`: 클릭 시 드롭다운됩니다.
+`hadleClickOutSide` : 인풋, 드롭다운 영역 외 클릭 시 드롭다운 닫힘니다.
 
-## 🛠 기능 구현
+```ts
+ {isDropdownOpen && inputText && searchListData.length > 0 && (
+   <DropDown
+     dropdownRef={dropdownRef}
+     searchListData={searchListData}
+     inputText={inputText}
+     handleAddTodoClick={handleAddTodo}
+   />
+ )}
+```
 
-사용자가 input에 타이핑을 하면 아래에 제공된 search api를 통해 받은 아이템들이 dropdown에 보여질 수 있도록 `InputTodo`에 추천 기능을 구현해주시면 됩니다.
+**isDropdownOpen**이 true이거나 **inputText**에 값이 있거나 **searchListData**에 검색 값이 있다면 드롭다운은 동작합니다.
 
-1. 디자인 가이드(Figma)를 참고해서 InputTodo의 디자인 수정 및 dropdown을 새로 만들어주세요.
-2. Bootstrap이나 Ant Design, tailwindcss와 같은 UI kit는 사용하지 않고 구현해 주세요.
-3. Input에 `500ms`로 debounce를 적용해주세요.
-4. Dropdown에 추천된 아이템들이 처음에 10개가 나올 수 있도록 하고, 아이템이 더 있으면 무한 스크롤로 최대 10개씩 받아올 수 있도록 구현해주세요.
-5. Dropdown에서 아이템 하나를 선택하면, input의 value는 초기화가 되고 아이템이 리스트에 추가되도록 구현해주세요.
+### 무한 스크롤
 
-### 권장
-- TypeScript를 적용해주시면 좋습니다.
-- Jest나 Cypress 등을 사용한 테스트 코드를 작성해주시면 더욱 좋습니다.
+useIntersectionObserver 커스텀 훅 구현
 
-## 📜 문서화
+```ts
+import { useEffect, useState } from 'react';
 
-1. 작업의 주제와 성격에 따라 [GitHub PR](https://docs.github.com/es/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)을 생성 후, 개발된 내용을 정리 부탁드립니다. (완료된 내용은 merge 해주셔도 좋습니다.)
-2. 개발이 모두 완료되면 [GitHub Issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues)에 전반적으로 수정된 사항과 그렇게 개발된 이유를 작성 부탁드립니다.
-
-<br/>
-
----
-
-<br/>
-
-### 🔍 API
-
-#### HTTP
-
-- API: `https://interview-api.labnote.co/api`
-- RESOURCE: `{ GET } /search`
-
-#### Parameters
-
-| Name  | Required | Type     | Default | Description             |
-| ----- | -------- | -------- | ------- | ----------------------- |
-| q     | yes      | `string` | -       | input에서 검색하는 단어 |
-| page  | no       | `number` | `1`     | 받아올 페이지 번호      |
-| limit | no       | `number` | `10`    | 받아올 최대 사이즈 값   |
-
-#### Responses
-
-| Status | Messsage              | data                                                 |
-| ------ | --------------------- | ---------------------------------------------------- |
-| 200    | Ok                    | 응답 데이터 (See Payload result) |
-| 400    | Bad Request           | `details`: 상세 validation 에러 메시지               |
-| 401    | You are unauthorized. | `(인증 실패, 토큰 필요)`                             |
-| 500    | Internal Server Error | `(서버측 에러)`                                      |
-
-<br/>
-
-### Payload result
-
-| Field    | Type       | Description                            |
-| -------- | ---------- | -------------------------------------- |
-| `q`      | `string`   | 쿼리 키워드                            |
-| `page`   | `number`   | 현재 페이지 번호                       |
-| `limit`  | `number`   | per page 사이즈                        |
-| `result` | `string[]` | `limit`이 적용되어 `q`로 필터된 리스트 |
-| `qty`    | `number`   | `result`의 길이                        |
-| `total`  | `number`   | `q`로 필터된 총 `result` 길이          |
-
-#### Sample
-
-```javascript
-// Request
-`{ GET } https://interview-api.labnote.co/api/search?q=lorem&page=1&limit=10`
-
-// Response (JSON)
-{
-  "opcode": 200,
-  "message": "OK",
-  "data": {
-    "q": "lorem",
-    "page": 1,
-    "limit": 10,
-    "result": [
-      "Maecenas in lorem sit amet felis volutpat dapibus vulputate at dui.",
-      "Nam porta lorem ut turpis pellentesque, et efficitur felis ullamcorper.",
-      "Duis fringilla turpis vel lorem eleifend, sit amet hendrerit velit gravida.",
-      "Cras in felis eget augue cursus placerat ac eget lorem.",
-      "Sed id orci quis mi porttitor pulvinar cursus eget lorem.",
-      "Fusce tincidunt lorem ac purus elementum, ut fermentum lacus mollis.",
-      "Nam commodo lorem ac posuere dignissim.",
-      "Etiam eu elit finibus enim consequat scelerisque aliquam vulputate lorem.",
-      "Donec in lorem id eros ornare aliquam ut a nisi.",
-      "Donec efficitur nulla eget lorem sollicitudin, in blandit massa dictum."
-    ],
-    "qty": 10,
-    "total": 19
-  }
+export interface IntersectionObserverTypes {
+  root?: null;
+  rootMargin?: string;
+  threshold?: number;
+  onIntersect: IntersectionObserverCallback;
 }
+
+const useIntersectionObserver = ({
+  root,
+  rootMargin = '0px',
+  threshold = 0,
+  onIntersect,
+}: IntersectionObserverTypes) => {
+  const [target, setTarget] = useState<HTMLElement | null | undefined>(null);
+
+  useEffect(() => {
+    if (!target) return;
+
+    const observer: IntersectionObserver = new IntersectionObserver(onIntersect, {
+      root,
+      rootMargin,
+      threshold,
+    });
+    observer.observe(target);
+
+    return () => observer.unobserve(target);
+  }, [onIntersect, root, rootMargin, target, threshold]);
+
+  return { setTarget };
+};
+
+export default useIntersectionObserver;
 ```
 
-<br/>
+**root**: 가시성을 모니터링할 요소의 루트(root) 요소이며 기본값은 null, 브라우저의 viewport가 기본값으로 사용됩니다.  
+**rootMargin**: root 요소의 마진(margin)을 지정하는 문자열이며 기본값은 '0px', root 요소의 경계에 대한 여백을 나타냅니다.  
+**threshold**: 가시성 이벤트가 발생하는 임계값(threshold)이며 기본값은 0, 타겟 요소가 root 요소와 교차할 때 이벤트가 발생합니다.  
+**onIntersect**: 교차 이벤트 발생 시 호출될 콜백 함수(callback function)다. IntersectionObserverCallback 타입으로 정의되어 있으며, 교차 이벤트 정보를 인자로 받습니다.
 
----
+**useIntersectionObserver** 훅은 위에서 정의한 인터페이스를 매개변수로 받습니다.  
+내부에서는 상태 관리를 위해 useState 훅을 사용하여 **target** 상태를 생성하며 target은 가시성을 모니터링할 대상 요소를 가리킵니다.  
+**useEffect** 훅을 사용하여 컴포넌트가 마운트되거나 **target** 상태가 변경될 때마다 **Intersection Observer**를 생성하고 대상 요소를 관찰(observing)합니다.  
+생성된 **Observer**는 root, rootMargin, threshold 등을 옵션으로 설정하여 초기화됩니다.  
+**useEffect** 훅은 컴포넌트가 언마운트될 때 해당 Observer를 해제(unobserve)합니다.
 
-<br/>
+사용 방법
 
-## 💻 로컬 설치 및 실행방법
+```ts
+const onIntersect: IntersectionObserverCallback = ([{ isIntersecting }]) => {
+  if (isIntersecting && !isTotal && !isSearchLoading) {
+    handleSearchFetch('scroll', inputText);
+  }
+};
+const { setTarget } = useIntersectionObserver({ onIntersect });
+```
+**isInersecting** 값이 true이며 **isTotal**(검색 결과를 전부 가져왔는지)이 false이며 **isSearchLoading**(로딩 중인지)이 false인 경우 무한 스크롤 이벤트 실행합니다.
 
-1. Clone this repo:
+```ts
+<DropdownBox ref={dropdownRef}>
+  {searchListData.map((item, idx) => (
+    <DropdownItem key={idx} onClick={() => handleAddTodoClick(item)}>
+      <HighlightedText text={item} highlight={inputText} />
+    </DropdownItem>
+  ))}
+  {!isTotal && (
+    <IntersectionBox ref={setTarget}>
+      {isSearchLoading ? <Spinner className="spinner" /> : !isTotal && <Union />}
+    </IntersectionBox>
+  )}
+</DropdownBox>
+```
+**setTarget**은 **Intersection Observer**를 적용할 컴포넌트에 선언해줍니다.  
+검색중인 경우 스피너 아이콘을 띄어주며 검색 결과가 더 있는 경우 Union 아이콘을 띄어줍니다.
 
-```bash
-git clone ...
+### 디바운스
+
+useDebounce 커스텀 훅 구현
+
+```ts
+import { useEffect, useState } from 'react';
+
+function useDebounce(value: string, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+}
+
+export default useDebounce;
 ```
 
-2. Install dependencies & packages
+### ContextAPI
 
-```bash
-npm i
-# OR
-yarn
+로직이 많아 관심사를 분리하기 위해 **ContextAPI**를 적용하여 **TodoContext**, **SearchContext**추가
+
+**TodoContext**
+state와 event로 분리  
+**state** : inputText, setInputText, todoListData, isAddLoading  
+**event** : handleAddTodo, handleRemoveTodo, handleSubmit
+
+**SearchContext**
+state와 event로 분리  
+**state** : isTotal, isSearchLoading, searchListData  
+**event** : handleSearchFetch
+
+`handleSearchFetch`의 경우에는 구현한거라 부연 설명하겠습니다.
+
+```ts
+const [isTotal, setIsTotal] = useState(false);  // 현재 검색 결과가 마지막 검색 결과인지 확인
+const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+const [isSearchLoading, setIsSearchLoading] = useState(false); // 검색 결과 로딩
+const [searchListData, setSearchListData] = useState<string[]>([]); // 검색 결과
 ```
 
-3. Run application
-
-```bash
-npm run start
-# OR
-yarn start
+```ts
+const handleSearchFetch = async (type: string, inputText: string) => {
+  if (inputText.trim() === '') {
+    setSearchListData([]);
+    return;
+  }
+  if (type === 'first') {
+    setCurrentPage(1);
+    setSearchListData([]);
+  }
+  if (type === 'scroll') setCurrentPage(prev => prev + 1);
+  setIsSearchLoading(true);
+  const updateCurrentPage = type === 'scroll' ? currentPage + 1 : 1;
+  const { data } = await searchTodoList({ q: inputText, page: updateCurrentPage, limit: 10 });
+  setSearchListData(prev => [...prev, ...data.result]);
+  setIsTotal(data.page * data.limit >= data.total);
+  setIsSearchLoading(false);
+};
 ```
+
+**type**은 input에 검색중인지(first), 무한 스크롤 검색중인지(scroll)를 구분하며 **inputText**는 검색어입니다.  
+우선 어떠한 검색 결과도 입력이 되지 않았다면 검색은 진행되지 않습니다.  
+input에 검색어 입력 시(first) 현재 페이지를 1로 바꾸고 저장된 검색 결과를 초기화합니다.  
+input에 검색어가 입력되어 있고 스크롤 바를 움직이는 경우 현재 페이지에서 1을 더합니다.  
+하지만 **setState**에 변경된 state가 적용되는 이벤트보다 바뀐 현재페이지를 통해 다음 검색어를 검색하는 이벤트가 먼저 발생되기 때문에 바뀐 페이지 번호가 적용되지 않는 문제가 발생했습니다.  
+따라서 **type**에 따라 현재 페이지나 변경된 페이지를 파라미터로 넘겨주는 **updateCurrentPage** 변수를 선언했습니다.  
+그 다음은 검색한 결과를 state에 적용해주면 됩니다.
