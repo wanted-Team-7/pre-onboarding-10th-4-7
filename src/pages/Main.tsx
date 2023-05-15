@@ -12,7 +12,11 @@ interface ITodoDispatchContext {
   setInputText: React.Dispatch<React.SetStateAction<string>>;
   setSearchResults: React.Dispatch<React.SetStateAction<string[]>>;
 }
+interface ITodoStateContext {
+  inputText: string;
+}
 export const TodoDispatchContext = createContext<ITodoDispatchContext | undefined>(undefined);
+export const TodoStateContext = createContext<ITodoStateContext | undefined>(undefined);
 
 const Main = () => {
   const [inputText, setInputText] = useState('');
@@ -32,33 +36,35 @@ const Main = () => {
 
   return (
     <TodoDispatchContext.Provider value={{ setTodoListData, setInputText, setSearchResults }}>
-      <TodoContainer>
-        <TodoInner>
-          <Header />
-          <InputTodo
-            inputText={inputText}
-            setInputText={setInputText}
-            setTodos={setTodoListData}
-            setSearchResults={setSearchResults}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setIsHidden={setIsHidden}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            setIsFocus={setIsFocus}
-          />
-          {isFocus && inputText.length !== 0 && (
-            <TodoDropDown
-              searchResults={searchResults}
+      <TodoStateContext.Provider value={{ inputText }}>
+        <TodoContainer>
+          <TodoInner>
+            <Header />
+            <InputTodo
+              inputText={inputText}
+              setInputText={setInputText}
+              setTodos={setTodoListData}
+              setSearchResults={setSearchResults}
+              currentPage={currentPage}
               setCurrentPage={setCurrentPage}
-              isHidden={isHidden}
+              setIsHidden={setIsHidden}
               isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              setIsFocus={setIsFocus}
             />
-          )}
+            {isFocus && inputText.length !== 0 && (
+              <TodoDropDown
+                searchResults={searchResults}
+                setCurrentPage={setCurrentPage}
+                isHidden={isHidden}
+                isLoading={isLoading}
+              />
+            )}
 
-          <TodoList todos={todoListData} setTodos={setTodoListData} />
-        </TodoInner>
-      </TodoContainer>
+            <TodoList todos={todoListData} setTodos={setTodoListData} />
+          </TodoInner>
+        </TodoContainer>
+      </TodoStateContext.Provider>
     </TodoDispatchContext.Provider>
   );
 };

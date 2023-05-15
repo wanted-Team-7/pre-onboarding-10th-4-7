@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { TodoDispatchContext } from '../pages/Main';
+import { TodoDispatchContext, TodoStateContext } from '../pages/Main';
 import { createTodo } from '../api/todo';
 
 interface ITodoSearchResult {
@@ -9,15 +9,20 @@ interface ITodoSearchResult {
 
 function TodoSearchResult({ value }: ITodoSearchResult) {
   const [isClicked, setIsClicked] = useState(false);
-  const dispatch = useContext(TodoDispatchContext);
+  const todoDispatch = useContext(TodoDispatchContext);
+  const todoState = useContext(TodoStateContext);
+
+  const omittedValue = value.length > 40 ? value.slice(0, 39) + '...' : value;
+  const splitValue = omittedValue.split(todoState?.inputText ?? '');
+
   const handleClick = async () => {
     try {
       setIsClicked(true);
       const { data } = await createTodo({ title: value });
       if (data) {
-        dispatch?.setTodoListData(prevTodos => [...prevTodos, data]);
-        dispatch?.setInputText('');
-        dispatch?.setSearchResults([]);
+        todoDispatch?.setTodoListData(prevTodos => [...prevTodos, data]);
+        todoDispatch?.setInputText('');
+        todoDispatch?.setSearchResults([]);
       }
     } catch (error) {
       console.error(error);
@@ -27,23 +32,24 @@ function TodoSearchResult({ value }: ITodoSearchResult) {
 
   return (
     <ItemContainer onClick={handleClick} isClicked={isClicked}>
-      {value.length > 40 ? value.slice(0, 39) + '...' : value}
+      <Span>{splitValue[0]}</Span>
+      <Strong>{todoState?.inputText ?? ''}</Strong>
+      <Span>{splitValue[1]}</Span>
     </ItemContainer>
   );
 }
 
 const ItemContainer = styled.div<{ isClicked: boolean }>`
-  /* font color #2BC9BA  */
   width: 100%;
   height: 28px;
   padding: 6px 12px;
   gap: 10px;
 
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
 
   background-color: #ffffff;
-  /* background-color: #d5f4f1; */
   border-radius: 3px;
 
   white-space: nowrap;
@@ -56,12 +62,16 @@ const ItemContainer = styled.div<{ isClicked: boolean }>`
   ${props =>
     props.isClicked &&
     `
-      color: #2bc9ba;
       background-color: #d5f4f1;
       &:hover {
         background-color: #d5f4f1;
       }
   `}
+`;
+const Span = styled.span``;
+const Strong = styled.span`
+  color: #2bc9ba;
+  margin: 0;
 `;
 
 export default TodoSearchResult;
