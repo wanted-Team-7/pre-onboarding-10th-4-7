@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useDebounce from '../hooks/useDebounce';
 import PlusIcon from '../icon/PlusIcon';
@@ -16,7 +16,12 @@ const InputTodo = ({ inputRef, setInputFocus, handleInputClick }: InputTodoType)
   const { handleSubmit } = useTodoDispatch();
   const { handleSearchFetch } = useSearchDispatch();
   const { inputText, setInputText, isAddLoading } = useTodoState();
+  const [isFocused, setIsFocused] = useState(false);
   const debouncedSearch = useDebounce(inputText, 500);
+
+  const handleFocus = () => setIsFocused(true);
+
+  const handleBlur = () => setIsFocused(false);
 
   useEffect(() => {
     handleSearchFetch('first', inputText);
@@ -27,11 +32,13 @@ const InputTodo = ({ inputRef, setInputFocus, handleInputClick }: InputTodoType)
   }, [setInputFocus]);
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <FormContainer onSubmit={handleSubmit} isFocused={isFocused}>
       <InputText
         placeholder="Add new todo..."
         ref={inputRef}
         value={inputText}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onChange={e => setInputText(e.target.value)}
         onClick={handleInputClick}
         disabled={isAddLoading}
@@ -49,12 +56,13 @@ const InputTodo = ({ inputRef, setInputFocus, handleInputClick }: InputTodoType)
 
 export default InputTodo;
 
-const FormContainer = styled.form`
+const FormContainer = styled.form<{ isFocused: boolean }>`
   width: 100%;
   margin-bottom: 20px;
   display: flex;
   border-radius: 6px;
-  border: 1px solid ${({ theme }) => theme.color.COLOR_GRAY_4};
+  border: 1px solid
+    ${({ theme, isFocused }) => (isFocused ? theme.color.COLOR_GRAY_5 : theme.color.COLOR_GRAY_4)};
   justify-content: space-evenly;
   &:hover {
     border: 3px solid ${({ theme }) => theme.color.COLOR_GRAY_4};
