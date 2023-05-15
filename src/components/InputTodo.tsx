@@ -1,9 +1,10 @@
 import { FiSearch } from 'react-icons/fi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebounce } from '../hooks/useDebounce';
 import { S } from './style';
-import { INIT_PAGE, DELAY_TIME, LIMIT_STR_LENGTH } from '../util/constant';
+import { INIT_PAGE, DELAY_TIME, LIMIT_STR_LENGTH, PER_PAGE_LIMIT_COUNT } from '../util/constant';
 import { ellipsis } from '../util/ellipsis';
+import { getSearchList } from '../api/todo';
 
 interface InputTodoType {
   setSearchList: React.Dispatch<React.SetStateAction<string[]>>;
@@ -14,6 +15,7 @@ interface InputTodoType {
   setDropdownDisplay: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   loaderFlag: React.MutableRefObject<boolean>;
+  currentPage: number;
 }
 
 const InputTodo = ({
@@ -24,10 +26,25 @@ const InputTodo = ({
   setDropdownDisplay,
   isLoading,
   loaderFlag,
+  currentPage,
 }: InputTodoType) => {
   const debounceValue = useDebounce(inputText, DELAY_TIME);
+  const [inputLoading, setInputLoading] = useState<boolean>(false);
+
+  const getDataInput = async () => {
+    try {
+      setInputLoading(true);
+      const res = await getSearchList(inputText, currentPage, PER_PAGE_LIMIT_COUNT);
+      setSearchList(prev => [...prev, ...res.result]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setInputLoading(false);
+    }
+  };
 
   useEffect(() => {
+    getDataInput();
     if (debounceValue.length !== 0) {
       setDropdownDisplay(true); // 검색어 입력할 경우 DropDown display(true)
     } else {
@@ -55,7 +72,7 @@ const InputTodo = ({
         onChange={onChangeInputValue}
         disabled={isLoading}
       />
-      {isLoading && loaderFlag.current ? <S.Spinner /> : null}
+      {inputLoading ? <S.Spinner /> : null}
     </S.InputForm>
   );
 };

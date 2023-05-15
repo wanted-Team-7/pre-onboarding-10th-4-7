@@ -46,9 +46,6 @@ const DropDown = ({
 
   // page 증가에 따른 새로운 data 불러오기
   // 문제점. getPost() api 호출을 이곳에서 다 해버리니까 DropDown에서 여러 가지 일을 하는 느낌.
-  useEffect(() => {
-    getPost();
-  }, [currentPage]);
 
   //옵저버 콜백함수
   const obsHandler = (entries: any) => {
@@ -60,6 +57,8 @@ const DropDown = ({
     if (entries[0].isIntersecting && endRef.current === false && preventRef.current === true) {
       preventRef.current = false; //옵저버 중복 실행 방지
       setCurrentPage(prev => prev + 1); //페이지 값 증가
+      console.log('hello');
+      getDataScroll();
     }
   };
 
@@ -81,7 +80,7 @@ const DropDown = ({
   };
 
   // get search list api function
-  const getPost = useCallback(async () => {
+  const getDataScroll = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await getSearchList(inputText, currentPage, PER_PAGE_LIMIT_COUNT);
@@ -97,7 +96,6 @@ const DropDown = ({
       console.log(error);
     } finally {
       setIsLoading(false);
-      loaderFlag.current = false;
     }
   }, [currentPage]);
 
@@ -114,7 +112,7 @@ const DropDown = ({
               {e.split(inputText)[1]}
             </S.Li>
           ))}
-          {isLoading && !loaderFlag.current ? (
+          {isLoading ? (
             <S.SpinnerContainer
               style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
             >

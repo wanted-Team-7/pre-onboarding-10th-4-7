@@ -36,6 +36,7 @@ const Main = () => {
           setDropdownDisplay={setDropdownDisplay}
           isLoading={isLoading}
           loaderFlag={loaderFlag}
+          currentPage={currentPage}
         />
         {dropdownDisplay ? (
           <DropDown
