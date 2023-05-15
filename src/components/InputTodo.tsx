@@ -4,18 +4,30 @@ import { TodoTypes } from '../types/todo';
 import { createTodo } from '../api/todo';
 import useFocus from '../hooks/useFocus';
 import { SearchIcon } from './InputTodo.styled';
+
 interface InputTodoType {
+  inputText: string;
   setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
+  getSearchKeywordHandler: (input: string) => Promise<void>;
 }
 
-const InputTodo = ({ setTodos }: InputTodoType) => {
-  const [inputText, setInputText] = useState('');
+const InputTodo = ({
+  setTodos,
+  inputText,
+  setInputText,
+  getSearchKeywordHandler,
+}: InputTodoType) => {
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
 
   useEffect(() => {
     setFocus();
   }, [setFocus]);
+
+  useEffect(() => {
+    getSearchKeywordHandler(inputText);
+  }, [inputText]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -42,7 +54,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         setIsLoading(false);
       }
     },
-    [inputText, setTodos]
+    [inputText, setInputText, setTodos]
   );
 
   return (
