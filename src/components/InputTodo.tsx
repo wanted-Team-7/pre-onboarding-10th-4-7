@@ -108,7 +108,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
           )}
         </StForm>
       </StFormContainer>
-      <Dropdown ref={dropdownRef} data={data} />
+      <Dropdown ref={dropdownRef} data={data} debouncedInputText={debouncedInputText} />
     </>
   );
 };

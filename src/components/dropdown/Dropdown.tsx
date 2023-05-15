@@ -1,15 +1,27 @@
 import { Ref, forwardRef } from 'react';
 import styled from 'styled-components';
 
-const Dropdown = forwardRef<HTMLUListElement, { data: string[] }>(
-  ({ data }, ref: Ref<HTMLUListElement> | undefined) => {
+const Dropdown = forwardRef<HTMLUListElement, { data: string[]; debouncedInputText: string }>(
+  ({ data, debouncedInputText }, ref: Ref<HTMLUListElement> | undefined) => {
     // console.log('Dropdown rendering');
 
     return (
       <StDropdownUl ref={ref}>
-        {data?.map((item, index) => (
-          <StDropdownLi key={index}>{item}</StDropdownLi>
-        ))}
+        {data?.map((item, index) => {
+          const searchWordArray = item.split(debouncedInputText);
+          return (
+            <StDropdownLi key={index}>
+              {searchWordArray.map((item, index) => (
+                <span key={index}>
+                  {item}
+                  {index !== searchWordArray.length - 1 && (
+                    <StSearchText>{debouncedInputText}</StSearchText>
+                  )}
+                </span>
+              ))}
+            </StDropdownLi>
+          );
+        })}
         {data.length === 0 && <StTextNoResult>No Result</StTextNoResult>}
       </StDropdownUl>
     );
@@ -42,9 +54,10 @@ const StDropdownLi = styled.div`
   &:hover {
     background-color: #f2f2f2;
   }
-  :focus {
-    background-color: #2bc9ba;
-  }
+`;
+
+const StSearchText = styled.span`
+  color: #2bc9ba;
 `;
 
 const StTextNoResult = styled.div`
