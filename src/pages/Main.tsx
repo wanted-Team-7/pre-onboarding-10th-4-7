@@ -97,9 +97,9 @@ const Main = () => {
 
   // handleSubmit: 폼 제출 시 처리 함수
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.FormEvent, todoText: string) => {
       e.preventDefault();
-      const trimmed = inputText.trim();
+      const trimmed = todoText.trim();
       if (!trimmed) return alert('Please write something');
       setIsLoading(true);
       const newItem = { title: trimmed };
@@ -157,7 +157,6 @@ const Main = () => {
           <SearchedList
             searchedResponse={searchedResponse}
             inputText={inputText}
-            setInputText={setInputText}
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
