@@ -66,6 +66,7 @@ const StyledForm = styled.form<StyledFormProps>`
       !props.isFocused &&
       !props.isTyping &&
       `
+    transition: 0.3s;
     border-color: #dedede;
   `}
   }
