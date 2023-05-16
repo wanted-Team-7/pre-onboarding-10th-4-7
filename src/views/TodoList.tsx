@@ -20,12 +20,14 @@ const TodoList = ({ todos, setTodos }: TodoListTypes) => {
 };
 
 const Empty = styled.div`
-  width: 100%;
   display: flex;
+  width: 100%;
   justify-content: center;
+
+  margin-left: 0.75rem;
+
   font-size: 2.5rem;
   letter-spacing: 1.5rem;
-  margin-left: 0.75rem;
   color: #ececec;
 `;
 

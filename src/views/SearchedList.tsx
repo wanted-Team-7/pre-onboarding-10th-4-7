@@ -44,9 +44,11 @@ const ListContainer = styled.div`
   border-radius: 5px;
   width: 97%;
   height: 193px;
-  background-color: #fff;
   border: 1px solid #dedede;
-  box-shadow: 0 2px 4px 0 rgba(50, 50, 50, 0.1);
+
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgb(50 50 50 / 10%);
+
   overflow-y: scroll;
 `;
 
@@ -56,12 +58,13 @@ const LoadingIndicator = styled.div`
 `;
 
 const LoadingContent = styled.div`
+  display: flex;
   position: relative;
   height: 30px;
-  display: flex;
   justify-content: center;
   align-items: center;
   cursor: wait;
+
   .btn-spinner {
     animation: spin 2s linear infinite;
   }

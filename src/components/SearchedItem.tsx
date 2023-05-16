@@ -48,6 +48,7 @@ const ListItem = styled.li<ListItemProps>`
   :hover {
     background-color: #f2f2f2;
   }
+
   :active {
     background-color: #2bc9ba;
   }

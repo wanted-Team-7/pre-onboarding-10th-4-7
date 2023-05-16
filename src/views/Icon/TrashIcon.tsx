@@ -27,16 +27,20 @@ const Wrapper = styled.span`
   right: 5px;
   bottom: 0;
   top: 0;
+
   .btn-spinner {
     animation: spin 2s linear infinite;
   }
+
   .btn-trash {
     color: orangered;
     font-size: 16px;
   }
+
   button {
-    background-color: transparent;
     border: none;
+
+    background-color: transparent;
     cursor: pointer;
   }
 `;

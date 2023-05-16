@@ -46,14 +46,14 @@ const InputTodo = ({
 };
 
 const StyledForm = styled.form<StyledFormProps>`
+  display: flex;
   position: relative;
   width: 100%;
   height: 44px;
-  margin-bottom: 10px;
-  display: flex;
   border: 3px solid transparent;
-  outline: 1px solid #dedede;
   border-radius: 6px;
+  outline: 1px solid #dedede;
+  margin-bottom: 10px;
   justify-content: space-evenly;
   box-sizing: border-box;
 
@@ -73,13 +73,16 @@ const StyledForm = styled.form<StyledFormProps>`
 `;
 
 const StyledInput = styled.input`
-  font-size: 1rem;
-  font-weight: 400;
   width: 85%;
   padding: 0 5px;
-  outline: none;
   border: none;
+
   background-color: transparent;
+
+  font-size: 1rem;
+  font-weight: 400;
+  outline: none;
+
   text-overflow: ellipsis;
 `;
 

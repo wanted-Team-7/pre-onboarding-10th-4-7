@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   left: 20px;
   display: flex;
   align-self: center;
+
   #search-icon {
     fill: #7d7d7d;
   }
