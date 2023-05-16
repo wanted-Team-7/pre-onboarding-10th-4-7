@@ -1,14 +1,14 @@
-import { getTodoList } from '../api/todo';
-import Header from '../views/Header';
-import InputTodo from '../views/InputTodo';
-import TodoList from '../views/TodoList';
-import SearchedList from '../views/SearchedList';
+import { TodoTypes, getTodoList } from '../api/todo';
+
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { TodoTypes } from '../types/todo';
 import { createTodo, searchTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
 import { DEBOUNCED_DELAY } from '../constants/constant';
+import Header from '../components/Header';
+import InputTodo from '../components/InputTodo';
+import SearchedList from '../components/SearchedList';
+import TodoList from '../components/TodoList';
 
 const Main = () => {
   // todoListData: 할 일 목록 데이터

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { TodoTypes } from '../types/todo';
 import TodoItem from '../components/TodoItem';
+import { TodoTypes } from '../api/todo';
 
 interface TodoListTypes {
   todos: TodoTypes[];

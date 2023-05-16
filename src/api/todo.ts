@@ -8,6 +8,13 @@ interface SearchTodoParams {
   limit?: number;
 }
 
+export interface TodoTypes {
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+}
+
 export const getTodoList = async () => {
   const response = await apiRequest.get(`${RESOURCE}`);
 

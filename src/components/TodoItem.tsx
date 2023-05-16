@@ -1,7 +1,6 @@
 import { useCallback, useState, useEffect } from 'react';
-import { deleteTodo } from '../api/todo';
-import { TodoTypes } from '../types/todo';
-import TrashIcon from '../views/Icon/TrashIcon';
+import { TodoTypes, deleteTodo } from '../api/todo';
+import TrashIcon from './Icon/TrashIcon';
 import styled from 'styled-components';
 
 interface TodoItemTypes {
