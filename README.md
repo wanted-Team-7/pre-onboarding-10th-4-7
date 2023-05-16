@@ -1,5 +1,10 @@
 ## 원티드 프리온보딩 4주차 과제 - 박정도
 ---
+## 시연 GIF
+![wanted-4](https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/assets/72500346/ccc02307-5403-4b6c-b4ac-47daf87c8cb7)
+
+
+---
 <br/>
 
 ## 구현
