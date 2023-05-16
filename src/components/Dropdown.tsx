@@ -65,7 +65,9 @@ const Dropdown = forwardRef<
   }
 );
 
-const StDropdownContainer = styled.div``;
+const StDropdownContainer = styled.div`
+  z-index: 100;
+`;
 
 const StDropdownUl = styled.ul`
   border-radius: 6px;
@@ -76,9 +78,7 @@ const StDropdownUl = styled.ul`
   width: 580px;
   min-height: 50px;
   max-height: 200px;
-  top: 46%;
 
-  margin-top: 8px;
   padding: 20px 0;
   box-shadow: rgba(30, 32, 37, 0.1) 0px 2px 10px;
   position: absolute;
