@@ -19,9 +19,6 @@ const Main = () => {
   // searchedResponse: 검색 결과 데이터
   const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
 
-  // isTyping: 입력 중인지 여부
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-
   // isLoading: 로딩 중인지 여부
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -126,9 +123,8 @@ const Main = () => {
 
   useEffect(() => {
     // 입력 중인지 여부 설정
-    setIsTyping(!!debouncedSearchQuery);
     handleChange();
-  }, [handleChange, debouncedSearchQuery]);
+  }, [handleChange]);
 
   useEffect(() => {
     // 할 일 목록 데이터 로드
@@ -143,7 +139,6 @@ const Main = () => {
       <Inner>
         <Header />
         <InputTodo
-          isTyping={isTyping}
           isLoading={isLoading}
           handleSubmit={handleSubmit}
           inputText={inputText}
