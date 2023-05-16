@@ -90,6 +90,9 @@ const DropdownLi = styled.li`
   text-overflow: ellipsis;
 
   &:hover {
+    background-color: #f2f2f2;
+  }
+  &:active {
     background-color: #d5f4f1;
   }
 `;
