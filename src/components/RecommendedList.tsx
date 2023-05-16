@@ -88,6 +88,10 @@ const DropdownLi = styled.li`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &:hover {
+    background-color: #d5f4f1;
+  }
 `;
 
 const HiliteText = styled.span`
