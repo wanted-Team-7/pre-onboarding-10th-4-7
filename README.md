@@ -318,11 +318,91 @@ const searchTerm = useDebounce(inputText, 500);
 |---|---|
 |![캡처_2023_05_15_15_30_45_521](https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/assets/118191378/4d34c896-aa25-460d-8db3-70d3fa8fb049)|![녹화_2023_05_16_02_27_45_443](https://github.com/minnyoung/minnyoung/assets/118191378/963855e5-ef9b-4895-9fb7-d706ead4984f)|
 
+```tsx
+
+/* RecommendList.tsx */
+
+// 초기 추천리스트 받아오는 함수
+  const onCreateRecommendList = async () => {
+    if (searchTerm) {
+      const { data } = await getRecommendList(searchTerm, recommendListPage);
+
+      // 받아온 추천 리스트의 내용이 없다면, dropdown box를 보여지지 않게 함
+      if (!data.total) return setIsShowRecommendList(false);
+
+      // 받아온 추천 리스트의 내용이 limit number(10개) 보다 많다면, 스크롤 하단 아이콘 표시
+      if (data.total > GETLISTLIMITNUMBER) setisShowAddContentsIcon(true);
+      setIsShowRecommendList(true);
+      setRecommendList(data.result);
+    }
+  };
+
+// debounce 이용해서 받아온 검색어가 바뀔 때마다 추천 검색어 받아오기 
+  useEffect(() => {
+    onCreateRecommendList();
+  }, [searchTerm]);
+
+
+// target을 지정해 해당 타켓이 관찰되면 추천 검색어를 불러올 수 있는 함수 
+  const scrollGetList = async () => {
+    setIsGetListLoading(true);
+    setRecommendListPage(prev => prev + 1);
+    const { data } = await getRecommendList(searchTerm, recommendListPage);
+    if (data.qty === 0) {
+      setIsGetListLoading(false);
+      setisShowAddContentsIcon(false);
+    } else {
+      setIsGetListLoading(false);
+      setRecommendList(prev => [...prev, ...data.result]);
+    }
+  };
+  
+return (
+    <S.DropdownContainer visible={isShowRecommendList}>
+    {/* (...) */}
+    
+    {/* dropdown의 가장 하단 아이콘에 target을 둠. */}
+      {isShowAddContentsIcon &&
+        (!isGetListLoading ? <S.AddIcon ref={setTarget}>...</S.AddIcon> : <Spinner />)}
+    </S.DropdownContainer>
+  );
+
+```
+
+
 <br/>
 
 #### 4. Dropdown에서 아이템 하나를 선택하면, input의 value는 초기화가 되고 아이템이 리스트에 추가되도록 구현해주세요.
 <img src="https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/assets/118191378/95992193-3d9c-402e-b398-e4df274acc8b" width="50%" height="50%"/>
 
+```tsx
+
+/* InputTodo.tsx */
+
+  const addTodo = async (todo: string) => {
+    const newItem = { title: todo };
+    const { data } = await createTodo(newItem);
+
+    if (data) {
+      return setTodos(prev => [...prev, data]);
+    }
+  };
+
+
+/* RecommendList.tsx */
+
+  const clickDropdownItem = (event: React.MouseEvent<HTMLLIElement>) => {
+    const data = event.currentTarget.innerText;
+    addTodo(data); // click 이벤트 통해 받아온 추천 검색어를 넣어서 todos state를 변경해줌
+    setInputText(''); // input text 초기화
+    setIsShowRecommendList(false); // dropdown box 보이지 않게 하기
+  };
+
+```
+
+<br/>
+
+<br/>
 
 ## 🔧 Tech Stack
 ![React](https://img.shields.io/badge/react-61DAFB.svg?&style=for-the-badge&logo=react&logoColor=white)
