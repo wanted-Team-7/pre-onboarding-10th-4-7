@@ -33,7 +33,6 @@ export const deleteTodo = async (id: string) => {
 
 export const getRecommendedKeywords = async (searchText: string, page: number) => {
   try {
-    console.log(searchText);
     const response = await apiRequest.get(`/search?q=${searchText}&page=${page}&limit=10`);
     return response;
   } catch (error) {

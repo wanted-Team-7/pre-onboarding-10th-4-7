@@ -14,21 +14,7 @@ const Main = () => {
     setInputText(e.target.value);
   };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { data } = await getTodoList();
-  //     setTodoListData(data || []);
-  //   })();
-  // }, []);
-
   return (
-    // <div className="container">
-    //   <div className="inner">
-    //     <Header />
-    //     <InputTodo inputText={inputText} inputChange={inputChange} setTodos={setTodoListData} />
-    //     {/* <TodoList todos={todoListData} setTodos={setTodoListData} /> */}
-    //   </div>
-    // </div>
     <Container>
       <Inner>
         <Header />

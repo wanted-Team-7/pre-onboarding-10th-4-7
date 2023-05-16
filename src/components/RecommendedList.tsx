@@ -13,6 +13,8 @@ const RecomendedList = ({ searchText }: RecomendedListType) => {
     if (searchText.length > 0) {
       const { data } = await getRecommendedKeywords(searchText, 1);
       setRecomendedList(data.result);
+    } else if (searchText.length === 0) {
+      setRecomendedList([]);
     }
   };
 
@@ -22,18 +24,17 @@ const RecomendedList = ({ searchText }: RecomendedListType) => {
 
   return (
     <DropdownUl>
-      {/* <DropdownLi>hello</DropdownLi>
-      <DropdownLi>my name</DropdownLi>
-      <DropdownLi>alice</DropdownLi> */}
       {recomendedList.map((recomendedText: string, idx) => (
         <DropdownLi key={idx} value={recomendedText}>
-          {recomendedText.split(' ').map(text => {
-            if (text === searchText) return <HiliteText>{text}</HiliteText>;
+          {recomendedText.split(' ').map((text, idx) => {
+            if (text === searchText) {
+              return <HiliteText key={idx}>{text}</HiliteText>;
+            }
             if (text.includes(searchText)) {
               return (
                 <span>
                   {text.slice(0, text.indexOf(searchText))}
-                  <HiliteText>
+                  <HiliteText key={idx}>
                     {text.slice(
                       text.indexOf(searchText),
                       text.indexOf(searchText) + searchText.length
