@@ -1,6 +1,6 @@
 import { TodoTypes, getTodoList } from '../api/todo';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { createTodo, searchTodo } from '../api/todo';
+import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
 import { DEBOUNCED_DELAY } from '../constants/constant';
@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import SearchedList from '../components/SearchedList';
 import TodoList from '../components/TodoList';
+import useSearchData from '../hooks/useSearchData';
 
 const Main = () => {
   // todoListData: 할 일 목록 데이터
@@ -46,28 +47,11 @@ const Main = () => {
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
-  const handleSearchData = useCallback(
-    async (type: string, debouncedSearchQuery: string) => {
-      if (!debouncedSearchQuery) {
-        setSearchedResponse([]);
-        return;
-      }
-      if (type === 'first') {
-        setCurrentPage(1);
-        setSearchedResponse([]);
-      }
-      if (type === 'scroll') setCurrentPage((prevPage: number) => prevPage + 1);
-      const updateCurrentPage = type === 'scroll' ? currentPage + 1 : 1;
-      setIsMoreLoading(true);
-      const { data } = await searchTodo({ q: debouncedSearchQuery, page: updateCurrentPage });
-      setSearchedResponse((prevData: string[]) => [...prevData, ...data.result]);
-      setIsNoMoreData(data.page * data.limit >= data.total);
-      setIsMoreLoading(false);
-    },
-    [currentPage]
-  );
+  const handleSearchData = useSearchData({
+    setSearchedResponse,
+    setIsMoreLoading,
+    setIsNoMoreData,
+  });
 
   // loadMoreData: 추가 데이터 로드 함수
   // const loadMoreData = useCallback(async () => {
@@ -156,6 +140,8 @@ const Main = () => {
   // }, [handleChange, debouncedSearchQuery]);
 
   useEffect(() => {
+    // 입력 중인지 여부 설정
+    setIsTyping(!!debouncedSearchQuery);
     handleSearchData('first', debouncedSearchQuery);
   }, [debouncedSearchQuery]);
 
