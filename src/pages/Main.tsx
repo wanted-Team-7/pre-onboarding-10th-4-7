@@ -9,6 +9,7 @@ import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import SearchedList from '../components/SearchedList';
 import TodoList from '../components/TodoList';
+import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
 const Main = () => {
   // todoListData: 할 일 목록 데이터
@@ -18,7 +19,8 @@ const Main = () => {
   const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
 
   // inputText: 입력된 텍스트
-  const [inputText, setInputText] = useState<string>('');
+  const { inputText } = useTodoState();
+  const { setInputText } = useTodoDispatch();
 
   // isTyping: 입력 중인지 여부
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -156,8 +158,6 @@ const Main = () => {
         {isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
-            inputText={inputText}
-            setInputText={setInputText}
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
