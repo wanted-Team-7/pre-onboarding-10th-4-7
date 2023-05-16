@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import SearchIcon from './SearchIcon';
-import SpinnerIcon from './SpinnerIcon';
+import SearchIcon from './Icon/SearchIcon';
+import SpinnerIcon from './Icon/SpinnerIcon';
 import { ChangeEvent } from 'react';
 
 interface InputTodoProps {

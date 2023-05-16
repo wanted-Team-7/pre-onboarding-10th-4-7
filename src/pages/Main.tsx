@@ -1,6 +1,6 @@
 import { getTodoList } from '../api/todo';
 import Header from '../views/Header';
-import InputTodo from '../views/Icon/InputTodo';
+import InputTodo from '../views/InputTodo';
 import TodoList from '../views/TodoList';
 import SearchedList from '../views/SearchedList';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
