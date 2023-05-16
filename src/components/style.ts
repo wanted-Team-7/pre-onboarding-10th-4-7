@@ -137,6 +137,10 @@ const ObserveTarget = styled.li`
   display: flex;
   justify-content: 'center';
 `;
+
+const Highlight = styled.span`
+  color: #2bc9ba;
+`;
 export const S = {
   Li,
   DropDownContainer,
@@ -150,4 +154,5 @@ export const S = {
   Empty,
   SpinnerContainer,
   ObserveTarget,
+  Highlight,
 };
