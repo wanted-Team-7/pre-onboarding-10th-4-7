@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { getTodoList } from '../api/todo';
 import { TodoTypes } from '../types/todo';
 import Header from '../components/Header';

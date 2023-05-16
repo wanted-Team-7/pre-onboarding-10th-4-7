@@ -19,7 +19,11 @@ const InputTodo = ({
   setInputLoading,
 }: InputTodoType) => {
   const debounceValue = useDebounce(inputText, DELAY_TIME);
+
+  // 재 검색 flag
   const loaderFlag = useRef(true);
+
+  // get Api 호출
   const getDataInput = async () => {
     try {
       setInputLoading(true);

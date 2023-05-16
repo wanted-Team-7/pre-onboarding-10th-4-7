@@ -37,11 +37,6 @@ const DropDown = ({
 
   //옵저버 콜백함수
   const obsHandler = (entries: any) => {
-    if (flag.current) {
-      flag.current = false;
-      return;
-    }
-
     if (entries[0].isIntersecting && endRef.current === false && preventRef.current === true) {
       preventRef.current = false; //옵저버 중복 실행 방지
       setCurrentPage(prev => prev + 1); //페이지 값 증가
@@ -105,7 +100,7 @@ const DropDown = ({
         {searchList?.map((str: string, idx: number) => (
           <S.Li key={idx} onClick={handleAddTodoElement}>
             {str.split(inputText)[0]}
-            <span style={{ color: '#2BC9BA' }}>{inputText}</span>
+            <S.Highlight>{inputText}</S.Highlight>
             {str.split(inputText)[1]}
           </S.Li>
         ))}
