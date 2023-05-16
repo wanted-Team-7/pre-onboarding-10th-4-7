@@ -49,6 +49,7 @@ const InputTodo = ({ setTodos }: InputTodoType) => {
         console.error(error);
         alert('Something went wrong.');
       } finally {
+        setData([]);
         setInputText('');
         setIsLoading(false);
       }
