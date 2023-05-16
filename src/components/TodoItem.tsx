@@ -2,6 +2,7 @@ import { FaSpinner, FaTrash } from 'react-icons/fa';
 import { useCallback, useState, useEffect } from 'react';
 import { deleteTodo } from '../api/todo';
 import { TodoTypes } from '../types/todo';
+import styled from 'styled-components';
 
 interface TodoItemTypes {
   id: string;
@@ -49,3 +50,21 @@ const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
 };
 
 export default TodoItem;
+
+// const Item = styled.li`
+//   list-style-type: none;
+//   padding: 17px 1.5rem;
+//   border-bottom: 1px solid #eaeaea;
+//   font-size: 1.2rem;
+//   letter-spacing: 1.5px;
+// `;
+
+// const ItemOption = styled.div`
+//   float: right;
+// `;
+
+// const BtnTrash = styled.button`
+//   background-color: transparent;
+//   border: none;
+//   cursor: pointer;
+// `;
