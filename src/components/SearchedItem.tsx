@@ -56,7 +56,7 @@ const ListItem = styled.li<ListItemProps>`
   }
 
   :active {
-    background-color: #2bc9ba;
+    background-color: #d5f4f1;
   }
 `;
 
