@@ -1,4 +1,4 @@
-import { TodoTypes, getTodoList } from '../api/todo';
+import { getTodoList } from '../api/todo';
 
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { createTodo, searchTodo } from '../api/todo';
@@ -12,15 +12,12 @@ import TodoList from '../components/TodoList';
 import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
 const Main = () => {
-  // todoListData: 할 일 목록 데이터
-  const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+  // inputText: 입력된 텍스트 & todoListData: 할 일 목록 데이터
+  const { inputText, todoListData } = useTodoState();
+  const { setInputText, setTodoListData } = useTodoDispatch();
 
   // searchedResponse: 검색 결과 데이터
-  const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
-
-  // inputText: 입력된 텍스트
-  const { inputText } = useTodoState();
-  const { setInputText } = useTodoDispatch();
+  const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
 
   // isTyping: 입력 중인지 여부
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -163,7 +160,7 @@ const Main = () => {
             isMoreLoading={isMoreLoading}
           />
         )}
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoList todos={todoListData} />
       </Inner>
     </Container>
   );
