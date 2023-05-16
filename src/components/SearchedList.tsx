@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import SearchedItem from '../components/SearchedItem';
 import { FaSpinner } from 'react-icons/fa';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
 
 interface SearchedListProps {
   searchedResponse: string[];
@@ -9,6 +10,7 @@ interface SearchedListProps {
   isNoMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
+  isLoading: boolean;
 }
 
 const SearchedList = ({
@@ -18,7 +20,14 @@ const SearchedList = ({
   isNoMoreData,
   lastItemRef,
   isMoreLoading,
+  isLoading,
 }: SearchedListProps) => {
+  if (searchedResponse.length === 0)
+    return (
+      <ListContainer>
+        <AlignCenter>검색어 없음</AlignCenter>
+      </ListContainer>
+    );
   return (
     <ListContainer>
       <ul>
@@ -26,16 +35,28 @@ const SearchedList = ({
           <SearchedItem key={index} item={item} inputText={inputText} setInputText={setInputText} />
         ))}
       </ul>
-      {isMoreLoading ? (
-        <LoadingContent>
+
+      {isLoading ? null : isMoreLoading ? (
+        <AlignCenter>
           <FaSpinner className="btn-spinner" />
-        </LoadingContent>
-      ) : (
-        !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        </AlignCenter>
+      ) : isNoMoreData ? null : (
+        <Dot />
       )}
+
+      <div ref={lastItemRef}></div>
     </ListContainer>
   );
 };
+
+const Dot = styled(BiDotsHorizontalRounded)`
+  color: black;
+`;
+
+const AlignCenter = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const ListContainer = styled.div`
   z-index: 1;
@@ -57,7 +78,7 @@ const LoadingIndicator = styled.div`
   justify-content: center;
 `;
 
-const LoadingContent = styled.div`
+const LoadingContent = styled.li`
   display: flex;
   position: relative;
   height: 30px;

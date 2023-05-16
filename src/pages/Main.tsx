@@ -38,6 +38,12 @@ const Main = () => {
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
 
+  // prevent Observer callback function
+  const preventRef = useRef(false);
+
+  // 재 검색 여부 체크
+  const checkReSearch = useRef(false);
+
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
@@ -45,6 +51,9 @@ const Main = () => {
     setSearchedResponse,
     setIsMoreLoading,
     setIsNoMoreData,
+    setIsLoading,
+    checkReSearch,
+    preventRef,
   });
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
@@ -52,7 +61,8 @@ const Main = () => {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting && !isNoMoreData && !isMoreLoading) {
+        if (entries[0].isIntersecting && !checkReSearch.current && !preventRef.current) {
+          preventRef.current = true;
           // loadMoreData();
           handleSearchData('scroll', debouncedSearchQuery);
         }
@@ -60,11 +70,13 @@ const Main = () => {
       if (node) observer.current.observe(node);
     },
     // [loadMoreData]
-    [debouncedSearchQuery, handleSearchData, isMoreLoading, isNoMoreData]
+    [debouncedSearchQuery, handleSearchData]
   );
 
   // onChangeInput: 입력 값 변경 시 처리 함수
   const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    // 기존 검색을 지우고 재검색 여부 체크
+    if (e.target.value.length === 0) checkReSearch.current = true;
     setInputText(e.target.value);
   };
 
@@ -80,7 +92,6 @@ const Main = () => {
       e.preventDefault();
       const trimmed = inputText.trim();
       if (!trimmed) return alert('Please write something');
-      setIsLoading(true);
       const newItem = { title: trimmed };
       const { data } = await createTodo(newItem);
 
@@ -89,7 +100,6 @@ const Main = () => {
       }
 
       setInputText('');
-      setIsLoading(false);
       setIsFocused(false);
     },
     [inputText]
@@ -131,6 +141,7 @@ const Main = () => {
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
+            isLoading={isLoading}
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />
