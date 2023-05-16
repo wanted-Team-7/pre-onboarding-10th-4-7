@@ -23,7 +23,8 @@
     "postinstall": "husky install",
     "prepare": "husky install",
     "format": "prettier --cache --write .",
-    "lint-front": "lint-staged"
+    "lint-front": "lint-staged",
+    "build" : "react-scripts build"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
