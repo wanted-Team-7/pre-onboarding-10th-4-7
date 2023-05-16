@@ -4,14 +4,14 @@ import { FaSpinner } from 'react-icons/fa';
 
 interface SearchedListProps {
   searchedResponse: string[];
-  isNoMoreData: boolean;
+  isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
 }
 
 const SearchedList = ({
   searchedResponse,
-  isNoMoreData,
+  isMoreData,
   lastItemRef,
   isMoreLoading,
 }: SearchedListProps) => {
@@ -27,7 +27,7 @@ const SearchedList = ({
           <FaSpinner className="btn-spinner" />
         </LoadingContent>
       ) : (
-        !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
     </ListContainer>
   );

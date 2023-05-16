@@ -11,6 +11,10 @@ import SearchedList from '../components/SearchedList';
 import TodoList from '../components/TodoList';
 import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
+const isMorePage = (total: number, limit: number, currentPage: number): boolean => {
+  return Math.ceil(total / limit) !== currentPage;
+};
+
 const Main = () => {
   // inputText: 입력된 텍스트 & todoListData: 할 일 목록 데이터
   const { inputText, todoListData } = useTodoState();
@@ -28,14 +32,11 @@ const Main = () => {
   // isFocused: 입력창이 포커싱되었는지 여부
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  // isNoMoreData: 더 이상 데이터가 없는지 여부
-  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
+  // isMoreData: 더 받아올 데이터가 있는지 여부
+  const [isMoreData, setIsMoreData] = useState<boolean>(false);
 
   // currentPage: 현재 페이지
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  // total: 전체 데이터 개수
-  const [total, setTotal] = useState<number>(0);
 
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
@@ -48,7 +49,7 @@ const Main = () => {
     setIsMoreLoading(true);
     const newData = await searchTodo({ q: debouncedSearchQuery, page: currentPage + 1 });
     setSearchedResponse((prevData: string[]) => [...prevData, ...newData.data.result]);
-    setTotal(newData.data.total);
+    setIsMoreData(isMorePage(newData.data.total, newData.data.limit, currentPage));
     setCurrentPage((prevPage: number) => prevPage + 1);
     setIsMoreLoading(false);
   }, [currentPage, debouncedSearchQuery]);
@@ -82,12 +83,12 @@ const Main = () => {
   const handleChange = useCallback(async () => {
     if (!debouncedSearchQuery) {
       setSearchedResponse([]);
-      setTotal(0);
       return;
     }
     const response = await searchTodo({ q: debouncedSearchQuery });
     setSearchedResponse(response.data.result);
-    setTotal(response.data.total);
+    setIsMoreData(isMorePage(response.data.total, response.data.limit, currentPage));
+
     setCurrentPage(1);
   }, [debouncedSearchQuery]);
 
@@ -111,15 +112,6 @@ const Main = () => {
     },
     [inputText]
   );
-
-  useEffect(() => {
-    // 검색 결과가 전체 데이터 개수와 동일하다면 더 이상 데이터가 없음
-    if (searchedResponse.length === total) {
-      setIsNoMoreData(true);
-    } else {
-      setIsNoMoreData(false);
-    }
-  }, [searchedResponse.length, total]);
 
   useEffect(() => {
     // 입력 중인지 여부 설정
@@ -150,7 +142,7 @@ const Main = () => {
         {isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
-            isNoMoreData={isNoMoreData}
+            isMoreData={isMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
           />
