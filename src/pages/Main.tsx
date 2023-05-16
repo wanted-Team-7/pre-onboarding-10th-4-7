@@ -35,12 +35,6 @@ const Main = () => {
   // isNoMoreData: 더 이상 데이터가 없는지 여부
   const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
 
-  // currentPage: 현재 페이지
-  // const [currentPage, setCurrentPage] = useState<number>(1);
-
-  // total: 전체 데이터 개수
-  // const [total, setTotal] = useState<number>(0);
-
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -52,16 +46,6 @@ const Main = () => {
     setIsMoreLoading,
     setIsNoMoreData,
   });
-
-  // loadMoreData: 추가 데이터 로드 함수
-  // const loadMoreData = useCallback(async () => {
-  //   setIsMoreLoading(true);
-  //   const newData = await searchTodo({ q: debouncedSearchQuery, page: currentPage + 1 });
-  //   setSearchedResponse((prevData: string[]) => [...prevData, ...newData.data.result]);
-  //   setTotal(newData.data.total);
-  //   setCurrentPage((prevPage: number) => prevPage + 1);
-  //   setIsMoreLoading(false);
-  // }, [currentPage, debouncedSearchQuery]);
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
   const lastItemRef = useCallback(
@@ -90,19 +74,6 @@ const Main = () => {
   // handleBlur: 입력창에서 포커스가 벗어날 때 처리 함수
   const handleBlur = () => setIsFocused(false);
 
-  // handleChange: 검색어 변경 시 처리 함수
-  // const handleChange = useCallback(async () => {
-  //   if (!debouncedSearchQuery) {
-  //     setSearchedResponse([]);
-  //     setTotal(0);
-  //     return;
-  //   }
-  //   const response = await searchTodo({ q: debouncedSearchQuery });
-  //   setSearchedResponse(response.data.result);
-  //   setTotal(response.data.total);
-  //   setCurrentPage(1);
-  // }, [debouncedSearchQuery]);
-
   // handleSubmit: 폼 제출 시 처리 함수
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -123,21 +94,6 @@ const Main = () => {
     },
     [inputText]
   );
-
-  // useEffect(() => {
-  //   // 검색 결과가 전체 데이터 개수와 동일하다면 더 이상 데이터가 없음
-  //   if (searchedResponse.length === total) {
-  //     setIsNoMoreData(true);
-  //   } else {
-  //     setIsNoMoreData(false);
-  //   }
-  // }, [searchedResponse.length, total]);
-
-  // useEffect(() => {
-  //   // 입력 중인지 여부 설정
-  //   setIsTyping(!!debouncedSearchQuery);
-  //   handleChange();
-  // }, [handleChange, debouncedSearchQuery]);
 
   useEffect(() => {
     // 입력 중인지 여부 설정
