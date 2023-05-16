@@ -160,6 +160,7 @@ const Main = () => {
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
+            handleSubmit={handleSubmit}
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />

@@ -5,25 +5,25 @@ import { FaSpinner } from 'react-icons/fa';
 interface SearchedListProps {
   searchedResponse: string[];
   inputText: string;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
   isNoMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
+  handleSubmit: (e: React.FormEvent, text: string) => Promise<void>;
 }
 
 const SearchedList = ({
   searchedResponse,
   inputText,
-  setInputText,
   isNoMoreData,
   lastItemRef,
   isMoreLoading,
+  handleSubmit,
 }: SearchedListProps) => {
   return (
     <ListContainer>
       <ul>
         {searchedResponse.map((item, index) => (
-          <SearchedItem key={index} item={item} inputText={inputText} setInputText={setInputText} />
+          <SearchedItem key={index} item={item} inputText={inputText} handleSubmit={handleSubmit} />
         ))}
       </ul>
       {isMoreLoading ? (
