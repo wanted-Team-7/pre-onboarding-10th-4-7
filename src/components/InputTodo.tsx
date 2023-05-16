@@ -136,10 +136,11 @@ const StFormContainer = styled.div`
   height: 67px;
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 const StForm = styled.form`
-  width: 100%;
+  width: 364px;
   display: flex;
   border: 1px solid #dedede;
   border-radius: 6px;

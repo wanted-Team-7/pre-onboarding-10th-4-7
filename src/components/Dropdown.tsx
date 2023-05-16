@@ -65,9 +65,7 @@ const Dropdown = forwardRef<
   }
 );
 
-const StDropdownContainer = styled.div`
-  z-index: 100;
-`;
+const StDropdownContainer = styled.div``;
 
 const StDropdownUl = styled.ul`
   border-radius: 6px;
@@ -75,18 +73,23 @@ const StDropdownUl = styled.ul`
   background-color: white;
   overflow: auto;
 
-  width: 580px;
+  width: 364px;
   min-height: 50px;
   max-height: 200px;
+  left: 50%;
+  transform: translateX(-50%);
 
   padding: 20px 0;
   box-shadow: rgba(30, 32, 37, 0.1) 0px 2px 10px;
   position: absolute;
+  z-index: 100;
 `;
 
 const StDropdownLi = styled.div`
   padding: 6px 20px;
   margin: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 3px;
   cursor: pointer;
