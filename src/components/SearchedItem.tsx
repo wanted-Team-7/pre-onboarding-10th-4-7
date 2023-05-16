@@ -44,13 +44,19 @@ const ListItem = styled.li<ListItemProps>`
   padding: 5px 3px;
   list-style-type: none;
   cursor: pointer;
+  overflow-x: hidden;
+  width: 98%;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
 
   :hover {
     background-color: #f2f2f2;
   }
 
   :active {
-    background-color: #2bc9ba;
+    background-color: #d5f4f1;
   }
 `;
 
