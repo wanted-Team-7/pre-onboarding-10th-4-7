@@ -24,6 +24,7 @@ const TrashIcon = ({ isDeleting, handleRemoveTodo }: TrashIconProps) => {
 const Trash = styled(FaTrash)`
   color: orangered;
   font-size: 16px;
+
   &:hover {
     opacity: 0.5;
   }

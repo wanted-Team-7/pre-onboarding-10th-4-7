@@ -4,14 +4,13 @@ import { TodoTypes } from '../api/todo';
 
 interface TodoListTypes {
   todos: TodoTypes[];
-  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
 }
 
-const TodoList = ({ todos, setTodos }: TodoListTypes) => {
+const TodoList = ({ todos }: TodoListTypes) => {
   return todos.length ? (
     <ul>
       {todos.map(({ id, title }) => (
-        <TodoItem key={id} id={id} title={title} setTodos={setTodos} />
+        <TodoItem key={id} id={id} title={title} />
       ))}
     </ul>
   ) : (

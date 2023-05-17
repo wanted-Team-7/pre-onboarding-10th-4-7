@@ -2,24 +2,25 @@ import { useCallback, useState, useEffect } from 'react';
 import { TodoTypes, deleteTodo } from '../api/todo';
 import TrashIcon from './Icon/TrashIcon';
 import styled from 'styled-components';
+import { useTodoDispatch } from '../contexts/TodoContext';
 
 interface TodoItemTypes {
   id: string;
   title: string;
-  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
 }
 
-const TodoItem = ({ id, title, setTodos }: TodoItemTypes) => {
+const TodoItem = ({ id, title }: TodoItemTypes) => {
   // isDeleting: 할 일 삭제 중 여부
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const { setTodoListData } = useTodoDispatch();
 
   // handleRemoveTodo: 할 일 삭제 처리 함수
   const handleRemoveTodo = useCallback(async () => {
     setIsDeleting(true);
     await deleteTodo(id);
-    setTodos(prev => prev.filter((item: TodoTypes) => item.id !== id));
+    setTodoListData(prev => prev.filter((item: TodoTypes) => item.id !== id));
     setIsDeleting(false);
-  }, [id, setTodos]);
+  }, [id]);
 
   useEffect(() => {
     // 컴포넌트 언마운트 시 isDeleting 상태 초기화

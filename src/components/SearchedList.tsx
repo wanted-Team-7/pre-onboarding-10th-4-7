@@ -5,21 +5,21 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 interface SearchedListProps {
   searchedResponse: string[];
   inputText: string;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
-  isNoMoreData: boolean;
+  isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
   isSearchLoading: boolean;
+  handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
 }
 
 const SearchedList = ({
   searchedResponse,
   inputText,
-  setInputText,
-  isNoMoreData,
+  isMoreData,
   lastItemRef,
   isMoreLoading,
   isSearchLoading,
+  handleSubmit,
 }: SearchedListProps) => {
   if (searchedResponse.length === 0)
     return (
@@ -33,12 +33,12 @@ const SearchedList = ({
     <ListContainer>
       <ul>
         {searchedResponse.map((item, index) => (
-          <SearchedItem key={index} item={item} inputText={inputText} setInputText={setInputText} />
+          <SearchedItem key={index} item={item} inputText={inputText} handleSubmit={handleSubmit} />
         ))}
       </ul>
       {isSearchLoading ? null : isMoreLoading ? (
         <SpinnerIcon type={'scroll'} />
-      ) : isNoMoreData ? null : (
+      ) : !isMoreData ? null : (
         <AlignCenter ref={lastItemRef}>
           <Dot />
         </AlignCenter>

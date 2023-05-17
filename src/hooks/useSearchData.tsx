@@ -2,21 +2,23 @@ import { useCallback, useState } from 'react';
 import { searchTodo } from '../api/todo';
 
 interface UseSearchDataProps {
-  setSearchedResponse: React.Dispatch<React.SetStateAction<string[]>>;
-  setIsMoreLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsNoMoreData: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
   checkReSearch: React.MutableRefObject<boolean>;
 }
 
 function useSearchData({
-  setSearchedResponse,
-  setIsMoreLoading,
-  setIsNoMoreData,
   setSearchLoading,
   checkReSearch,
 }: UseSearchDataProps) {
+function useSearchData() {
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // searchedResponse: 검색 결과 데이터
+  const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
+  // isMoreLoading: 추가 데이터 로딩 중인지 여부
+  const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
+  // isNoMoreData: 더 이상 데이터가 없는지 여부
+  const [isMoreData, setIsMoreData] = useState<boolean>(true);
 
   const handleSearchData = useCallback(
     async (type: string, debouncedSearchQuery: string) => {
@@ -37,15 +39,15 @@ function useSearchData({
 
       const { data } = await searchTodo({ q: debouncedSearchQuery, page: updateCurrentPage });
       setSearchedResponse((prevData: string[]) => [...prevData, ...data.result]);
-      setIsNoMoreData(data.page * data.limit >= data.total);
+      setIsMoreData(data.page * data.limit < data.total);
       setIsMoreLoading(false);
       setSearchLoading(false);
       checkReSearch.current = false;
     },
-    [currentPage, setIsMoreLoading, setSearchedResponse, setIsNoMoreData]
+    [currentPage]
   );
 
-  return handleSearchData;
+  return { handleSearchData, searchedResponse, currentPage, isMoreLoading, isMoreData };
 }
 
 export default useSearchData;
