@@ -1,6 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { getTodoList } from '../api/todo';
 import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
 import useSearchData from '../hooks/useSearchData';
@@ -28,14 +27,14 @@ const Main = () => {
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  // 재 검색 여부 체크
-  const checkReSearch = useRef(false);
-
-  // 검색 로딩 여부
-  const [isSearchLoading, setSearchLoading] = useState<boolean>(false);
-  
-  const { handleSearchData, searchedResponse, isMoreLoading, isMoreData } = useSearchData({ setSearchLoading,
-    checkReSearch,});
+  const {
+    handleSearchData,
+    searchedResponse,
+    isMoreLoading,
+    isMoreData,
+    checkReSearch,
+    isSearchLoading,
+  } = useSearchData();
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
   const lastItemRef = useCallback(
@@ -88,14 +87,6 @@ const Main = () => {
     // 입력 중인지 여부 설정
     handleSearchData('first', debouncedSearchQuery);
   }, [debouncedSearchQuery]);
-
-  useEffect(() => {
-    // 할 일 목록 데이터 로드
-    (async () => {
-      const { data } = await getTodoList();
-      setTodoListData(data || []);
-    })();
-  }, []);
 
   return (
     <Container>
