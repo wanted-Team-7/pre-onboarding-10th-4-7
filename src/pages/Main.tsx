@@ -70,14 +70,14 @@ const Main = () => {
 
   // handleSubmit: 폼 제출 시 처리 함수
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.FormEvent, todoText: string) => {
       e.preventDefault();
-      const trimmed = inputText.trim();
+      if (isLoading) return;
+      const trimmed = todoText.trim();
       if (!trimmed) return alert('Please write something');
       setIsLoading(true);
       const newItem = { title: trimmed };
       const { data } = await createTodo(newItem);
-
       if (data) {
         setTodoListData(prev => [...prev, data]);
       }
@@ -86,7 +86,7 @@ const Main = () => {
       setIsLoading(false);
       setIsFocused(false);
     },
-    [inputText]
+    [isLoading]
   );
 
   useEffect(() => {
@@ -115,12 +115,14 @@ const Main = () => {
           handleBlur={handleBlur}
           isFocused={isFocused}
         />
-        {isFocused && (
+        {debouncedSearchQuery && isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
+            inputText={inputText}
             isMoreData={isMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
+            handleSubmit={handleSubmit}
           />
         )}
         <TodoList todos={todoListData} />

@@ -5,7 +5,7 @@ import { ChangeEvent } from 'react';
 
 interface InputTodoProps {
   isLoading: boolean;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
   inputText: string;
   onChangeInput: (e: ChangeEvent<HTMLInputElement>) => void;
   handleFocus: () => void;
@@ -28,7 +28,11 @@ const InputTodo = ({
   isFocused,
 }: InputTodoProps) => {
   return (
-    <StyledForm onSubmit={handleSubmit} isFocused={isFocused} isTyping={inputText.length !== 0}>
+    <StyledForm
+      onSubmit={e => handleSubmit(e, inputText)}
+      isFocused={isFocused}
+      isTyping={inputText.length !== 0}
+    >
       <SearchIcon />
       <StyledInput
         placeholder="Add new todo..."
