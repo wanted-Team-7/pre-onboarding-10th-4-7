@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
 interface SearchedItemProps {
   item: string;
