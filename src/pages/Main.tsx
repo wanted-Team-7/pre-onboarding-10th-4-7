@@ -99,6 +99,7 @@ const Main = () => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent, todoText: string) => {
       e.preventDefault();
+      if (isLoading) return;
       const trimmed = todoText.trim();
       if (!trimmed) return alert('Please write something');
       setIsLoading(true);
@@ -113,7 +114,7 @@ const Main = () => {
       setIsLoading(false);
       setIsFocused(false);
     },
-    [inputText]
+    [isLoading]
   );
 
   useEffect(() => {
