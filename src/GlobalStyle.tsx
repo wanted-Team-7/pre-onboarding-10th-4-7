@@ -1,4 +1,7 @@
-* {
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -11,13 +14,6 @@ body {
   background: #fff;
   height: 100vh;
 }
+`;
 
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+export default GlobalStyle;
