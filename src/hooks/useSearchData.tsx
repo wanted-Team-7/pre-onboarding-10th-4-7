@@ -9,7 +9,7 @@ function useSearchData() {
   // isMoreLoading: 추가 데이터 로딩 중인지 여부
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
   // isNoMoreData: 더 이상 데이터가 없는지 여부
-  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
+  const [isMoreData, setIsMoreData] = useState<boolean>(true);
 
   const handleSearchData = useCallback(
     async (type: string, debouncedSearchQuery: string) => {
@@ -26,13 +26,13 @@ function useSearchData() {
       setIsMoreLoading(true);
       const { data } = await searchTodo({ q: debouncedSearchQuery, page: updateCurrentPage });
       setSearchedResponse((prevData: string[]) => [...prevData, ...data.result]);
-      setIsNoMoreData(data.page * data.limit >= data.total);
+      setIsMoreData(data.page * data.limit < data.total);
       setIsMoreLoading(false);
     },
     [currentPage]
   );
 
-  return { handleSearchData, searchedResponse, currentPage, isMoreLoading, isNoMoreData };
+  return { handleSearchData, searchedResponse, currentPage, isMoreLoading, isMoreData };
 }
 
 export default useSearchData;
