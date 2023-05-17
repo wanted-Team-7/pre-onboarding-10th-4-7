@@ -30,16 +30,18 @@ const spin = keyframes`
   `;
 
 export const Spinner = styled(FaSpinner)`
-  color: #000000;
-  font-size: 20px;
-  animation: ${spin} 2s linear infinite;
   display: flex;
   align-self: center;
+
+  color: #000;
+  font-size: 20px;
+  animation: ${spin} 2s linear infinite;
 `;
 
 const Trash = styled(FaTrash)`
   color: orangered;
   font-size: 16px;
+
   &:hover {
     opacity: 0.5;
   }

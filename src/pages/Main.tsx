@@ -1,19 +1,15 @@
-import { getTodoList } from '../api/todo';
-
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { createTodo, searchTodo } from '../api/todo';
-import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
+import { TodoTypes, getTodoList } from '../api/todo';
+import { createTodo } from '../api/todo';
+import useDebounce from '../hooks/useDebounce';
+import useSearchData from '../hooks/useSearchData';
 import { DEBOUNCED_DELAY } from '../constants/constant';
 import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import SearchedList from '../components/SearchedList';
 import TodoList from '../components/TodoList';
 import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
-
-const isMorePage = (total: number, limit: number, currentPage: number): boolean => {
-  return Math.ceil(total / limit) !== currentPage;
-};
 
 const Main = () => {
   // inputText: 입력된 텍스트 & todoListData: 할 일 목록 데이터
@@ -35,24 +31,17 @@ const Main = () => {
   // isMoreData: 더 받아올 데이터가 있는지 여부
   const [isMoreData, setIsMoreData] = useState<boolean>(false);
 
-  // currentPage: 현재 페이지
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
 
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  // loadMoreData: 추가 데이터 로드 함수
-  const loadMoreData = useCallback(async () => {
-    setIsMoreLoading(true);
-    const newData = await searchTodo({ q: debouncedSearchQuery, page: currentPage + 1 });
-    setSearchedResponse((prevData: string[]) => [...prevData, ...newData.data.result]);
-    setIsMoreData(isMorePage(newData.data.total, newData.data.limit, currentPage));
-    setCurrentPage((prevPage: number) => prevPage + 1);
-    setIsMoreLoading(false);
-  }, [currentPage, debouncedSearchQuery]);
+  const handleSearchData = useSearchData({
+    setSearchedResponse,
+    setIsMoreLoading,
+    setIsMoreData,
+  });
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
   const lastItemRef = useCallback(
@@ -60,12 +49,12 @@ const Main = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
-          loadMoreData();
+          handleSearchData('scroll', debouncedSearchQuery);
         }
       });
       if (node) observer.current.observe(node);
     },
-    [loadMoreData]
+    [debouncedSearchQuery, handleSearchData]
   );
 
   // onChangeInput: 입력 값 변경 시 처리 함수
@@ -78,19 +67,6 @@ const Main = () => {
 
   // handleBlur: 입력창에서 포커스가 벗어날 때 처리 함수
   const handleBlur = () => setIsFocused(false);
-
-  // handleChange: 검색어 변경 시 처리 함수
-  const handleChange = useCallback(async () => {
-    if (!debouncedSearchQuery) {
-      setSearchedResponse([]);
-      return;
-    }
-    const response = await searchTodo({ q: debouncedSearchQuery });
-    setSearchedResponse(response.data.result);
-    setIsMoreData(isMorePage(response.data.total, response.data.limit, currentPage));
-
-    setCurrentPage(1);
-  }, [debouncedSearchQuery]);
 
   // handleSubmit: 폼 제출 시 처리 함수
   const handleSubmit = useCallback(
@@ -115,8 +91,8 @@ const Main = () => {
 
   useEffect(() => {
     // 입력 중인지 여부 설정
-    handleChange();
-  }, [handleChange]);
+    handleSearchData('first', debouncedSearchQuery);
+  }, [debouncedSearchQuery]);
 
   useEffect(() => {
     // 할 일 목록 데이터 로드
