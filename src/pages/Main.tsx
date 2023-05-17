@@ -121,7 +121,7 @@ const Main = () => {
           handleBlur={handleBlur}
           isFocused={isFocused}
         />
-        {isTyping && (
+        {isTyping && isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
             inputText={inputText}
