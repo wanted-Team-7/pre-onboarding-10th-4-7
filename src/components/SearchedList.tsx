@@ -8,7 +8,7 @@ interface SearchedListProps {
   isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
-  handleSubmit: (e: React.FormEvent, text: string) => Promise<void>;
+  handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
 }
 
 const SearchedList = ({
@@ -31,7 +31,7 @@ const SearchedList = ({
           <Spinner />
         </LoadingContent>
       ) : (
-        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        !isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
     </ListContainer>
   );
