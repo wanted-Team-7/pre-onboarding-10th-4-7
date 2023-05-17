@@ -29,12 +29,11 @@ const InputTodo = ({
   isFocused,
   isSearchLoading,
 }: InputTodoProps) => {
+  const handleTodoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    handleSubmit(e, inputText);
+  };
   return (
-    <StyledForm
-      onSubmit={e => handleSubmit(e, inputText)}
-      isFocused={isFocused}
-      isTyping={inputText.length !== 0}
-    >
+    <StyledForm onSubmit={handleTodoSubmit} isFocused={isFocused} isTyping={inputText.length !== 0}>
       <SearchIcon />
       <StyledInput
         placeholder="Add new todo..."
