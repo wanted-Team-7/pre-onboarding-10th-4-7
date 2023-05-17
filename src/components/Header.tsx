@@ -1,22 +1,27 @@
-const Header = () => {
-  const headerStyle = {
-    padding: '20px 0',
-    lineHeight: '1.5em',
-  };
-  const titleStyle: React.CSSProperties = {
-    fontSize: '6rem',
-    fontWeight: '600',
-    marginBottom: '2rem',
-    lineHeight: '1em',
-    color: '#ececec',
-    textAlign: 'center',
-  };
+import styled from 'styled-components';
 
+const Header = () => {
   return (
-    <header style={headerStyle}>
-      <h1 style={titleStyle}>Toodos</h1>
-    </header>
+    <StyledHeader>
+      <H1>Toodos</H1>
+    </StyledHeader>
   );
 };
+
+const StyledHeader = styled.header`
+  padding: 20px 0;
+  line-height: 1.5em;
+`;
+
+const H1 = styled.h1`
+  margin-bottom: 2rem;
+
+  font-size: 6rem;
+  font-weight: 600;
+  line-height: 1em;
+
+  color: #ececec;
+  text-align: center;
+`;
 
 export default Header;

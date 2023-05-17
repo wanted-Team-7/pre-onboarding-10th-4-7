@@ -1,69 +1,92 @@
-import { FaPlusCircle, FaSpinner } from 'react-icons/fa';
-import { useCallback, useEffect, useState } from 'react';
-import { TodoTypes } from '../types/todo';
-import { createTodo } from '../api/todo';
-import useFocus from '../hooks/useFocus';
+import styled from 'styled-components';
+import SearchIcon from './Icon/SearchIcon';
+import SpinnerIcon from './Icon/SpinnerIcon';
+import { ChangeEvent } from 'react';
 
-interface InputTodoType {
-  setTodos: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+interface InputTodoProps {
+  isLoading: boolean;
+  handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
+  inputText: string;
+  onChangeInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleFocus: () => void;
+  handleBlur: () => void;
+  isFocused: boolean;
 }
 
-const InputTodo = ({ setTodos }: InputTodoType) => {
-  const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { ref, setFocus } = useFocus();
+interface StyledFormProps {
+  isFocused: boolean;
+  isTyping: boolean;
+}
 
-  useEffect(() => {
-    setFocus();
-  }, [setFocus]);
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      try {
-        e.preventDefault();
-        setIsLoading(true);
-
-        const trimmed = inputText.trim();
-        if (!trimmed) {
-          return alert('Please write something');
-        }
-
-        const newItem = { title: trimmed };
-        const { data } = await createTodo(newItem);
-
-        if (data) {
-          return setTodos(prev => [...prev, data]);
-        }
-      } catch (error) {
-        console.error(error);
-        alert('Something went wrong.');
-      } finally {
-        setInputText('');
-        setIsLoading(false);
-      }
-    },
-    [inputText, setTodos]
-  );
-
+const InputTodo = ({
+  isLoading,
+  handleSubmit,
+  inputText,
+  onChangeInput,
+  handleFocus,
+  handleBlur,
+  isFocused,
+}: InputTodoProps) => {
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <input
-        className="input-text"
+    <StyledForm
+      onSubmit={e => handleSubmit(e, inputText)}
+      isFocused={isFocused}
+      isTyping={inputText.length !== 0}
+    >
+      <SearchIcon />
+      <StyledInput
         placeholder="Add new todo..."
-        ref={ref}
         value={inputText}
-        onChange={e => setInputText(e.target.value)}
+        onChange={onChangeInput}
         disabled={isLoading}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
-      {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
-      ) : (
-        <FaSpinner className="spinner" />
-      )}
-    </form>
+      {isLoading && <SpinnerIcon />}
+    </StyledForm>
   );
 };
+
+const StyledForm = styled.form<StyledFormProps>`
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 44px;
+  border: 3px solid transparent;
+  border-radius: 6px;
+  outline: 1px solid #dedede;
+  margin-bottom: 10px;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+
+  :hover {
+    ${props =>
+      !props.isFocused &&
+      !props.isTyping &&
+      `
+    transition: 0.3s;
+    border-color: #dedede;
+  `}
+  }
+  ${props =>
+    (props.isFocused || props.isTyping) &&
+    `
+    outline: 1px solid #000;
+  `}
+`;
+
+const StyledInput = styled.input`
+  width: 85%;
+  padding: 0 5px;
+  border: none;
+
+  background-color: transparent;
+
+  font-size: 1rem;
+  font-weight: 400;
+  outline: none;
+
+  text-overflow: ellipsis;
+`;
 
 export default InputTodo;
