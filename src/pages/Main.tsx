@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { TodoTypes, getTodoList } from '../api/todo';
+import { getTodoList } from '../api/todo';
 import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
 import useSearchData from '../hooks/useSearchData';
