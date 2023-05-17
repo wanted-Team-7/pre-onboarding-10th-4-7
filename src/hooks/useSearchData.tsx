@@ -17,14 +17,11 @@ function useSearchData({
 
   const getSearchData = async (updateCurrentPage: number, debouncedSearchQuery: string) => {
     const cacheData = await getCache(debouncedSearchQuery + updateCurrentPage);
-    console.log(cacheData);
     if (!cacheData) {
-      console.log('caching!!');
       const { data } = await searchTodo({ q: debouncedSearchQuery, page: updateCurrentPage });
       setCache(debouncedSearchQuery + updateCurrentPage, data, 60 * 1000);
       return data;
     }
-    console.log('cached!!');
     return cacheData;
   };
 
