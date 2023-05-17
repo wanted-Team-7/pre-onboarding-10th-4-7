@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import SearchedItem from '../components/SearchedItem';
-import { FaSpinner } from 'react-icons/fa';
+
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { Spinner } from './Icon/TrashIcon';
 
 interface SearchedListProps {
   searchedResponse: string[];
@@ -38,7 +39,7 @@ const SearchedList = ({
 
       {isLoading ? null : isMoreLoading ? (
         <AlignCenter>
-          <FaSpinner className="btn-spinner" />
+          <Spinner />
         </AlignCenter>
       ) : isNoMoreData ? null : (
         <Dot />
@@ -85,10 +86,6 @@ const LoadingContent = styled.li`
   justify-content: center;
   align-items: center;
   cursor: wait;
-
-  .btn-spinner {
-    animation: spin 2s linear infinite;
-  }
 `;
 
 export default SearchedList;

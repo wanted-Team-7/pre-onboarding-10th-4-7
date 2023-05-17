@@ -61,15 +61,14 @@ const Main = () => {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting && !checkReSearch.current && !preventRef.current) {
+
+        if (entries[0].isIntersecting) {
           preventRef.current = true;
-          // loadMoreData();
           handleSearchData('scroll', debouncedSearchQuery);
         }
       });
       if (node) observer.current.observe(node);
     },
-    // [loadMoreData]
     [debouncedSearchQuery, handleSearchData]
   );
 
