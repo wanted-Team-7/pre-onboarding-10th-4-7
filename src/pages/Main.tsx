@@ -1,24 +1,23 @@
-import { TodoTypes, getTodoList } from '../api/todo';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { TodoTypes, getTodoList } from '../api/todo';
 import { createTodo } from '../api/todo';
 import useDebounce from '../hooks/useDebounce';
-import styled from 'styled-components';
+import useSearchData from '../hooks/useSearchData';
 import { DEBOUNCED_DELAY } from '../constants/constant';
 import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import SearchedList from '../components/SearchedList';
 import TodoList from '../components/TodoList';
-import useSearchData from '../hooks/useSearchData';
+import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
 const Main = () => {
-  // todoListData: 할 일 목록 데이터
-  const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+  // inputText: 입력된 텍스트 & todoListData: 할 일 목록 데이터
+  const { inputText, todoListData } = useTodoState();
+  const { setInputText, setTodoListData } = useTodoDispatch();
 
   // searchedResponse: 검색 결과 데이터
-  const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
-
-  // inputText: 입력된 텍스트
-  const [inputText, setInputText] = useState<string>('');
+  const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
 
   // isTyping: 입력 중인지 여부
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -124,14 +123,12 @@ const Main = () => {
         {isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
-            inputText={inputText}
-            setInputText={setInputText}
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
           />
         )}
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoList todos={todoListData} />
       </Inner>
     </Container>
   );

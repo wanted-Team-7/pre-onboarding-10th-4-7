@@ -1,13 +1,14 @@
-import GlobalStyle from './GlobalStyle';
 import React from 'react';
+import TodoContextProvider from './contexts/TodoContext';
+import GlobalStyle from './GlobalStyle';
 import Main from './pages/Main';
 
 const App = () => {
   return (
-    <React.Fragment>
+    <TodoContextProvider>
       <GlobalStyle />
       <Main />
-    </React.Fragment>
+    </TodoContextProvider>
   );
 };
 
