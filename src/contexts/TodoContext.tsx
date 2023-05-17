@@ -17,7 +17,6 @@ function TodoContextProvider({ children }: { children: React.ReactNode }) {
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
 
   useEffect(() => {
-    // 할 일 목록 데이터 로드
     (async () => {
       const { data } = await getTodoList();
       setTodoListData(data || []);

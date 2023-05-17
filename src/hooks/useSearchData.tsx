@@ -4,19 +4,10 @@ import { getCache, setCache } from '../utils/cache';
 
 function useSearchData() {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  // searchedResponse: 검색 결과 데이터
-
   const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
-  // isMoreLoading: 추가 데이터 로딩 중인지 여부
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
-
-  // isNoMoreData: 더 이상 데이터가 없는지 여부
   const [isMoreData, setIsMoreData] = useState<boolean>(true);
-
-  // 재 검색 여부 체크
   const checkReSearch = useRef(false);
-
-  // 검색 로딩 여부
   const [isSearchLoading, setSearchLoading] = useState<boolean>(false);
 
   const getSearchData = async (updateCurrentPage: number, debouncedSearchQuery: string) => {
