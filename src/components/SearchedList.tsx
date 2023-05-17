@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import SearchedItem from '../components/SearchedItem';
 import SpinnerIcon from './Icon/SpinnerIcon';
-import DotIcon from './Icon/DotIcon';
-
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
 interface SearchedListProps {
   searchedResponse: string[];
   inputText: string;
@@ -40,13 +39,22 @@ const SearchedList = ({
       {isSearchLoading ? null : isMoreLoading ? (
         <SpinnerIcon type={'scroll'} />
       ) : isNoMoreData ? null : (
-        <DotIcon />
+        <AlignCenter ref={lastItemRef}>
+          <Dot />
+        </AlignCenter>
       )}
-
-      {!isNoMoreData && <div ref={lastItemRef}></div>}
     </ListContainer>
   );
 };
+
+const Dot = styled(BiDotsHorizontalRounded)`
+  color: black;
+`;
+
+const AlignCenter = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const TextContainer = styled.div`
   display: flex;

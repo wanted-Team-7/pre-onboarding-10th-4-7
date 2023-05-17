@@ -41,9 +41,6 @@ const Main = () => {
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  // prevent Observer callback function
-  const preventRef = useRef(false);
-
   // 재 검색 여부 체크
   const checkReSearch = useRef(false);
 
@@ -55,7 +52,6 @@ const Main = () => {
     setIsMoreLoading,
     setIsNoMoreData,
     setSearchLoading,
-    preventRef,
     checkReSearch,
   });
 
@@ -64,8 +60,7 @@ const Main = () => {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting && !checkReSearch.current && !preventRef.current) {
-          preventRef.current = true;
+        if (entries[0].isIntersecting && !checkReSearch.current) {
           handleSearchData('scroll', debouncedSearchQuery);
         }
       });

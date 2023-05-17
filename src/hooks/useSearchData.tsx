@@ -7,7 +7,6 @@ interface UseSearchDataProps {
   setIsNoMoreData: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
   checkReSearch: React.MutableRefObject<boolean>;
-  preventRef: React.MutableRefObject<boolean>;
 }
 
 function useSearchData({
@@ -15,7 +14,6 @@ function useSearchData({
   setIsMoreLoading,
   setIsNoMoreData,
   setSearchLoading,
-  preventRef,
   checkReSearch,
 }: UseSearchDataProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -43,7 +41,6 @@ function useSearchData({
       setIsMoreLoading(false);
       setSearchLoading(false);
       checkReSearch.current = false;
-      preventRef.current = false;
     },
     [currentPage, setIsMoreLoading, setSearchedResponse, setIsNoMoreData]
   );
