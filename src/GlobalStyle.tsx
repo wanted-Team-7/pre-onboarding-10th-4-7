@@ -10,9 +10,10 @@ const GlobalStyle = createGlobalStyle`
 body {
   font-family: "Segoe UI", Arial, sans-serif;
   line-height: 1.4;
+  height: 100vh;
+  
   color: #444;
   background: #fff;
-  height: 100vh;
 }
 `;
 
