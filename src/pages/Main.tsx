@@ -61,8 +61,7 @@ const Main = () => {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !checkReSearch.current && !preventRef.current) {
           preventRef.current = true;
           handleSearchData('scroll', debouncedSearchQuery);
         }

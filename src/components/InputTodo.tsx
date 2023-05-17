@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import SearchIcon from './Icon/SearchIcon';
 import SpinnerIcon from './Icon/SpinnerIcon';
+import { Spinner } from './Icon/TrashIcon';
 import { ChangeEvent } from 'react';
 
 interface InputTodoProps {
@@ -40,7 +41,7 @@ const InputTodo = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
-      {isLoading && <SpinnerIcon />}
+      {isLoading && <Spinner />}
     </StyledForm>
   );
 };
