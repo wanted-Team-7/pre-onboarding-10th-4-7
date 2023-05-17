@@ -1,24 +1,23 @@
-import { TodoTypes, getTodoList } from '../api/todo';
-
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { createTodo, searchTodo } from '../api/todo';
-import useDebounce from '../hooks/useDebounce';
 import styled from 'styled-components';
+import { TodoTypes, getTodoList } from '../api/todo';
+import { createTodo } from '../api/todo';
+import useDebounce from '../hooks/useDebounce';
+import useSearchData from '../hooks/useSearchData';
 import { DEBOUNCED_DELAY } from '../constants/constant';
 import Header from '../components/Header';
 import InputTodo from '../components/InputTodo';
 import SearchedList from '../components/SearchedList';
 import TodoList from '../components/TodoList';
+import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
 const Main = () => {
-  // todoListData: 할 일 목록 데이터
-  const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+  // inputText: 입력된 텍스트 & todoListData: 할 일 목록 데이터
+  const { inputText, todoListData } = useTodoState();
+  const { setInputText, setTodoListData } = useTodoDispatch();
 
   // searchedResponse: 검색 결과 데이터
-  const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
-
-  // inputText: 입력된 텍스트
-  const [inputText, setInputText] = useState<string>('');
+  const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
 
   // isTyping: 입력 중인지 여부
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -35,27 +34,17 @@ const Main = () => {
   // isNoMoreData: 더 이상 데이터가 없는지 여부
   const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
 
-  // currentPage: 현재 페이지
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
-  // total: 전체 데이터 개수
-  const [total, setTotal] = useState<number>(0);
-
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
 
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  // loadMoreData: 추가 데이터 로드 함수
-  const loadMoreData = useCallback(async () => {
-    setIsMoreLoading(true);
-    const newData = await searchTodo({ q: debouncedSearchQuery, page: currentPage + 1 });
-    setSearchedResponse((prevData: string[]) => [...prevData, ...newData.data.result]);
-    setTotal(newData.data.total);
-    setCurrentPage((prevPage: number) => prevPage + 1);
-    setIsMoreLoading(false);
-  }, [currentPage, debouncedSearchQuery]);
+  const handleSearchData = useSearchData({
+    setSearchedResponse,
+    setIsMoreLoading,
+    setIsNoMoreData,
+  });
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
   const lastItemRef = useCallback(
@@ -63,12 +52,12 @@ const Main = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
-          loadMoreData();
+          handleSearchData('scroll', debouncedSearchQuery);
         }
       });
       if (node) observer.current.observe(node);
     },
-    [loadMoreData]
+    [debouncedSearchQuery, handleSearchData]
   );
 
   // onChangeInput: 입력 값 변경 시 처리 함수
@@ -81,19 +70,6 @@ const Main = () => {
 
   // handleBlur: 입력창에서 포커스가 벗어날 때 처리 함수
   const handleBlur = () => setIsFocused(false);
-
-  // handleChange: 검색어 변경 시 처리 함수
-  const handleChange = useCallback(async () => {
-    if (!debouncedSearchQuery) {
-      setSearchedResponse([]);
-      setTotal(0);
-      return;
-    }
-    const response = await searchTodo({ q: debouncedSearchQuery });
-    setSearchedResponse(response.data.result);
-    setTotal(response.data.total);
-    setCurrentPage(1);
-  }, [debouncedSearchQuery]);
 
   // handleSubmit: 폼 제출 시 처리 함수
   const handleSubmit = useCallback(
@@ -117,19 +93,10 @@ const Main = () => {
   );
 
   useEffect(() => {
-    // 검색 결과가 전체 데이터 개수와 동일하다면 더 이상 데이터가 없음
-    if (searchedResponse.length === total) {
-      setIsNoMoreData(true);
-    } else {
-      setIsNoMoreData(false);
-    }
-  }, [searchedResponse.length, total]);
-
-  useEffect(() => {
     // 입력 중인지 여부 설정
     setIsTyping(!!debouncedSearchQuery);
-    handleChange();
-  }, [handleChange, debouncedSearchQuery]);
+    handleSearchData('first', debouncedSearchQuery);
+  }, [debouncedSearchQuery]);
 
   useEffect(() => {
     // 할 일 목록 데이터 로드
@@ -156,14 +123,12 @@ const Main = () => {
         {isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
-            inputText={inputText}
-            setInputText={setInputText}
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
           />
         )}
-        <TodoList todos={todoListData} setTodos={setTodoListData} />
+        <TodoList todos={todoListData} />
       </Inner>
     </Container>
   );

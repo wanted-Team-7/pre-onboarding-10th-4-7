@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useTodoDispatch, useTodoState } from '../contexts/TodoContext';
 
 interface SearchedItemProps {
   item: string;
-  inputText: string;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface ListItemProps {
   isSelected: boolean;
 }
 
-const SearchedItem = ({ item, inputText, setInputText }: SearchedItemProps) => {
+const SearchedItem = ({ item }: SearchedItemProps) => {
+  const { inputText } = useTodoState();
+  const { setInputText } = useTodoDispatch();
+
   // isSelected : 아이템이 선택되었는지 여부.
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
