@@ -16,23 +16,14 @@ const Main = () => {
   const { inputText, todoListData } = useTodoState();
   const { setInputText, setTodoListData } = useTodoDispatch();
 
-  // searchedResponse: 검색 결과 데이터
-  const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
-
   // isTyping: 입력 중인지 여부
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
   // isLoading: 로딩 중인지 여부
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // isMoreLoading: 추가 데이터 로딩 중인지 여부
-  const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
-
   // isFocused: 입력창이 포커싱되었는지 여부
   const [isFocused, setIsFocused] = useState<boolean>(false);
-
-  // isNoMoreData: 더 이상 데이터가 없는지 여부
-  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
 
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
@@ -40,11 +31,7 @@ const Main = () => {
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  const handleSearchData = useSearchData({
-    setSearchedResponse,
-    setIsMoreLoading,
-    setIsNoMoreData,
-  });
+  const { handleSearchData, searchedResponse, isMoreLoading, isNoMoreData } = useSearchData();
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
   const lastItemRef = useCallback(
