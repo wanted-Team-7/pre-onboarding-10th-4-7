@@ -53,6 +53,6 @@ describe('<SearchedList />', () => {
 
   test('"test" is rendered when searchedResponse is "test".', () => {
     const { getByText } = render(<SearchedList searchedResponse={['test']} inputText={'test'} />);
-    getByText(/test/); // search data가 있으면 그 값이 렌더링되늕;
+    getByText(/test/); // search data가 있으면 그 값이 렌더링되는지
   });
 });
