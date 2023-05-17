@@ -191,10 +191,185 @@ return (
     };
     ```
 
-### 2. Context API
+
+## 2. Context API
 [(pull request #19)](https://github.com/wanted-Team-7/pre-onboarding-10th-4-7/pull/19)
 
+### Context로 Main 컴포넌트 내부에서 전역 상태 공유
 
+- Main 컴포넌트의 InputTodo, DropDown, ToDoList 등 자식 컴포넌트와 다시 이들의 자식 컴포넌트에서 공통적으로 사용되는 값을 관리하는 Provider 컴포넌트를 생성하였습니다.
+- 그에 따라 context에서 접근 가능한 값들에 대해 props를 정리하였습니다.
+- 불필요한 렌더링을 제어하기 위해 state 등 자주 변하는 값과 setState 함수 등 변하지 않는 값을 분류하여 두 개의 context로 관리하였습니다.
+
+<details>
+<summary>Context Api Code</summary>
+<div>
+
+```ts
+// contexts/TodoContext.ts
+import { createContext, useContext, useEffect, useState } from 'react';
+import { TodoTypes, getTodoList } from '../api/todo';
+
+interface ITodoStateContext {
+  inputText: string;
+  todoListData: TodoTypes[];
+}
+interface ITodoDispatchContext {
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
+  setTodoListData: React.Dispatch<React.SetStateAction<TodoTypes[]>>;
+}
+const TodoStateContext = createContext<ITodoStateContext | null>(null);
+const TodoDispatchContext = createContext<ITodoDispatchContext | null>(null);
+
+function TodoContextProvider({ children }: { children: React.ReactNode }) {
+  const [inputText, setInputText] = useState('');
+  const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+
+  useEffect(() => {
+    // 할 일 목록 데이터 로드
+    (async () => {
+      const { data } = await getTodoList();
+      setTodoListData(data || []);
+    })();
+  }, []);
+
+  return (
+    <TodoStateContext.Provider value={{ inputText, todoListData }}>
+      <TodoDispatchContext.Provider value={{ setInputText, setTodoListData }}>
+        {children}
+      </TodoDispatchContext.Provider>
+    </TodoStateContext.Provider>
+  );
+}
+
+export const useTodoState = () => {
+  const value = useContext(TodoStateContext);
+  if (!value) throw new Error('useTodoState should be used within TodoContextProvider');
+  return value;
+};
+export const useTodoDispatch = () => {
+  const value = useContext(TodoDispatchContext);
+  if (!value) throw new Error('useTodoDispatch should be used within TodoContextProvider');
+  return value;
+};
+
+export default TodoContextProvider;
+
+```
+
+</div>
+</details>
+
+<br>
+
+---
+
+## 🚀 테스트 코드
+
+
+##  test 코드 작성
+- 중요한 DOM 요소들의 렌더링 여부와 이벤트 실행에 따른 함수 실행 여부에 대해서 테스트 코드를 작성하였습니다.
+- `npm run test`을 입력하면 총 다섯가지 항목에 대해서 테스트를 실행합니다.
+
+
+<details>
+<summary>Test Code</summary>
+<div>
+
+
+```js
+// Main.test.js
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
+import App from './App';
+import InputTodo from './components/InputTodo';
+import SearchedList from './components/SearchedList';
+
+describe('<App />', () => {
+  /*
+  it('matches snapshot', () => {
+    const app = render(<App />);
+    expect(app.container).toMatchSnapshot();
+    // container: 해당 컴포넌트의 최상위 DOM
+    // snap shot testing: 렌더링된 결과를 스냅샷 찍어 놓고, 테스트 할 때 마다 이와 비교함. 스냅샷을 업데이트하려면 테스트가 실행되고 있는 콘솔창에서 'u' 키를 입력.
+  });
+  */
+
+  it('should render title, inputTodo and todoList', () => {
+    const { getByText, getByPlaceholderText } = render(<App />);
+    getByText('Toodos'); // title이 있는지
+    getByPlaceholderText('Add new todo...'); // inputTodo이 있는지
+    getByText('...'); // todoList이 있는지
+  });
+});
+
+describe('<InputTodo />', () => {
+  test('The onChange handler function is called when the input is typed.', () => {
+    const onChange = jest.fn();
+    const { getByPlaceholderText } = render(
+      <InputTodo onChangeInput={onChange} inputText={'test'} />
+    );
+    const input = getByPlaceholderText('Add new todo...');
+    userEvent.type(input, 'test');
+    expect(onChange).toBeCalled(); // input에 타이핑하면 onChange 이벤트가 실행되는지
+  });
+
+  test('A form submit occurs when the input submit ', () => {
+    const onSubmit = jest.fn();
+    const { getByPlaceholderText } = render(
+      <InputTodo handleSubmit={onSubmit} inputText={'test'} />
+    );
+    const input = getByPlaceholderText('Add new todo...');
+    fireEvent.submit(input);
+    expect(onSubmit).toBeCalled(); // input이 submit하면 onSubmit 함수가 실행되는지
+  });
+});
+
+describe('<SearchedList />', () => {
+  test('"No Result" is rendered when there are no searchedResponse.', () => {
+    const { getByText } = render(<SearchedList searchedResponse={[]} />);
+    getByText('No Result'); // search data가 없으면 No Result가 렌더링되는지
+  });
+
+  test('"test" is rendered when searchedResponse is "test".', () => {
+    const { getByText } = render(<SearchedList searchedResponse={['test']} inputText={'test'} />);
+    getByText(/test/); // search data가 있으면 그 값이 렌더링되는지
+  });
+});
+
+```
+
+
+</div>
+</details>
+
+
+
+<br />
+
+<br>
+
+---
+
+<br>
+
+## 실행 방법
+
+### 설치
+
+```shell
+git clone
+npm install
+npm start
+```
+
+### 환경 변수 설정
+
+```
+REACT_APP_API_URL= 'api url'
+REACT_APP_TOKEN= 'token'
+```
 
 
 ## 팀원
