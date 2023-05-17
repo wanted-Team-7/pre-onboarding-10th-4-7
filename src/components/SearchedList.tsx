@@ -31,7 +31,7 @@ const SearchedList = ({
           <Spinner />
         </LoadingContent>
       ) : (
-        !isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
     </ListContainer>
   );
