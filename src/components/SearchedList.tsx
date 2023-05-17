@@ -42,10 +42,12 @@ const SearchedList = ({
           <Spinner />
         </AlignCenter>
       ) : isNoMoreData ? null : (
-        <Dot />
+        <AlignCenter>
+          <Dot />
+        </AlignCenter>
       )}
 
-      <div ref={lastItemRef}></div>
+      {!isNoMoreData && <div ref={lastItemRef}></div>}
     </ListContainer>
   );
 };
