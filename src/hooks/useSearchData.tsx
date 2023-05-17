@@ -4,13 +4,13 @@ import { searchTodo } from '../api/todo';
 interface UseSearchDataProps {
   setSearchedResponse: React.Dispatch<React.SetStateAction<string[]>>;
   setIsMoreLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsNoMoreData: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsMoreData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function useSearchData({
   setSearchedResponse,
   setIsMoreLoading,
-  setIsNoMoreData,
+  setIsMoreData,
 }: UseSearchDataProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -29,10 +29,10 @@ function useSearchData({
       setIsMoreLoading(true);
       const { data } = await searchTodo({ q: debouncedSearchQuery, page: updateCurrentPage });
       setSearchedResponse((prevData: string[]) => [...prevData, ...data.result]);
-      setIsNoMoreData(data.page * data.limit >= data.total);
+      setIsMoreData(data.page * data.limit < data.total);
       setIsMoreLoading(false);
     },
-    [currentPage, setIsMoreLoading, setSearchedResponse, setIsNoMoreData]
+    [currentPage, setIsMoreLoading, setSearchedResponse, setIsMoreData]
   );
 
   return handleSearchData;

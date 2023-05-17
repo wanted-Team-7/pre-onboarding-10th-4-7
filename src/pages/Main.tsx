@@ -19,9 +19,6 @@ const Main = () => {
   // searchedResponse: 검색 결과 데이터
   const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
 
-  // isTyping: 입력 중인지 여부
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-
   // isLoading: 로딩 중인지 여부
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -31,8 +28,8 @@ const Main = () => {
   // isFocused: 입력창이 포커싱되었는지 여부
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  // isNoMoreData: 더 이상 데이터가 없는지 여부
-  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
+  // isMoreData: 더 받아올 데이터가 있는지 여부
+  const [isMoreData, setIsMoreData] = useState<boolean>(false);
 
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
@@ -43,7 +40,7 @@ const Main = () => {
   const handleSearchData = useSearchData({
     setSearchedResponse,
     setIsMoreLoading,
-    setIsNoMoreData,
+    setIsMoreData,
   });
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
@@ -95,7 +92,6 @@ const Main = () => {
 
   useEffect(() => {
     // 입력 중인지 여부 설정
-    setIsTyping(!!debouncedSearchQuery);
     handleSearchData('first', debouncedSearchQuery);
   }, [debouncedSearchQuery]);
 
@@ -112,7 +108,6 @@ const Main = () => {
       <Inner>
         <Header />
         <InputTodo
-          isTyping={isTyping}
           isLoading={isLoading}
           handleSubmit={handleSubmit}
           inputText={inputText}
@@ -125,7 +120,7 @@ const Main = () => {
           <SearchedList
             searchedResponse={searchedResponse}
             inputText={inputText}
-            isNoMoreData={isNoMoreData}
+            isMoreData={isMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
             handleSubmit={handleSubmit}

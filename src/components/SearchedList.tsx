@@ -5,7 +5,7 @@ import { Spinner } from './Icon/TrashIcon';
 interface SearchedListProps {
   searchedResponse: string[];
   inputText: string;
-  isNoMoreData: boolean;
+  isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
   handleSubmit: (e: React.FormEvent, text: string) => Promise<void>;
@@ -14,7 +14,7 @@ interface SearchedListProps {
 const SearchedList = ({
   searchedResponse,
   inputText,
-  isNoMoreData,
+  isMoreData,
   lastItemRef,
   isMoreLoading,
   handleSubmit,
@@ -31,7 +31,7 @@ const SearchedList = ({
           <Spinner />
         </LoadingContent>
       ) : (
-        !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
     </ListContainer>
   );
