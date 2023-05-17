@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from 'react';
-import { TodoTypes } from '../api/todo';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { TodoTypes, getTodoList } from '../api/todo';
 
 interface ITodoStateContext {
   inputText: string;
@@ -15,6 +15,14 @@ const TodoDispatchContext = createContext<ITodoDispatchContext | null>(null);
 function TodoContextProvider({ children }: { children: React.ReactNode }) {
   const [inputText, setInputText] = useState('');
   const [todoListData, setTodoListData] = useState<TodoTypes[]>([]);
+
+  useEffect(() => {
+    // 할 일 목록 데이터 로드
+    (async () => {
+      const { data } = await getTodoList();
+      setTodoListData(data || []);
+    })();
+  }, []);
 
   return (
     <TodoStateContext.Provider value={{ inputText, todoListData }}>
