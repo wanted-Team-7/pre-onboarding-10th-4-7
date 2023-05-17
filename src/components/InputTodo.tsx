@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import SearchIcon from './Icon/SearchIcon';
 import SpinnerIcon from './Icon/SpinnerIcon';
 import { ChangeEvent } from 'react';
-import theme from '../style/theme';
 
 interface InputTodoProps {
   isLoading: boolean;
@@ -63,19 +62,19 @@ const StyledForm = styled.form<StyledFormProps>`
   box-sizing: border-box;
 
   :hover {
-    ${props =>
-      !props.isFocused &&
-      !props.isTyping &&
+    ${({ isFocused, isTyping, theme }) =>
+      !isFocused &&
+      !isTyping &&
       `
-    transition: 0.3s;
-    border-color: ${theme.gray}
-  `}
+  transition: 0.3s;
+  border-color: ${theme.gray};
+`}
   }
-  ${props =>
-    (props.isFocused || props.isTyping) &&
+  ${({ isFocused, isTyping, theme }) =>
+    (isFocused || isTyping) &&
     `
-    outline: 1px solid ${theme.black};
-  `}
+  outline: 1px solid ${theme.black};
+`}
 `;
 
 const StyledInput = styled.input`
