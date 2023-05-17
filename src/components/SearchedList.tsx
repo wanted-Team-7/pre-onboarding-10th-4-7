@@ -4,22 +4,26 @@ import { Spinner } from './Icon/TrashIcon';
 
 interface SearchedListProps {
   searchedResponse: string[];
-  isNoMoreData: boolean;
+  inputText: string;
+  isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
+  handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
 }
 
 const SearchedList = ({
   searchedResponse,
-  isNoMoreData,
+  inputText,
+  isMoreData,
   lastItemRef,
   isMoreLoading,
+  handleSubmit,
 }: SearchedListProps) => {
   return (
     <ListContainer>
       <ul>
         {searchedResponse.map((item, index) => (
-          <SearchedItem key={index} item={item} />
+          <SearchedItem key={index} item={item} inputText={inputText} handleSubmit={handleSubmit} />
         ))}
       </ul>
       {isMoreLoading ? (
@@ -27,7 +31,7 @@ const SearchedList = ({
           <Spinner />
         </LoadingContent>
       ) : (
-        !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
     </ListContainer>
   );
