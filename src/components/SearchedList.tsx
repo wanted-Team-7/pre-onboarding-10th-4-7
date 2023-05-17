@@ -4,14 +4,14 @@ import { Spinner } from './Icon/TrashIcon';
 
 interface SearchedListProps {
   searchedResponse: string[];
-  isNoMoreData: boolean;
+  isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
 }
 
 const SearchedList = ({
   searchedResponse,
-  isNoMoreData,
+  isMoreData,
   lastItemRef,
   isMoreLoading,
 }: SearchedListProps) => {
@@ -27,7 +27,7 @@ const SearchedList = ({
           <Spinner />
         </LoadingContent>
       ) : (
-        !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
       )}
     </ListContainer>
   );
