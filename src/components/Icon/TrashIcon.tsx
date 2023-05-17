@@ -1,5 +1,6 @@
-import { FaSpinner, FaTrash } from 'react-icons/fa';
-import styled, { keyframes } from 'styled-components';
+import { FaTrash } from 'react-icons/fa';
+import styled from 'styled-components';
+import SpinnerIcon from './SpinnerIcon';
 
 interface TrashIconProps {
   isDeleting: boolean;
@@ -14,28 +15,11 @@ const TrashIcon = ({ isDeleting, handleRemoveTodo }: TrashIconProps) => {
           <Trash />
         </button>
       ) : (
-        <Spinner />
+        <SpinnerIcon type="remove" />
       )}
     </Wrapper>
   );
 };
-
-const spin = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-  `;
-
-export const Spinner = styled(FaSpinner)`
-  color: #000000;
-  font-size: 20px;
-  animation: ${spin} 2s linear infinite;
-  display: flex;
-  align-self: center;
-`;
 
 const Trash = styled(FaTrash)`
   color: orangered;
