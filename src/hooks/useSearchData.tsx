@@ -15,7 +15,7 @@ function useSearchData({ setSearchLoading, checkReSearch }: UseSearchDataProps) 
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
   // isNoMoreData: 더 이상 데이터가 없는지 여부
   const [isMoreData, setIsMoreData] = useState<boolean>(true);
-  
+
   const getSearchData = async (updateCurrentPage: number, debouncedSearchQuery: string) => {
     const cacheData = await getCache(debouncedSearchQuery + updateCurrentPage);
     if (!cacheData) {
@@ -44,7 +44,7 @@ function useSearchData({ setSearchLoading, checkReSearch }: UseSearchDataProps) 
       const updateCurrentPage = type === 'scroll' ? currentPage + 1 : 1;
       const searchData = await getSearchData(updateCurrentPage, debouncedSearchQuery);
       setSearchedResponse((prevData: string[]) => [...prevData, ...searchData.result]);
-      setIsMoreData(data.page * data.limit < data.total);
+      setIsMoreData(searchData.page * searchData.limit < searchData.total);
       setIsMoreLoading(false);
       setSearchLoading(false);
       checkReSearch.current = false;
