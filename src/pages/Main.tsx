@@ -52,15 +52,13 @@ const Main = () => {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting && !isNoMoreData && !isMoreLoading) {
-          // loadMoreData();
+        if (entries[0].isIntersecting) {
           handleSearchData('scroll', debouncedSearchQuery);
         }
       });
       if (node) observer.current.observe(node);
     },
-    // [loadMoreData]
-    [debouncedSearchQuery, handleSearchData, isMoreLoading, isNoMoreData]
+    [debouncedSearchQuery, handleSearchData]
   );
 
   // onChangeInput: 입력 값 변경 시 처리 함수
