@@ -41,10 +41,22 @@ const Main = () => {
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
+  // prevent Observer callback function
+  const preventRef = useRef(false);
+
+  // 재 검색 여부 체크
+  const checkReSearch = useRef(false);
+
+  // 검색 로딩 여부
+  const [isSearchLoading, setSearchLoading] = useState<boolean>(false);
+
   const handleSearchData = useSearchData({
     setSearchedResponse,
     setIsMoreLoading,
     setIsNoMoreData,
+    setSearchLoading,
+    preventRef,
+    checkReSearch,
   });
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
@@ -52,7 +64,8 @@ const Main = () => {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !checkReSearch.current && !preventRef.current) {
+          preventRef.current = true;
           handleSearchData('scroll', debouncedSearchQuery);
         }
       });
@@ -63,6 +76,7 @@ const Main = () => {
 
   // onChangeInput: 입력 값 변경 시 처리 함수
   const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length === 0) checkReSearch.current = true;
     setInputText(e.target.value);
   };
 
@@ -120,6 +134,7 @@ const Main = () => {
           handleFocus={handleFocus}
           handleBlur={handleBlur}
           isFocused={isFocused}
+          isSearchLoading={isSearchLoading}
         />
         {isFocused && (
           <SearchedList
@@ -129,6 +144,7 @@ const Main = () => {
             isNoMoreData={isNoMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
+            isSearchLoading={isSearchLoading}
           />
         )}
         <TodoList todos={todoListData} setTodos={setTodoListData} />

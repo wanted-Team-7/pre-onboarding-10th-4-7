@@ -12,6 +12,7 @@ interface InputTodoProps {
   handleFocus: () => void;
   handleBlur: () => void;
   isFocused: boolean;
+  isSearchLoading: boolean;
 }
 
 interface StyledFormProps {
@@ -28,6 +29,7 @@ const InputTodo = ({
   handleFocus,
   handleBlur,
   isFocused,
+  isSearchLoading,
 }: InputTodoProps) => {
   return (
     <StyledForm onSubmit={handleSubmit} isFocused={isFocused} isTyping={isTyping}>
@@ -40,7 +42,7 @@ const InputTodo = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
-      {isLoading && <SpinnerIcon />}
+      {isSearchLoading && <SpinnerIcon type="input" />}
     </StyledForm>
   );
 };
