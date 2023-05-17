@@ -41,14 +41,14 @@ const Wrapper = styled.li`
   position: relative;
   list-style-type: none;
   padding: 17px 1.5rem;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid ${({ theme }) => theme.line};
 
   letter-spacing: 1.5px;
 
   :hover {
     opacity: 0.85;
 
-    background-color: #eaeaea;
+    background-color: ${({ theme }) => theme.line};
   }
 `;
 

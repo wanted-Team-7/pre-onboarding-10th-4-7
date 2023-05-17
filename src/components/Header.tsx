@@ -20,7 +20,7 @@ const H1 = styled.h1`
   font-weight: 600;
   line-height: 1em;
 
-  color: #ececec;
+  color: ${({ theme }) => theme.lightGray};
   text-align: center;
 `;
 

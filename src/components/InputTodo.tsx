@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import SearchIcon from './Icon/SearchIcon';
 import SpinnerIcon from './Icon/SpinnerIcon';
 import { ChangeEvent } from 'react';
+import theme from '../style/theme';
 
 interface InputTodoProps {
   isLoading: boolean;
@@ -56,7 +57,7 @@ const StyledForm = styled.form<StyledFormProps>`
   height: 44px;
   border: 3px solid transparent;
   border-radius: 6px;
-  outline: 1px solid #dedede;
+  outline: 1px solid ${({ theme }) => theme.gray};
   margin-bottom: 10px;
   justify-content: space-evenly;
   box-sizing: border-box;
@@ -67,13 +68,13 @@ const StyledForm = styled.form<StyledFormProps>`
       !props.isTyping &&
       `
     transition: 0.3s;
-    border-color: #dedede;
+    border-color: ${theme.gray}
   `}
   }
   ${props =>
     (props.isFocused || props.isTyping) &&
     `
-    outline: 1px solid #000;
+    outline: 1px solid ${theme.black};
   `}
 `;
 

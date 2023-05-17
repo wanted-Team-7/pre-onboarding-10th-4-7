@@ -39,7 +39,7 @@ const spin = keyframes`
   `;
 
 const Spinner = styled(FaSpinner)`
-  color: #000000;
+  color: ${({ theme }) => theme.black};
   font-size: 20px;
   animation: ${spin} 2s linear infinite;
   display: flex;
