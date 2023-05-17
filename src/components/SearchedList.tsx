@@ -64,7 +64,7 @@ const TextContainer = styled.div`
 
   span {
     font-size: 1.7rem;
-    color: #ececec;
+    color: ${({ theme }) => theme.lightGray};
   }
 `;
 
@@ -75,9 +75,9 @@ const ListContainer = styled.div`
   border-radius: 5px;
   width: 97%;
   height: 193px;
-  border: 1px solid #dedede;
+  border: 1px solid ${({ theme }) => theme.gray};
 
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.white};
   box-shadow: 0 2px 4px 0 rgb(50 50 50 / 10%);
 
   overflow-y: scroll;
