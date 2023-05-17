@@ -6,11 +6,7 @@ interface UseSearchDataProps {
   checkReSearch: React.MutableRefObject<boolean>;
 }
 
-function useSearchData({
-  setSearchLoading,
-  checkReSearch,
-}: UseSearchDataProps) {
-function useSearchData() {
+function useSearchData({ setSearchLoading, checkReSearch }: UseSearchDataProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   // searchedResponse: 검색 결과 데이터
