@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import SearchedItem from '../components/SearchedItem';
-import { FaSpinner } from 'react-icons/fa';
+import { Spinner } from './Icon/TrashIcon';
 
 interface SearchedListProps {
   searchedResponse: string[];
@@ -24,7 +24,7 @@ const SearchedList = ({
       </ul>
       {isMoreLoading ? (
         <LoadingContent>
-          <FaSpinner className="btn-spinner" />
+          <Spinner />
         </LoadingContent>
       ) : (
         !isNoMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
@@ -60,10 +60,6 @@ const LoadingContent = styled.div`
   justify-content: center;
   align-items: center;
   cursor: wait;
-
-  .btn-spinner {
-    animation: spin 2s linear infinite;
-  }
 `;
 
 export default SearchedList;
