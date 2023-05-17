@@ -105,7 +105,7 @@ const Main = () => {
       setIsLoading(true);
       const newItem = { title: trimmed };
       const { data } = await createTodo(newItem);
-
+      setIsTyping(false);
       if (data) {
         setTodoListData(prev => [...prev, data]);
       }
@@ -154,7 +154,7 @@ const Main = () => {
           handleBlur={handleBlur}
           isFocused={isFocused}
         />
-        {isFocused && (
+        {isTyping && (
           <SearchedList
             searchedResponse={searchedResponse}
             inputText={inputText}
