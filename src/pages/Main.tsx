@@ -16,23 +16,11 @@ const Main = () => {
   const { inputText, todoListData } = useTodoState();
   const { setInputText, setTodoListData } = useTodoDispatch();
 
-  // searchedResponse: 검색 결과 데이터
-  const [searchedResponse, setSearchedResponse] = useState<string[]>([]); //
-
-  // isTyping: 입력 중인지 여부
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-
   // isLoading: 로딩 중인지 여부
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // isMoreLoading: 추가 데이터 로딩 중인지 여부
-  const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
-
   // isFocused: 입력창이 포커싱되었는지 여부
   const [isFocused, setIsFocused] = useState<boolean>(false);
-
-  // isNoMoreData: 더 이상 데이터가 없는지 여부
-  const [isNoMoreData, setIsNoMoreData] = useState<boolean>(true);
 
   // observer: IntersectionObserver 객체
   const observer = useRef<IntersectionObserver | null>(null);
@@ -40,18 +28,21 @@ const Main = () => {
   // debouncedSearchQuery: 디바운스 적용된 검색어
   const debouncedSearchQuery = useDebounce(inputText, DEBOUNCED_DELAY);
 
-  const handleSearchData = useSearchData({
-    setSearchedResponse,
-    setIsMoreLoading,
-    setIsNoMoreData,
-  });
+  // 재 검색 여부 체크
+  const checkReSearch = useRef(false);
+
+  // 검색 로딩 여부
+  const [isSearchLoading, setSearchLoading] = useState<boolean>(false);
+  
+  const { handleSearchData, searchedResponse, isMoreLoading, isMoreData } = useSearchData({ setSearchLoading,
+    checkReSearch,});
 
   // lastItemRef: 마지막 항목의 ref 콜백 함수
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !checkReSearch.current) {
           handleSearchData('scroll', debouncedSearchQuery);
         }
       });
@@ -62,6 +53,7 @@ const Main = () => {
 
   // onChangeInput: 입력 값 변경 시 처리 함수
   const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length === 0) checkReSearch.current = true;
     setInputText(e.target.value);
   };
 
@@ -73,14 +65,14 @@ const Main = () => {
 
   // handleSubmit: 폼 제출 시 처리 함수
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.FormEvent, todoText: string) => {
       e.preventDefault();
-      const trimmed = inputText.trim();
+      if (isLoading) return;
+      const trimmed = todoText.trim();
       if (!trimmed) return alert('Please write something');
       setIsLoading(true);
       const newItem = { title: trimmed };
       const { data } = await createTodo(newItem);
-
       if (data) {
         setTodoListData(prev => [...prev, data]);
       }
@@ -89,12 +81,11 @@ const Main = () => {
       setIsLoading(false);
       setIsFocused(false);
     },
-    [inputText]
+    [isLoading]
   );
 
   useEffect(() => {
     // 입력 중인지 여부 설정
-    setIsTyping(!!debouncedSearchQuery);
     handleSearchData('first', debouncedSearchQuery);
   }, [debouncedSearchQuery]);
 
@@ -111,7 +102,6 @@ const Main = () => {
       <Inner>
         <Header />
         <InputTodo
-          isTyping={isTyping}
           isLoading={isLoading}
           handleSubmit={handleSubmit}
           inputText={inputText}
@@ -119,13 +109,17 @@ const Main = () => {
           handleFocus={handleFocus}
           handleBlur={handleBlur}
           isFocused={isFocused}
+          isSearchLoading={isSearchLoading}
         />
-        {isFocused && (
+        {debouncedSearchQuery && isFocused && (
           <SearchedList
             searchedResponse={searchedResponse}
-            isNoMoreData={isNoMoreData}
+            inputText={inputText}
+            isMoreData={isMoreData}
             lastItemRef={lastItemRef}
             isMoreLoading={isMoreLoading}
+            isSearchLoading={isSearchLoading}
+            handleSubmit={handleSubmit}
           />
         )}
         <TodoList todos={todoListData} />

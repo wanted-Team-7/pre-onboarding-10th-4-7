@@ -4,14 +4,14 @@ import SpinnerIcon from './Icon/SpinnerIcon';
 import { ChangeEvent } from 'react';
 
 interface InputTodoProps {
-  isTyping: boolean;
   isLoading: boolean;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
   inputText: string;
   onChangeInput: (e: ChangeEvent<HTMLInputElement>) => void;
   handleFocus: () => void;
   handleBlur: () => void;
   isFocused: boolean;
+  isSearchLoading: boolean;
 }
 
 interface StyledFormProps {
@@ -20,7 +20,6 @@ interface StyledFormProps {
 }
 
 const InputTodo = ({
-  isTyping,
   isLoading,
   handleSubmit,
   inputText,
@@ -28,9 +27,14 @@ const InputTodo = ({
   handleFocus,
   handleBlur,
   isFocused,
+  isSearchLoading,
 }: InputTodoProps) => {
   return (
-    <StyledForm onSubmit={handleSubmit} isFocused={isFocused} isTyping={isTyping}>
+    <StyledForm
+      onSubmit={e => handleSubmit(e, inputText)}
+      isFocused={isFocused}
+      isTyping={inputText.length !== 0}
+    >
       <SearchIcon />
       <StyledInput
         placeholder="Add new todo..."
@@ -40,7 +44,7 @@ const InputTodo = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
-      {isLoading && <SpinnerIcon />}
+      {isSearchLoading && <SpinnerIcon type="input" />}
     </StyledForm>
   );
 };
