@@ -1,20 +1,14 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { searchTodo } from '../api/todo';
 import { getCache, setCache } from '../utils/cache';
 
-interface UseSearchDataProps {
-  setSearchLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  checkReSearch: React.MutableRefObject<boolean>;
-}
-
-function useSearchData({ setSearchLoading, checkReSearch }: UseSearchDataProps) {
+function useSearchData() {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  // searchedResponse: 검색 결과 데이터
   const [searchedResponse, setSearchedResponse] = useState<string[]>([]);
-  // isMoreLoading: 추가 데이터 로딩 중인지 여부
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
-  // isNoMoreData: 더 이상 데이터가 없는지 여부
   const [isMoreData, setIsMoreData] = useState<boolean>(true);
+  const checkReSearch = useRef(false);
+  const [isSearchLoading, setSearchLoading] = useState<boolean>(false);
 
   const getSearchData = async (updateCurrentPage: number, debouncedSearchQuery: string) => {
     const cacheData = await getCache(debouncedSearchQuery + updateCurrentPage);
@@ -52,7 +46,15 @@ function useSearchData({ setSearchLoading, checkReSearch }: UseSearchDataProps) 
     [currentPage]
   );
 
-  return { handleSearchData, searchedResponse, currentPage, isMoreLoading, isMoreData };
+  return {
+    handleSearchData,
+    searchedResponse,
+    currentPage,
+    isMoreLoading,
+    isMoreData,
+    checkReSearch,
+    isSearchLoading,
+  };
 }
 
 export default useSearchData;

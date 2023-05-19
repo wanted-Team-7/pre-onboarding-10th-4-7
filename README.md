@@ -5,6 +5,37 @@
 
 <br/>
 
+## ⚙️ 실행 방법
+
+### 설치
+
+```shell
+git clone
+npm install
+npm start
+```
+
+### 환경 변수 설정
+
+```
+REACT_APP_API_URL= 'api url'
+REACT_APP_TOKEN= 'token'
+```
+
+
+## 👨‍💻👩‍💻 팀원 목록
+
+| 이름   | GitHub Repository                                       |
+| ------ | ------------------------------------------------------ |
+| 이지윤 | [@1yoouoo](https://github.com/1yoouoo)                   |
+| 우상헌 | [@Withlaw](https://github.com/Withlaw)                   |
+| 권민영 | [@minnyoung](https://github.com/minnyoung)               |
+| 유재형 | [@JwithYOU](https://github.com/JwithYOU)                 |
+| 박정도 | [@jeongdopark](https://github.com/jeongdopark)           |
+| 김희진 | [@Jinnie-kim](https://github.com/Jinnie-kim)             |
+| 정승연 | [@xxyeon129](https://github.com/xxyeon129)               |
+| 이준용 | [@leejy001](https://github.com/leejy001)                 |
+
 
 ## 🚀 구현 기능 
 
@@ -27,6 +58,7 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 ```
+
 디바운스 딜레이에 맞게 리랜더링 되도록 useCallback으로 최적화
 
 <br/>
@@ -253,6 +285,7 @@ export const useTodoDispatch = () => {
   return value;
 };
 
+
 export default TodoContextProvider;
 
 ```
@@ -339,44 +372,6 @@ describe('<SearchedList />', () => {
 });
 
 ```
-
-
 </div>
 </details>
-
-
-
-<br />
-
-<br>
-
----
-
-<br>
-
-## 실행 방법
-
-### 설치
-
-```shell
-git clone
-npm install
-npm start
-```
-
-### 환경 변수 설정
-
-```
-REACT_APP_API_URL= 'api url'
-REACT_APP_TOKEN= 'token'
-```
-
-
-## 팀원
-
-| 이지윤<br>(팀장) | 권민영 | 김희진 | 박정도 | 우상헌 | 이준용 | 유재형 | 정승연 |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| <img alt="이지윤" src="https://avatars.githubusercontent.com/u/79697414?v=4" height="100" width="100"> | <img alt="권민영" src="https://avatars.githubusercontent.com/u/118191378?v=4" height="100" width="100"> | <img alt="김희진" src="https://avatars.githubusercontent.com/u/92916958?v=4" height="100" width="100"> | <img alt="박정도" src="https://avatars.githubusercontent.com/u/72500346?v=4" height="100" width="100"> | <img alt="우상헌" src="https://avatars.githubusercontent.com/u/98410418?v=4" height="100" width="100"> | <img alt="이준용" src="https://avatars.githubusercontent.com/u/49552804?v=4" height="100" width="100"> | <img alt="유재형" src="https://avatars.githubusercontent.com/u/83080505?v=4" height="100" width="100"> | <img alt="정승연" src="https://avatars.githubusercontent.com/u/102347529?v=4" height="100" width="100">
-| [@1yoouoo](https://github.com/1yoouoo) |    [@minnyoung](https://github.com/minnyoung) | [@Jinnie-kim](https://github.com/Jinnie-kim) | [@jeongdopark](https://github.com/jeongdopark) | [@Withlaw](https://github.com/Withlaw) | [@leejy001](https://github.com/leejy001)| [@JwithYOU](https://github.com/JwithYOU) | [@xxyeon129](https://github.com/xxyeon129)
-
 
