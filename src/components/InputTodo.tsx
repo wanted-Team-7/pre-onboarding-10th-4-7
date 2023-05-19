@@ -11,6 +11,7 @@ interface InputTodoProps {
   handleFocus: () => void;
   handleBlur: () => void;
   isFocused: boolean;
+  isSearchLoading: boolean;
 }
 
 interface StyledFormProps {
@@ -26,6 +27,7 @@ const InputTodo = ({
   handleFocus,
   handleBlur,
   isFocused,
+  isSearchLoading,
 }: InputTodoProps) => {
   return (
     <StyledForm
@@ -42,7 +44,7 @@ const InputTodo = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
-      {isLoading && <SpinnerIcon />}
+      {isSearchLoading && <SpinnerIcon type="input" />}
     </StyledForm>
   );
 };
@@ -54,25 +56,25 @@ const StyledForm = styled.form<StyledFormProps>`
   height: 44px;
   border: 3px solid transparent;
   border-radius: 6px;
-  outline: 1px solid #dedede;
+  outline: 1px solid ${({ theme }) => theme.gray};
   margin-bottom: 10px;
   justify-content: space-evenly;
   box-sizing: border-box;
 
   :hover {
-    ${props =>
-      !props.isFocused &&
-      !props.isTyping &&
+    ${({ isFocused, isTyping, theme }) =>
+      !isFocused &&
+      !isTyping &&
       `
-    transition: 0.3s;
-    border-color: #dedede;
-  `}
+  transition: 0.3s;
+  border-color: ${theme.gray};
+`}
   }
-  ${props =>
-    (props.isFocused || props.isTyping) &&
+  ${({ isFocused, isTyping, theme }) =>
+    (isFocused || isTyping) &&
     `
-    outline: 1px solid #000;
-  `}
+  outline: 1px solid ${theme.black};
+`}
 `;
 
 const StyledInput = styled.input`

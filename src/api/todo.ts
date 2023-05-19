@@ -41,6 +41,5 @@ export const searchTodo = async ({ q, page, limit = 10 }: SearchTodoParams) => {
       limit,
     },
   });
-
   return response;
 };

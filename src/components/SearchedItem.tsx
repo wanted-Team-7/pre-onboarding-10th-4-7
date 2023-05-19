@@ -42,11 +42,11 @@ const ListItem = styled.li`
   text-overflow: ellipsis;
 
   :hover {
-    background-color: #f2f2f2;
+    background-color: ${({ theme }) => theme.softGray};
   }
 
   :active {
-    background-color: #d5f4f1;
+    background-color: ${({ theme }) => theme.lightCyan};
   }
 `;
 
@@ -56,7 +56,7 @@ const ItemContent = styled.span`
 
 const HighlightedText = styled.span`
   font-weight: bold;
-  color: #2bc9ba;
+  color: ${({ theme }) => theme.cyan};
 `;
 
 export default SearchedItem;

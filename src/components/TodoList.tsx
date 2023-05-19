@@ -27,7 +27,7 @@ const Empty = styled.div`
 
   font-size: 2.5rem;
   letter-spacing: 1.5rem;
-  color: #ececec;
+  color: ${({ theme }) => theme.lightGray};
 `;
 
 export default TodoList;

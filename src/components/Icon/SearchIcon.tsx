@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   align-self: center;
 
   #search-icon {
-    fill: #7d7d7d;
+    fill: ${({ theme }) => theme.darkGray};
   }
 `;
 
