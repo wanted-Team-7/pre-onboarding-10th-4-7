@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 import SearchedItem from '../components/SearchedItem';
-import { Spinner } from './Icon/TrashIcon';
-
+import SpinnerIcon from './Icon/SpinnerIcon';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
 interface SearchedListProps {
   searchedResponse: string[];
   inputText: string;
   isMoreData: boolean;
   lastItemRef: (node: HTMLDivElement | null) => void;
   isMoreLoading: boolean;
+  isSearchLoading: boolean;
   handleSubmit: (e: React.FormEvent, todoText: string) => Promise<void>;
 }
 
@@ -17,8 +18,17 @@ const SearchedList = ({
   isMoreData,
   lastItemRef,
   isMoreLoading,
+  isSearchLoading,
   handleSubmit,
 }: SearchedListProps) => {
+  if (searchedResponse.length === 0)
+    return (
+      <ListContainer>
+        <TextContainer>
+          <span>No Result</span>
+        </TextContainer>
+      </ListContainer>
+    );
   return (
     <ListContainer>
       <ul>
@@ -26,16 +36,37 @@ const SearchedList = ({
           <SearchedItem key={index} item={item} inputText={inputText} handleSubmit={handleSubmit} />
         ))}
       </ul>
-      {isMoreLoading ? (
-        <LoadingContent>
-          <Spinner />
-        </LoadingContent>
-      ) : (
-        isMoreData && <LoadingIndicator ref={lastItemRef}>...</LoadingIndicator>
+      {isSearchLoading ? null : isMoreLoading ? (
+        <SpinnerIcon type={'scroll'} />
+      ) : !isMoreData ? null : (
+        <AlignCenter ref={lastItemRef}>
+          <Dot />
+        </AlignCenter>
       )}
     </ListContainer>
   );
 };
+
+const Dot = styled(BiDotsHorizontalRounded)`
+  color: black;
+`;
+
+const AlignCenter = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-size: 1.7rem;
+    color: #ececec;
+  }
+`;
 
 const ListContainer = styled.div`
   z-index: 1;
@@ -50,20 +81,6 @@ const ListContainer = styled.div`
   box-shadow: 0 2px 4px 0 rgb(50 50 50 / 10%);
 
   overflow-y: scroll;
-`;
-
-const LoadingIndicator = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const LoadingContent = styled.div`
-  display: flex;
-  position: relative;
-  height: 30px;
-  justify-content: center;
-  align-items: center;
-  cursor: wait;
 `;
 
 export default SearchedList;
