@@ -10,11 +10,9 @@ interface TodoItemTypes {
 }
 
 const TodoItem = ({ id, title }: TodoItemTypes) => {
-  // isDeleting: 할 일 삭제 중 여부
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const { setTodoListData } = useTodoDispatch();
 
-  // handleRemoveTodo: 할 일 삭제 처리 함수
   const handleRemoveTodo = useCallback(async () => {
     setIsDeleting(true);
     await deleteTodo(id);
@@ -23,7 +21,6 @@ const TodoItem = ({ id, title }: TodoItemTypes) => {
   }, [id]);
 
   useEffect(() => {
-    // 컴포넌트 언마운트 시 isDeleting 상태 초기화
     return () => {
       setIsDeleting(false);
     };
@@ -41,14 +38,14 @@ const Wrapper = styled.li`
   position: relative;
   list-style-type: none;
   padding: 17px 1.5rem;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid ${({ theme }) => theme.line};
 
   letter-spacing: 1.5px;
 
   :hover {
     opacity: 0.85;
 
-    background-color: #eaeaea;
+    background-color: ${({ theme }) => theme.line};
   }
 `;
 

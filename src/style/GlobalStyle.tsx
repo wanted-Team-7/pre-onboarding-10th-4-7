@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import theme from './theme';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -12,8 +13,8 @@ body {
   line-height: 1.4;
   height: 100vh;
   
-  color: #444;
-  background: #fff;
+  color: ${theme.deepGray};
+  background: ${theme.white};
 }
 `;
 

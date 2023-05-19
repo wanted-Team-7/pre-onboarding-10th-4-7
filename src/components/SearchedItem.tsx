@@ -7,10 +7,8 @@ interface SearchedItemProps {
 }
 
 const SearchedItem = ({ item, inputText, handleSubmit }: SearchedItemProps) => {
-  // splitItem : 검색어를 기준으로 아이템을 분리한 배열을 생성합니다.
   const splitItem = item.split(new RegExp(`(${inputText})`, 'gi'));
 
-  // handleItemClick : 아이템을 클릭했을 때 실행되는 처리 함수.
   const handleItemClick = (event: React.MouseEvent<HTMLLIElement>) => {
     handleSubmit(event, event.currentTarget.innerText);
   };
@@ -42,11 +40,11 @@ const ListItem = styled.li`
   text-overflow: ellipsis;
 
   :hover {
-    background-color: #f2f2f2;
+    background-color: ${({ theme }) => theme.softGray};
   }
 
   :active {
-    background-color: #d5f4f1;
+    background-color: ${({ theme }) => theme.lightCyan};
   }
 `;
 
@@ -56,7 +54,7 @@ const ItemContent = styled.span`
 
 const HighlightedText = styled.span`
   font-weight: bold;
-  color: #2bc9ba;
+  color: ${({ theme }) => theme.cyan};
 `;
 
 export default SearchedItem;

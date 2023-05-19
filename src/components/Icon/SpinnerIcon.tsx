@@ -1,7 +1,6 @@
 import { FaSpinner } from 'react-icons/fa';
 import styled, { keyframes } from 'styled-components';
 
-// FIXME: SpinnerIcon 개선해야함 (FaSpinner가 사용되는 부분이 있음)
 const SpinnerIcon = ({ type }: { type: string }) => {
   switch (type) {
     case 'scroll':
@@ -39,7 +38,7 @@ const spin = keyframes`
   `;
 
 const Spinner = styled(FaSpinner)`
-  color: #000000;
+  color: ${({ theme }) => theme.black};
   font-size: 20px;
   animation: ${spin} 2s linear infinite;
   display: flex;
