@@ -1,6 +1,5 @@
 # 원티드 프리온보딩 프론트엔드 7팀 4주차 과제
 
-
 - **프로젝트 기간:** 2023년 5월 14일 ~ 2023년 5월 17일
 - **배포링크:** https://pre-onboarding-10th-4-7.netlify.app/
 
@@ -36,7 +35,6 @@ REACT_APP_TOKEN= 'token'
 | 김희진 | [@Jinnie-kim](https://github.com/Jinnie-kim)             |
 | 정승연 | [@xxyeon129](https://github.com/xxyeon129)               |
 | 이준용 | [@leejy001](https://github.com/leejy001)                 |
-
 
 
 ## 🚀 구현 기능 
@@ -287,6 +285,7 @@ export const useTodoDispatch = () => {
   return value;
 };
 
+
 export default TodoContextProvider;
 
 ```
@@ -373,7 +372,6 @@ describe('<SearchedList />', () => {
 });
 
 ```
-
-
 </div>
 </details>
+
